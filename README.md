@@ -1,77 +1,107 @@
-# eggroll-tree-enhancer README
+# Tree Enhancer
 
-This is the README for your extension "eggroll-tree-enhancer". After writing up a brief description, we recommend including the following sections.
+🌲 一个增强 VS Code 资源管理器的扩展，在悬浮时显示文件和文件夹的详细信息。
 
-## Features
+## ✨ 主要功能
 
-Describe specific features of your extension including screenshots of your extension in action. Image paths are relative to this README file.
+### 📁 智能文件夹信息
 
-For example if there is an image subfolder under your extension project workspace:
+- **递归计算大小**：自动统计文件夹内所有文件的总大小
+- **文件统计**：显示文件夹内的文件数量和子文件夹数量
+- **实时计算**：每次悬浮都重新计算，确保信息准确性
+- **超时保护**：可配置计算时间限制，避免长时间等待
 
-\!\[feature X\]\(images/feature-x.png\)
+### 📄 详细文件信息
 
-![alt text](文件夹效果演示.png)
+- **文件大小**：以易读格式显示文件大小
+- **修改时间**：显示文件最后修改时间
+- **格式化显示**：中文友好的日期时间格式
 
-![alt text](文件效果演示.png)
+### ⚙️ 灵活配置
 
-![alt text](与其他悬浮提示功能的兼容性.png)
+- **单位基底切换**：支持 1000（KB /MB /GB）和 1024（KiB /MiB /GiB）两种计算方式
+- **超时设置**：可调节文件夹计算的最大等待时间（1 - 60秒）
+- **调试模式**：开发者友好的详细日志输出
+
+## 📸 效果演示
+
+![文件夹信息展示](文件夹效果演示.png)
+
+悬浮在文件夹上显示大小、文件数量、修改时间等信息
+
+![文件信息展示](文件效果演示.png)
+
+悬浮在文件上显示大小和修改时间
+
+![兼容性展示](与其他悬浮提示功能的兼容性.png)
+
+与其他扩展的悬浮提示良好兼容
+
+## 🚀 安装使用
+
+1. 在 VS Code 扩展市场搜索 "Tree Enhancer"
+2. 点击安装并重启 VS Code
+3. 将鼠标悬浮在资源管理器中的文件或文件夹上即可查看详细信息
+
+## ⚙️ 扩展设置
+
+本扩展提供以下配置选项：
+
+- `eggroll-tree-enhancer.maxCalculationTime`: 文件夹大小计算的最大等待时间（毫秒），默认 5000ms，范围 1000-60000 ms
+- `eggroll-tree-enhancer.fileSizeBase`: 文件大小计算基底，可选 1000（十进制）或 1024（二进制），默认 1000
+- `eggroll-tree-enhancer.debugMode`: 启用调试模式，输出详细日志，默认关闭
+
+### 配置示例
+
+```json
+{
+    "eggroll-tree-enhancer.maxCalculationTime": 10000,
+    "eggroll-tree-enhancer.fileSizeBase": 1024,
+    "eggroll-tree-enhancer.debugMode": false
+}
+```
+
+## 💡 使用技巧
+
+- **大文件夹优化**：对于包含大量文件的文件夹，可以适当增加 `maxCalculationTime` 设置
+- **单位偏好**：习惯传统计算机单位的用户可以将 `fileSizeBase` 设置为 1024
+- **问题诊断**：遇到问题时可以临时开启 `debugMode` 查看详细日志
+
+## 🐛 已知问题
+
+- 在某些情况下，当文件具有 Git 状态变化时，可能与 Git 扩展的悬浮提示产生冲突
+- 对于权限受限的系统文件夹，可能无法正确计算大小
+
+## 📝 更新日志
+
+### 0.0.1
+
+- 🎉 初始版本发布
+- ✨ 支持文件和文件夹信息悬浮显示
+- ⚙️ 可配置的计算基底和超时设置
+- 🔧 调试模式支持
 
 > Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
 
-## Requirements
+## 📋 系统要求
 
-If you have any requirements or dependencies, add a section describing those and how to install and configure them.
+- 对 VS Code 理论上没有特定版本要求
+- 适用于 Windows、macOS 和 Linux
 
-## Extension Settings
+## 🤝 贡献
 
-Include if your extension adds any VS Code settings through the `contributes.configuration` extension point.
+欢迎提交 Issue 和 Pull Request！
 
-For example:
+## 🙏 致谢
 
-This extension contributes the following settings:
-
-* `myExtension.enable`: Enable/disable this extension.
-* `myExtension.thing`: Set to `blah` to do something.
-
-## Known Issues
-
-Calling out known issues can help limit users opening duplicate issues against your extension.
-
-## Release Notes
-
-Users appreciate release notes as you update your extension.
-
-### 1.0.0
-
-Initial release of ...
-
-### 1.0.1
-
-Fixed issue #.
-
-### 1.1.0
-
-Added features X, Y, and Z.
+感谢 VS Code 团队提供强大的扩展 API！
 
 ---
 
-## Following extension guidelines
+## 🔧 开发者信息
 
-Ensure that you've read through the extensions guidelines and follow the best practices for creating your extension.
+本扩展遵循 VS Code 扩展开发最佳实践：
 
-* [Extension Guidelines](https://code.visualstudio.com/api/references/extension-guidelines)
+- [扩展开发指南](https://code.visualstudio.com/api/references/extension-guidelines)
 
-## Working with Markdown
-
-You can author your README using Visual Studio Code. Here are some useful editor keyboard shortcuts:
-
-* Split the editor (`Cmd+\` on macOS or `Ctrl+\` on Windows and Linux).
-* Toggle preview (`Shift+Cmd+V` on macOS or `Shift+Ctrl+V` on Windows and Linux).
-* Press `Ctrl+Space` (Windows, Linux, macOS) to see a list of Markdown snippets.
-
-## For more information
-
-* [Visual Studio Code's Markdown Support](http://code.visualstudio.com/docs/languages/markdown)
-* [Markdown Syntax Reference](https://help.github.com/articles/markdown-basics/)
-
-**Enjoy!**
+**祝你使用愉快！** 🎉

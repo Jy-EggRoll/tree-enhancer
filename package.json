@@ -1,8 +1,32 @@
 {
   "name": "eggroll-tree-enhancer",
   "displayName": "Tree Enhancer",
-  "description": "在 VS Code 资源管理器中悬浮显示文件/文件夹的更多信息",
-  "version": "0.0.1",
+  "description": "在 VS Code 资源管理器中悬浮显示文件/文件夹的详细信息（大小、修改时间、文件数量等）",
+  "version": "1.0.0",
+  "publisher": "Jy-EggRoll",
+  "author": {
+    "name": "EggRoll"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Jy-EggRoll/tree-enhancer.git"
+  },
+  "bugs": {
+    "url": "https://github.com/Jy-EggRoll/tree-enhancer/issues"
+  },
+  "homepage": "https://github.com/Jy-EggRoll/tree-enhancer#readme",
+  "keywords": [
+    "file",
+    "folder",
+    "explorer",
+    "size",
+    "tooltip",
+    "tree",
+    "enhancer",
+    "chinese",
+    "资源管理器"
+  ],
   "engines": {
     "vscode": "^1.101.0"
   },
@@ -50,14 +74,17 @@
     "test": "vscode-test"
   },
   "devDependencies": {
-    "@types/vscode": "^1.101.0",
     "@types/mocha": "^10.0.10",
     "@types/node": "20.x",
+    "@types/vscode": "^1.101.0",
     "@typescript-eslint/eslint-plugin": "^8.31.1",
     "@typescript-eslint/parser": "^8.31.1",
-    "eslint": "^9.25.1",
-    "typescript": "^5.8.3",
     "@vscode/test-cli": "^0.0.11",
-    "@vscode/test-electron": "^2.5.2"
+    "@vscode/test-electron": "^2.5.2",
+    "eslint": "^9.25.1",
+    "typescript": "^5.8.3"
+  },
+  "dependencies": {
+    "vsce": "^2.15.0"
   }
 }
