@@ -1,0 +1,445 @@
+[INFO] 2025-07-06T10:25:17.240Z - Translations initialized.
+extensionHostProcess.js:177
+[INFO] 2025-07-06T10:25:17.246Z - Extension activated!
+extensionHostProcess.js:177
+rejected promise not handled within 1 second: Git error {
+  "exitCode": 128,
+  "gitErrorCode": "IsInSubmodule",
+  "stdout": "",
+  "stderr": "fatal: Pathspec 'c:\\Users\\EggRoll\\Documents\\GitFiles\\my-blog\\main\\themes\\hugo-theme-stack\\assets\\scss\\style.scss' is in submodule 'main/themes/hugo-theme-stack'\n"
+}
+extensionHostProcess.js:177
+stack trace: Error: Git error
+    at ChildProcess.<anonymous> (c:\Users\EggRoll\AppData\Local\Programs\Microsoft VS Code\resources\app\extensions\git\dist\main.js:2:604610)
+    at ChildProcess.emit (node:events:530:35)
+    at Process.ChildProcess._handle.onexit (node:internal/child_process:293:12)
+    at Process.callbackTrampoline (node:internal/async_hooks:130:17)
+extensionHostProcess.js:177
+rejected promise not handled within 1 second: Git error {
+  "exitCode": 128,
+  "gitErrorCode": "IsInSubmodule",
+  "stdout": "",
+  "stderr": "fatal: Pathspec 'c:\\Users\\EggRoll\\Documents\\GitFiles\\my-blog\\main\\themes\\hugo-theme-stack\\assets\\scss\\style.scss' is in submodule 'main/themes/hugo-theme-stack'\n"
+}
+extensionHostProcess.js:177
+stack trace: Error: Git error
+    at ChildProcess.<anonymous> (c:\Users\EggRoll\AppData\Local\Programs\Microsoft VS Code\resources\app\extensions\git\dist\main.js:2:604610)
+    at ChildProcess.emit (node:events:530:35)
+    at Process.ChildProcess._handle.onexit (node:internal/child_process:293:12)
+    at Process.callbackTrampoline (node:internal/async_hooks:130:17)
+extensionHostProcess.js:177
+rejected promise not handled within 1 second: Git error {
+  "exitCode": 128,
+  "gitErrorCode": "IsInSubmodule",
+  "stdout": "",
+  "stderr": "fatal: Pathspec 'c:\\Users\\EggRoll\\Documents\\GitFiles\\my-blog\\main\\themes\\hugo-theme-stack\\assets\\scss\\style.scss' is in submodule 'main/themes/hugo-theme-stack'\n"
+}
+extensionHostProcess.js:177
+stack trace: Error: Git error
+    at ChildProcess.<anonymous> (c:\Users\EggRoll\AppData\Local\Programs\Microsoft VS Code\resources\app\extensions\git\dist\main.js:2:604610)
+    at ChildProcess.emit (node:events:530:35)
+    at Process.ChildProcess._handle.onexit (node:internal/child_process:293:12)
+    at Process.callbackTrampoline (node:internal/async_hooks:130:17)
+extensionHostProcess.js:177
+rejected promise not handled within 1 second: Git error {
+  "exitCode": 128,
+  "gitErrorCode": "IsInSubmodule",
+  "stdout": "",
+  "stderr": "fatal: Pathspec 'c:\\Users\\EggRoll\\Documents\\GitFiles\\my-blog\\main\\themes\\hugo-theme-stack\\assets\\scss\\style.scss' is in submodule 'main/themes/hugo-theme-stack'\n"
+}
+extensionHostProcess.js:177
+stack trace: Error: Git error
+    at ChildProcess.<anonymous> (c:\Users\EggRoll\AppData\Local\Programs\Microsoft VS Code\resources\app\extensions\git\dist\main.js:2:604610)
+    at ChildProcess.emit (node:events:530:35)
+    at Process.ChildProcess._handle.onexit (node:internal/child_process:293:12)
+    at Process.callbackTrampoline (node:internal/async_hooks:130:17)
+extensionHostProcess.js:177
+rejected promise not handled within 1 second: Git error {
+  "exitCode": 128,
+  "gitErrorCode": "IsInSubmodule",
+  "stdout": "",
+  "stderr": "fatal: Pathspec 'c:\\Users\\EggRoll\\Documents\\GitFiles\\my-blog\\main\\themes\\hugo-theme-stack\\assets\\scss\\style.scss' is in submodule 'main/themes/hugo-theme-stack'\n"
+}
+extensionHostProcess.js:177
+stack trace: Error: Git error
+    at ChildProcess.<anonymous> (c:\Users\EggRoll\AppData\Local\Programs\Microsoft VS Code\resources\app\extensions\git\dist\main.js:2:604610)
+    at ChildProcess.emit (node:events:530:35)
+    at Process.ChildProcess._handle.onexit (node:internal/child_process:293:12)
+    at Process.callbackTrampoline (node:internal/async_hooks:130:17)
+extensionHostProcess.js:177
+rejected promise not handled within 1 second: Git error {
+  "exitCode": 128,
+  "gitErrorCode": "IsInSubmodule",
+  "stdout": "",
+  "stderr": "fatal: Pathspec 'c:\\Users\\EggRoll\\Documents\\GitFiles\\my-blog\\main\\themes\\hugo-theme-stack\\assets\\scss\\style.scss' is in submodule 'main/themes/hugo-theme-stack'\n"
+}
+extensionHostProcess.js:177
+stack trace: Error: Git error
+    at ChildProcess.<anonymous> (c:\Users\EggRoll\AppData\Local\Programs\Microsoft VS Code\resources\app\extensions\git\dist\main.js:2:604610)
+    at ChildProcess.emit (node:events:530:35)
+    at Process.ChildProcess._handle.onexit (node:internal/child_process:293:12)
+    at Process.callbackTrampoline (node:internal/async_hooks:130:17)
+extensionHostProcess.js:177
+rejected promise not handled within 1 second: Git error {
+  "exitCode": 128,
+  "gitErrorCode": "IsInSubmodule",
+  "stdout": "",
+  "stderr": "fatal: Pathspec 'c:\\Users\\EggRoll\\Documents\\GitFiles\\my-blog\\main\\themes\\hugo-theme-stack\\assets\\scss\\style.scss' is in submodule 'main/themes/hugo-theme-stack'\n"
+}
+extensionHostProcess.js:177
+stack trace: Error: Git error
+    at ChildProcess.<anonymous> (c:\Users\EggRoll\AppData\Local\Programs\Microsoft VS Code\resources\app\extensions\git\dist\main.js:2:604610)
+    at ChildProcess.emit (node:events:530:35)
+    at Process.ChildProcess._handle.onexit (node:internal/child_process:293:12)
+    at Process.callbackTrampoline (node:internal/async_hooks:130:17)
+extensionHostProcess.js:177
+rejected promise not handled within 1 second: Git error {
+  "exitCode": 128,
+  "gitErrorCode": "IsInSubmodule",
+  "stdout": "",
+  "stderr": "fatal: Pathspec 'c:\\Users\\EggRoll\\Documents\\GitFiles\\my-blog\\main\\themes\\hugo-theme-stack\\assets\\scss\\style.scss' is in submodule 'main/themes/hugo-theme-stack'\n"
+}
+extensionHostProcess.js:177
+stack trace: Error: Git error
+    at ChildProcess.<anonymous> (c:\Users\EggRoll\AppData\Local\Programs\Microsoft VS Code\resources\app\extensions\git\dist\main.js:2:604610)
+    at ChildProcess.emit (node:events:530:35)
+    at Process.ChildProcess._handle.onexit (node:internal/child_process:293:12)
+    at Process.callbackTrampoline (node:internal/async_hooks:130:17)
+extensionHostProcess.js:177
+rejected promise not handled within 1 second: Git error {
+  "exitCode": 128,
+  "gitErrorCode": "IsInSubmodule",
+  "stdout": "",
+  "stderr": "fatal: Pathspec 'c:\\Users\\EggRoll\\Documents\\GitFiles\\my-blog\\main\\themes\\hugo-theme-stack\\assets\\scss\\style.scss' is in submodule 'main/themes/hugo-theme-stack'\n"
+}
+extensionHostProcess.js:177
+stack trace: Error: Git error
+    at ChildProcess.<anonymous> (c:\Users\EggRoll\AppData\Local\Programs\Microsoft VS Code\resources\app\extensions\git\dist\main.js:2:604610)
+    at ChildProcess.emit (node:events:530:35)
+    at Process.ChildProcess._handle.onexit (node:internal/child_process:293:12)
+    at Process.callbackTrampoline (node:internal/async_hooks:130:17)
+extensionHostProcess.js:177
+rejected promise not handled within 1 second: Git error {
+  "exitCode": 128,
+  "gitErrorCode": "IsInSubmodule",
+  "stdout": "",
+  "stderr": "fatal: Pathspec 'c:\\Users\\EggRoll\\Documents\\GitFiles\\my-blog\\main\\themes\\hugo-theme-stack\\assets\\scss\\style.scss' is in submodule 'main/themes/hugo-theme-stack'\n"
+}
+extensionHostProcess.js:177
+stack trace: Error: Git error
+    at ChildProcess.<anonymous> (c:\Users\EggRoll\AppData\Local\Programs\Microsoft VS Code\resources\app\extensions\git\dist\main.js:2:604610)
+    at ChildProcess.emit (node:events:530:35)
+    at Process.ChildProcess._handle.onexit (node:internal/child_process:293:12)
+    at Process.callbackTrampoline (node:internal/async_hooks:130:17)
+extensionHostProcess.js:177
+rejected promise not handled within 1 second: Git error {
+  "exitCode": 128,
+  "gitErrorCode": "IsInSubmodule",
+  "stdout": "",
+  "stderr": "fatal: Pathspec 'c:\\Users\\EggRoll\\Documents\\GitFiles\\my-blog\\main\\themes\\hugo-theme-stack\\assets\\scss\\style.scss' is in submodule 'main/themes/hugo-theme-stack'\n"
+}
+extensionHostProcess.js:177
+stack trace: Error: Git error
+    at ChildProcess.<anonymous> (c:\Users\EggRoll\AppData\Local\Programs\Microsoft VS Code\resources\app\extensions\git\dist\main.js:2:604610)
+    at ChildProcess.emit (node:events:530:35)
+    at Process.ChildProcess._handle.onexit (node:internal/child_process:293:12)
+    at Process.callbackTrampoline (node:internal/async_hooks:130:17)
+extensionHostProcess.js:177
+rejected promise not handled within 1 second: Git error {
+  "exitCode": 128,
+  "gitErrorCode": "IsInSubmodule",
+  "stdout": "",
+  "stderr": "fatal: Pathspec 'c:\\Users\\EggRoll\\Documents\\GitFiles\\my-blog\\main\\themes\\hugo-theme-stack\\assets\\scss\\style.scss' is in submodule 'main/themes/hugo-theme-stack'\n"
+}
+extensionHostProcess.js:177
+stack trace: Error: Git error
+    at ChildProcess.<anonymous> (c:\Users\EggRoll\AppData\Local\Programs\Microsoft VS Code\resources\app\extensions\git\dist\main.js:2:604610)
+    at ChildProcess.emit (node:events:530:35)
+    at Process.ChildProcess._handle.onexit (node:internal/child_process:293:12)
+    at Process.callbackTrampoline (node:internal/async_hooks:130:17)
+extensionHostProcess.js:177
+rejected promise not handled within 1 second: Git error {
+  "exitCode": 128,
+  "gitErrorCode": "IsInSubmodule",
+  "stdout": "",
+  "stderr": "fatal: Pathspec 'c:\\Users\\EggRoll\\Documents\\GitFiles\\my-blog\\main\\themes\\hugo-theme-stack\\assets\\scss\\style.scss' is in submodule 'main/themes/hugo-theme-stack'\n"
+}
+extensionHostProcess.js:177
+stack trace: Error: Git error
+    at ChildProcess.<anonymous> (c:\Users\EggRoll\AppData\Local\Programs\Microsoft VS Code\resources\app\extensions\git\dist\main.js:2:604610)
+    at ChildProcess.emit (node:events:530:35)
+    at Process.ChildProcess._handle.onexit (node:internal/child_process:293:12)
+    at Process.callbackTrampoline (node:internal/async_hooks:130:17)
+extensionHostProcess.js:177
+rejected promise not handled within 1 second: Git error {
+  "exitCode": 128,
+  "gitErrorCode": "IsInSubmodule",
+  "stdout": "",
+  "stderr": "fatal: Pathspec 'c:\\Users\\EggRoll\\Documents\\GitFiles\\my-blog\\main\\themes\\hugo-theme-stack\\assets\\scss\\style.scss' is in submodule 'main/themes/hugo-theme-stack'\n"
+}
+extensionHostProcess.js:177
+stack trace: Error: Git error
+    at ChildProcess.<anonymous> (c:\Users\EggRoll\AppData\Local\Programs\Microsoft VS Code\resources\app\extensions\git\dist\main.js:2:604610)
+    at ChildProcess.emit (node:events:530:35)
+    at Process.ChildProcess._handle.onexit (node:internal/child_process:293:12)
+    at Process.callbackTrampoline (node:internal/async_hooks:130:17)
+extensionHostProcess.js:177
+rejected promise not handled within 1 second: Git error {
+  "exitCode": 128,
+  "gitErrorCode": "IsInSubmodule",
+  "stdout": "",
+  "stderr": "fatal: Pathspec 'c:\\Users\\EggRoll\\Documents\\GitFiles\\my-blog\\main\\themes\\hugo-theme-stack\\assets\\scss\\style.scss' is in submodule 'main/themes/hugo-theme-stack'\n"
+}
+extensionHostProcess.js:177
+stack trace: Error: Git error
+    at ChildProcess.<anonymous> (c:\Users\EggRoll\AppData\Local\Programs\Microsoft VS Code\resources\app\extensions\git\dist\main.js:2:604610)
+    at ChildProcess.emit (node:events:530:35)
+    at Process.ChildProcess._handle.onexit (node:internal/child_process:293:12)
+    at Process.callbackTrampoline (node:internal/async_hooks:130:17)
+extensionHostProcess.js:177
+rejected promise not handled within 1 second: Git error {
+  "exitCode": 128,
+  "gitErrorCode": "IsInSubmodule",
+  "stdout": "",
+  "stderr": "fatal: Pathspec 'c:\\Users\\EggRoll\\Documents\\GitFiles\\my-blog\\main\\themes\\hugo-theme-stack\\assets\\scss\\style.scss' is in submodule 'main/themes/hugo-theme-stack'\n"
+}
+extensionHostProcess.js:177
+stack trace: Error: Git error
+    at ChildProcess.<anonymous> (c:\Users\EggRoll\AppData\Local\Programs\Microsoft VS Code\resources\app\extensions\git\dist\main.js:2:604610)
+    at ChildProcess.emit (node:events:530:35)
+    at Process.ChildProcess._handle.onexit (node:internal/child_process:293:12)
+    at Process.callbackTrampoline (node:internal/async_hooks:130:17)
+extensionHostProcess.js:177
+rejected promise not handled within 1 second: Git error {
+  "exitCode": 128,
+  "gitErrorCode": "IsInSubmodule",
+  "stdout": "",
+  "stderr": "fatal: Pathspec 'c:\\Users\\EggRoll\\Documents\\GitFiles\\my-blog\\main\\themes\\hugo-theme-stack\\assets\\scss\\style.scss' is in submodule 'main/themes/hugo-theme-stack'\n"
+}
+extensionHostProcess.js:177
+stack trace: Error: Git error
+    at ChildProcess.<anonymous> (c:\Users\EggRoll\AppData\Local\Programs\Microsoft VS Code\resources\app\extensions\git\dist\main.js:2:604610)
+    at ChildProcess.emit (node:events:530:35)
+    at Process.ChildProcess._handle.onexit (node:internal/child_process:293:12)
+    at Process.callbackTrampoline (node:internal/async_hooks:130:17)
+extensionHostProcess.js:177
+rejected promise not handled within 1 second: Git error {
+  "exitCode": 128,
+  "gitErrorCode": "IsInSubmodule",
+  "stdout": "",
+  "stderr": "fatal: Pathspec 'c:\\Users\\EggRoll\\Documents\\GitFiles\\my-blog\\main\\themes\\hugo-theme-stack\\assets\\scss\\style.scss' is in submodule 'main/themes/hugo-theme-stack'\n"
+}
+extensionHostProcess.js:177
+stack trace: Error: Git error
+    at ChildProcess.<anonymous> (c:\Users\EggRoll\AppData\Local\Programs\Microsoft VS Code\resources\app\extensions\git\dist\main.js:2:604610)
+    at ChildProcess.emit (node:events:530:35)
+    at Process.ChildProcess._handle.onexit (node:internal/child_process:293:12)
+    at Process.callbackTrampoline (node:internal/async_hooks:130:17)
+extensionHostProcess.js:177
+rejected promise not handled within 1 second: Git error {
+  "exitCode": 128,
+  "gitErrorCode": "IsInSubmodule",
+  "stdout": "",
+  "stderr": "fatal: Pathspec 'c:\\Users\\EggRoll\\Documents\\GitFiles\\my-blog\\main\\themes\\hugo-theme-stack\\assets\\scss\\style.scss' is in submodule 'main/themes/hugo-theme-stack'\n"
+}
+extensionHostProcess.js:177
+stack trace: Error: Git error
+    at ChildProcess.<anonymous> (c:\Users\EggRoll\AppData\Local\Programs\Microsoft VS Code\resources\app\extensions\git\dist\main.js:2:604610)
+    at ChildProcess.emit (node:events:530:35)
+    at Process.ChildProcess._handle.onexit (node:internal/child_process:293:12)
+    at Process.callbackTrampoline (node:internal/async_hooks:130:17)
+extensionHostProcess.js:177
+rejected promise not handled within 1 second: Git error {
+  "exitCode": 128,
+  "gitErrorCode": "IsInSubmodule",
+  "stdout": "",
+  "stderr": "fatal: Pathspec 'c:\\Users\\EggRoll\\Documents\\GitFiles\\my-blog\\main\\themes\\hugo-theme-stack\\assets\\scss\\style.scss' is in submodule 'main/themes/hugo-theme-stack'\n"
+}
+extensionHostProcess.js:177
+stack trace: Error: Git error
+    at ChildProcess.<anonymous> (c:\Users\EggRoll\AppData\Local\Programs\Microsoft VS Code\resources\app\extensions\git\dist\main.js:2:604610)
+    at ChildProcess.emit (node:events:530:35)
+    at Process.ChildProcess._handle.onexit (node:internal/child_process:293:12)
+    at Process.callbackTrampoline (node:internal/async_hooks:130:17)
+extensionHostProcess.js:177
+rejected promise not handled within 1 second: Git error {
+  "exitCode": 128,
+  "gitErrorCode": "IsInSubmodule",
+  "stdout": "",
+  "stderr": "fatal: Pathspec 'c:\\Users\\EggRoll\\Documents\\GitFiles\\my-blog\\main\\themes\\hugo-theme-stack\\assets\\scss\\style.scss' is in submodule 'main/themes/hugo-theme-stack'\n"
+}
+extensionHostProcess.js:177
+stack trace: Error: Git error
+    at ChildProcess.<anonymous> (c:\Users\EggRoll\AppData\Local\Programs\Microsoft VS Code\resources\app\extensions\git\dist\main.js:2:604610)
+    at ChildProcess.emit (node:events:530:35)
+    at Process.ChildProcess._handle.onexit (node:internal/child_process:293:12)
+    at Process.callbackTrampoline (node:internal/async_hooks:130:17)
+extensionHostProcess.js:177
+rejected promise not handled within 1 second: Git error {
+  "exitCode": 128,
+  "gitErrorCode": "IsInSubmodule",
+  "stdout": "",
+  "stderr": "fatal: Pathspec 'c:\\Users\\EggRoll\\Documents\\GitFiles\\my-blog\\main\\themes\\hugo-theme-stack\\assets\\scss\\style.scss' is in submodule 'main/themes/hugo-theme-stack'\n"
+}
+extensionHostProcess.js:177
+stack trace: Error: Git error
+    at ChildProcess.<anonymous> (c:\Users\EggRoll\AppData\Local\Programs\Microsoft VS Code\resources\app\extensions\git\dist\main.js:2:604610)
+    at ChildProcess.emit (node:events:530:35)
+    at Process.ChildProcess._handle.onexit (node:internal/child_process:293:12)
+    at Process.callbackTrampoline (node:internal/async_hooks:130:17)
+extensionHostProcess.js:177
+rejected promise not handled within 1 second: Git error {
+  "exitCode": 128,
+  "gitErrorCode": "IsInSubmodule",
+  "stdout": "",
+  "stderr": "fatal: Pathspec 'c:\\Users\\EggRoll\\Documents\\GitFiles\\my-blog\\main\\themes\\hugo-theme-stack\\assets\\scss\\style.scss' is in submodule 'main/themes/hugo-theme-stack'\n"
+}
+extensionHostProcess.js:177
+stack trace: Error: Git error
+    at ChildProcess.<anonymous> (c:\Users\EggRoll\AppData\Local\Programs\Microsoft VS Code\resources\app\extensions\git\dist\main.js:2:604610)
+    at ChildProcess.emit (node:events:530:35)
+    at Process.ChildProcess._handle.onexit (node:internal/child_process:293:12)
+    at Process.callbackTrampoline (node:internal/async_hooks:130:17)
+extensionHostProcess.js:177
+rejected promise not handled within 1 second: Git error {
+  "exitCode": 128,
+  "gitErrorCode": "IsInSubmodule",
+  "stdout": "",
+  "stderr": "fatal: Pathspec 'c:\\Users\\EggRoll\\Documents\\GitFiles\\my-blog\\main\\themes\\hugo-theme-stack\\assets\\scss\\style.scss' is in submodule 'main/themes/hugo-theme-stack'\n"
+}
+extensionHostProcess.js:177
+stack trace: Error: Git error
+    at ChildProcess.<anonymous> (c:\Users\EggRoll\AppData\Local\Programs\Microsoft VS Code\resources\app\extensions\git\dist\main.js:2:604610)
+    at ChildProcess.emit (node:events:530:35)
+    at Process.ChildProcess._handle.onexit (node:internal/child_process:293:12)
+    at Process.callbackTrampoline (node:internal/async_hooks:130:17)
+extensionHostProcess.js:177
+rejected promise not handled within 1 second: Git error {
+  "exitCode": 128,
+  "gitErrorCode": "IsInSubmodule",
+  "stdout": "",
+  "stderr": "fatal: Pathspec 'c:\\Users\\EggRoll\\Documents\\GitFiles\\my-blog\\main\\themes\\hugo-theme-stack\\assets\\scss\\style.scss' is in submodule 'main/themes/hugo-theme-stack'\n"
+}
+extensionHostProcess.js:177
+stack trace: Error: Git error
+    at ChildProcess.<anonymous> (c:\Users\EggRoll\AppData\Local\Programs\Microsoft VS Code\resources\app\extensions\git\dist\main.js:2:604610)
+    at ChildProcess.emit (node:events:530:35)
+    at Process.ChildProcess._handle.onexit (node:internal/child_process:293:12)
+    at Process.callbackTrampoline (node:internal/async_hooks:130:17)
+extensionHostProcess.js:177
+rejected promise not handled within 1 second: Git error {
+  "exitCode": 128,
+  "gitErrorCode": "IsInSubmodule",
+  "stdout": "",
+  "stderr": "fatal: Pathspec 'c:\\Users\\EggRoll\\Documents\\GitFiles\\my-blog\\main\\themes\\hugo-theme-stack\\assets\\scss\\style.scss' is in submodule 'main/themes/hugo-theme-stack'\n"
+}
+extensionHostProcess.js:177
+stack trace: Error: Git error
+    at ChildProcess.<anonymous> (c:\Users\EggRoll\AppData\Local\Programs\Microsoft VS Code\resources\app\extensions\git\dist\main.js:2:604610)
+    at ChildProcess.emit (node:events:530:35)
+    at Process.ChildProcess._handle.onexit (node:internal/child_process:293:12)
+    at Process.callbackTrampoline (node:internal/async_hooks:130:17)
+extensionHostProcess.js:177
+rejected promise not handled within 1 second: Git error {
+  "exitCode": 128,
+  "gitErrorCode": "IsInSubmodule",
+  "stdout": "",
+  "stderr": "fatal: Pathspec 'c:\\Users\\EggRoll\\Documents\\GitFiles\\my-blog\\main\\themes\\hugo-theme-stack\\assets\\scss\\style.scss' is in submodule 'main/themes/hugo-theme-stack'\n"
+}
+extensionHostProcess.js:177
+stack trace: Error: Git error
+    at ChildProcess.<anonymous> (c:\Users\EggRoll\AppData\Local\Programs\Microsoft VS Code\resources\app\extensions\git\dist\main.js:2:604610)
+    at ChildProcess.emit (node:events:530:35)
+    at Process.ChildProcess._handle.onexit (node:internal/child_process:293:12)
+    at Process.callbackTrampoline (node:internal/async_hooks:130:17)
+extensionHostProcess.js:177
+rejected promise not handled within 1 second: Git error {
+  "exitCode": 128,
+  "gitErrorCode": "IsInSubmodule",
+  "stdout": "",
+  "stderr": "fatal: Pathspec 'c:\\Users\\EggRoll\\Documents\\GitFiles\\my-blog\\main\\themes\\hugo-theme-stack\\assets\\scss\\style.scss' is in submodule 'main/themes/hugo-theme-stack'\n"
+}
+extensionHostProcess.js:177
+stack trace: Error: Git error
+    at ChildProcess.<anonymous> (c:\Users\EggRoll\AppData\Local\Programs\Microsoft VS Code\resources\app\extensions\git\dist\main.js:2:604610)
+    at ChildProcess.emit (node:events:530:35)
+    at Process.ChildProcess._handle.onexit (node:internal/child_process:293:12)
+    at Process.callbackTrampoline (node:internal/async_hooks:130:17)
+extensionHostProcess.js:177
+rejected promise not handled within 1 second: Git error {
+  "exitCode": 128,
+  "gitErrorCode": "IsInSubmodule",
+  "stdout": "",
+  "stderr": "fatal: Pathspec 'c:\\Users\\EggRoll\\Documents\\GitFiles\\my-blog\\main\\themes\\hugo-theme-stack\\assets\\scss\\style.scss' is in submodule 'main/themes/hugo-theme-stack'\n"
+}
+extensionHostProcess.js:177
+stack trace: Error: Git error
+    at ChildProcess.<anonymous> (c:\Users\EggRoll\AppData\Local\Programs\Microsoft VS Code\resources\app\extensions\git\dist\main.js:2:604610)
+    at ChildProcess.emit (node:events:530:35)
+    at Process.ChildProcess._handle.onexit (node:internal/child_process:293:12)
+    at Process.callbackTrampoline (node:internal/async_hooks:130:17)
+extensionHostProcess.js:177
+rejected promise not handled within 1 second: Git error {
+  "exitCode": 128,
+  "gitErrorCode": "IsInSubmodule",
+  "stdout": "",
+  "stderr": "fatal: Pathspec 'c:\\Users\\EggRoll\\Documents\\GitFiles\\my-blog\\main\\themes\\hugo-theme-stack\\assets\\scss\\style.scss' is in submodule 'main/themes/hugo-theme-stack'\n"
+}
+extensionHostProcess.js:177
+stack trace: Error: Git error
+    at ChildProcess.<anonymous> (c:\Users\EggRoll\AppData\Local\Programs\Microsoft VS Code\resources\app\extensions\git\dist\main.js:2:604610)
+    at ChildProcess.emit (node:events:530:35)
+    at Process.ChildProcess._handle.onexit (node:internal/child_process:293:12)
+    at Process.callbackTrampoline (node:internal/async_hooks:130:17)
+extensionHostProcess.js:177
+rejected promise not handled within 1 second: Git error {
+  "exitCode": 128,
+  "gitErrorCode": "IsInSubmodule",
+  "stdout": "",
+  "stderr": "fatal: Pathspec 'c:\\Users\\EggRoll\\Documents\\GitFiles\\my-blog\\main\\themes\\hugo-theme-stack\\assets\\scss\\style.scss' is in submodule 'main/themes/hugo-theme-stack'\n"
+}
+extensionHostProcess.js:177
+stack trace: Error: Git error
+    at ChildProcess.<anonymous> (c:\Users\EggRoll\AppData\Local\Programs\Microsoft VS Code\resources\app\extensions\git\dist\main.js:2:604610)
+    at ChildProcess.emit (node:events:530:35)
+    at Process.ChildProcess._handle.onexit (node:internal/child_process:293:12)
+    at Process.callbackTrampoline (node:internal/async_hooks:130:17)
+extensionHostProcess.js:177
+rejected promise not handled within 1 second: Git error {
+  "exitCode": 128,
+  "gitErrorCode": "IsInSubmodule",
+  "stdout": "",
+  "stderr": "fatal: Pathspec 'c:\\Users\\EggRoll\\Documents\\GitFiles\\my-blog\\main\\themes\\hugo-theme-stack\\assets\\scss\\style.scss' is in submodule 'main/themes/hugo-theme-stack'\n"
+}
+extensionHostProcess.js:177
+stack trace: Error: Git error
+    at ChildProcess.<anonymous> (c:\Users\EggRoll\AppData\Local\Programs\Microsoft VS Code\resources\app\extensions\git\dist\main.js:2:604610)
+    at ChildProcess.emit (node:events:530:35)
+    at Process.ChildProcess._handle.onexit (node:internal/child_process:293:12)
+    at Process.callbackTrampoline (node:internal/async_hooks:130:17)
+extensionHostProcess.js:177
+rejected promise not handled within 1 second: Git error {
+  "exitCode": 128,
+  "gitErrorCode": "IsInSubmodule",
+  "stdout": "",
+  "stderr": "fatal: Pathspec 'c:\\Users\\EggRoll\\Documents\\GitFiles\\my-blog\\main\\themes\\hugo-theme-stack\\assets\\scss\\style.scss' is in submodule 'main/themes/hugo-theme-stack'\n"
+}
+extensionHostProcess.js:177
+stack trace: Error: Git error
+    at ChildProcess.<anonymous> (c:\Users\EggRoll\AppData\Local\Programs\Microsoft VS Code\resources\app\extensions\git\dist\main.js:2:604610)
+    at ChildProcess.emit (node:events:530:35)
+    at Process.ChildProcess._handle.onexit (node:internal/child_process:293:12)
+    at Process.callbackTrampoline (node:internal/async_hooks:130:17)
+extensionHostProcess.js:177
+rejected promise not handled within 1 second: Git error {
+  "exitCode": 128,
+  "gitErrorCode": "IsInSubmodule",
+  "stdout": "",
+  "stderr": "fatal: Pathspec 'c:\\Users\\EggRoll\\Documents\\GitFiles\\my-blog\\main\\themes\\hugo-theme-stack\\assets\\scss\\style.scss' is in submodule 'main/themes/hugo-theme-stack'\n"
+}
+extensionHostProcess.js:177
+stack trace: Error: Git error
+    at ChildProcess.<anonymous> (c:\Users\EggRoll\AppData\Local\Programs\Microsoft VS Code\resources\app\extensions\git\dist\main.js:2:604610)
+    at ChildProcess.emit (node:events:530:35)
+    at Process.ChildProcess._handle.onexit (node:internal/child_process:293:12)
+    at Process.callbackTrampoline (node:internal/async_hooks:130:17)

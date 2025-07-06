@@ -10,6 +10,12 @@ For example if there is an image subfolder under your extension project workspac
 
 \!\[feature X\]\(images/feature-x.png\)
 
+![alt text](文件夹效果演示.png)
+
+![alt text](文件效果演示.png)
+
+![alt text](与其他悬浮提示功能的兼容性.png)
+
 > Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
 
 ## Requirements
