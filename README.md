@@ -74,14 +74,12 @@
 
 ## 📝 更新日志
 
-### 0.0.1
+### 1.0.0
 
 - 🎉 初始版本发布
 - ✨ 支持文件和文件夹信息悬浮显示
 - ⚙️ 可配置的计算基底和超时设置
 - 🔧 调试模式支持
-
-> Tip: Many popular extensions utilize animations. This is an excellent way to show off your extension! We recommend short, focused animations that are easy to follow.
 
 ## 📋 系统要求
 
