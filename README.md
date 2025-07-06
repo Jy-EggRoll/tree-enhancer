@@ -143,4 +143,4 @@ Blog: <https://eggroll.pages.dev>
 
 **祝你使用愉快！** 🎉
 
-**Enjoy using it!**🎉
+**Enjoy using it!** 🎉
