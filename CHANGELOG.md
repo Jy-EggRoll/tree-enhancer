@@ -1,9 +1,13 @@
-# Change Log
+# 更新日志 | Change Log
 
-All notable changes to the "eggroll-tree-enhancer" extension will be documented in this file.
+## 1.0.2
 
-Check [Keep a Changelog](http://keepachangelog.com/) for recommendations on how to structure this file.
+- 完善了部分文档信息 | Improved some documentation details
 
-## [Unreleased]
+## 1.0.1
 
-- Initial release
+- 添加了插件图标 | Added extension icon
+
+## 1.0.0
+
+- 功能基本完成，发布版 | Initial release with basic functionality

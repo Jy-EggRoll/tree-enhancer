@@ -1,8 +1,8 @@
 {
   "name": "eggroll-tree-enhancer",
   "displayName": "Tree Enhancer",
-  "description": "在 VS Code 资源管理器中悬浮显示文件/文件夹的详细信息（大小、修改时间、文件数量等）",
-  "version": "1.0.1",
+  "description": "Show more information in the VS Code file explorer when hovering over files and folders | 在 VS Code 资源管理器中悬浮显示文件/文件夹的详细信息（大小、修改时间、文件数量等）",
+  "version": "1.0.2",
   "publisher": "Jy-EggRoll",
   "icon": "icon.png",
   "author": {

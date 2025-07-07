@@ -103,26 +103,12 @@ This extension provides the following configuration options:
 - **Unit Preference**: Users accustomed to traditional computer units can set `fileSizeBase` to 1024
 - **Problem Diagnosis**: Temporarily enable `debugMode` to view detailed logs when encountering issues
 
-## 📝 更新日志 | Change Log
-
-### 1.0.0
-
-- 🎉 初始版本发布
-- ✨ 支持文件和文件夹信息悬浮显示
-- ⚙️ 可配置的计算基底和超时设置
-- 🔧 调试模式支持
-
-- 🎉 Initial version release
-- ✨ Supports hover display of file and folder information
-- ⚙️ Configurable calculation base and timeout settings
-- 🔧 Debug mode support
-
 ## 📋 系统要求 | System Requirement
 
-- 对 VS Code 理论上没有特定版本要求
+- VS Code 高于 1.50.1 版本
 - 适用于 Windows、macOS 和 Linux
 
-- The extension theoretically has no specific version requirements for VS Code
+- VS Code version above 1.50.1
 - Compatible with Windows, macOS, and Linux
 
 ## 🤝 贡献 | Contribute to
