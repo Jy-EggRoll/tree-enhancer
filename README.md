@@ -62,7 +62,7 @@
 
 👆 悬浮在文件上显示大小和修改时间 | Show size and modification time when hovering over a file
 
-![兼容性展示](与其他悬浮提示功能的兼容性.png)
+![兼容性展示](兼容性.png)
 
 👆 与其他扩展的悬浮提示良好兼容 | Good compatibility with hover tips of other extensions
 
