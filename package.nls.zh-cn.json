@@ -1,0 +1,10 @@
+{
+    "description.eggroll-tree-enhancer.maxCalculationTime": "文件夹大小计算的最大等待时间（毫秒）。超过此时间将停止计算并显示提示信息。最大可以设置为 60 秒。",
+    "description.eggroll-tree-enhancer.fileSizeBase": "文件大小计算基底。选择 1000（十进制，使用 KB / MB / GB 等单位）或 1024（二进制，使用 KiB / MiB / GiB 等单位）。",
+    "description.eggroll-tree-enhancer.debugMode": "启用调试模式。开启后将在控制台输出详细的扩展运行日志，便于诊断问题。",
+    "description.eggroll-tree-enhancer.fileTemplate": "文件悬浮提示的显示模板，建议在 settings.json 中设置。支持的占位符：\n- {name}: 文件名\n- {size}: 自动单位的文件大小\n- {rawSize}: 原始文件大小（以字节为单位）\n- {modifiedTime}: 格式化的修改时间",
+    "description.eggroll-tree-enhancer.folderTemplate": "文件夹悬浮提示的显示模板，建议在 settings.json 中设置。支持的占位符：\n- {name}: 文件夹名\n- {size}: 自动单位的文件夹大小\n- {rawSize}: 原始文件夹大小（字节）\n- {fileCount}: 子文件数量\n- {folderCount}: 子文件夹数量\n- {modifiedTime}: 格式化的修改时间",
+    "description.eggroll-tree-enhancer.folderCalculatingTemplate": "文件夹计算中状态的显示模板，建议在 settings.json 中设置。支持的占位符：\n- {name}: 文件夹名\n- {modifiedTime}: 格式化的修改时间",
+    "description.eggroll-tree-enhancer.folderTimeoutTemplate": "文件夹计算超时的显示模板，建议在 settings.json 中设置。支持的占位符：\n- {name}: 文件夹名\n- {modifiedTime}: 格式化的修改时间\n- {maxCalculationTime}: 最大计算时间（毫秒）",
+    "description.eggroll-tree-enhancer.dateTimeFormat": "日期时间的显示格式。支持的占位符：\n- YYYY: 四位年份\n- MM: 两位月份（01-12）\n- DD: 两位日期（01-31）\n- HH: 两位小时（00-23）\n- mm: 两位分钟（00-59）\n- ss: 两位秒数（00-59）"
+}

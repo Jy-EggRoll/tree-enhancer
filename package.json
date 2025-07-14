@@ -2,7 +2,7 @@
     "name": "eggroll-tree-enhancer",
     "displayName": "Tree Enhancer",
     "description": "Show more information in the VS Code file explorer when hovering over files and folders | 在 VS Code 资源管理器中悬浮显示文件/文件夹的详细信息（大小、修改时间、文件数量等）",
-    "version": "1.1.0",
+    "version": "1.1.1",
     "publisher": "Jy-EggRoll",
     "icon": "icon.png",
     "author": {
@@ -26,10 +26,12 @@
         "tree",
         "enhancer",
         "chinese",
-        "资源管理器"
+        "资源管理器",
+        "文件",
+        "显示"
     ],
     "engines": {
-        "vscode": "^1.101.0"
+        "vscode": "^1.76.0"
     },
     "categories": [
         "Other"
@@ -47,7 +49,7 @@
                     "default": 5000,
                     "minimum": 1000,
                     "maximum": 60000,
-                    "description": "文件夹大小计算的最大等待时间（毫秒）。超过此时间将停止计算并显示提示信息。最大可以设置为 60 秒。"
+                    "description": "%description.eggroll-tree-enhancer.maxCalculationTime%"
                 },
                 "eggroll-tree-enhancer.fileSizeBase": {
                     "type": "number",
@@ -56,37 +58,37 @@
                         1024
                     ],
                     "default": 1000,
-                    "description": "文件大小计算基底。选择 1000（十进制，使用 KB / MB / GB 等单位）或 1024（二进制，使用 KiB / MiB / GiB 等单位）。\n\n- 1000：符合国际标准（SI）\n- 1024：传统计算机标准，操作系统常用\n\n例如：1024000 字节\n- 使用 1000：显示为 1.02 MB\n- 使用 1024：显示为 1000 KiB"
+                    "description": "%description.eggroll-tree-enhancer.fileSizeBase%"
                 },
                 "eggroll-tree-enhancer.debugMode": {
                     "type": "boolean",
                     "default": false,
-                    "description": "启用调试模式。开启后将在控制台输出详细的扩展运行日志，便于诊断问题。\n\n- false（默认）：安静模式，只输出严重错误\n- true：调试模式，输出详细的计算过程和状态信息\n\n注意：调试模式会增加控制台输出，建议仅在遇到问题时临时开启。"
+                    "description": "%description.eggroll-tree-enhancer.debugMode%"
                 },
                 "eggroll-tree-enhancer.fileTemplate": {
                     "type": "string",
-                    "default": "文件：{name} | 大小：{size} | 修改于：{modifiedTime}",
-                    "description": "文件悬浮提示的显示模板。支持的占位符：\n- {name}: 文件名\n- {size}: 格式化的文件大小\n- {rawSize}: 原始文件大小（字节）\n- {modifiedTime}: 格式化的修改时间\n\n示例：\n- 中文：文件：{name} | 大小：{size} | 修改于：{modifiedTime}\n- 英文：File: {name} | Size: {size} | Modified: {modifiedTime}\n- 简洁：{name} ({size})"
+                    "default": "详细信息：\n文件：{name}\n大小：{size}\n修改于：{modifiedTime}\n",
+                    "description": "%description.eggroll-tree-enhancer.fileTemplate%"
                 },
                 "eggroll-tree-enhancer.folderTemplate": {
                     "type": "string",
-                    "default": "文件夹：{name} | 大小：{size} | 子文件总数：{fileCount} | 子文件夹总数：{folderCount} | 修改于：{modifiedTime}",
-                    "description": "文件夹悬浮提示的显示模板。支持的占位符：\n- {name}: 文件夹名\n- {size}: 格式化的文件夹大小\n- {rawSize}: 原始文件夹大小（字节）\n- {fileCount}: 子文件数量\n- {folderCount}: 子文件夹数量\n- {modifiedTime}: 格式化的修改时间\n\n示例：\n- 中文：文件夹：{name} | 大小：{size} | 子文件总数：{fileCount} | 子文件夹总数：{folderCount} | 修改于：{modifiedTime}\n- 英文：Folder: {name} | Size: {size} | Files: {fileCount} | Folders: {folderCount} | Modified: {modifiedTime}\n- 简洁：{name} ({size}, {fileCount} files)"
+                    "default": "详细信息：\n文件夹：{name}\n大小：{size}\n子文件总数：{fileCount}\n子文件夹总数：{folderCount}\n修改于：{modifiedTime}\n",
+                    "description": ""
                 },
                 "eggroll-tree-enhancer.folderCalculatingTemplate": {
                     "type": "string",
-                    "default": "文件夹：{name} | 正在计算 | 修改于：{modifiedTime}",
-                    "description": "文件夹计算中状态的显示模板。支持的占位符：\n- {name}: 文件夹名\n- {modifiedTime}: 格式化的修改时间\n\n示例：\n- 中文：文件夹：{name} | 正在计算 | 修改于：{modifiedTime}\n- 英文：Folder: {name} | Calculating... | Modified: {modifiedTime}\n- 简洁：{name} (calculating...)"
+                    "default": "详细信息：\n文件夹：{name}\n正在计算\n修改于：{modifiedTime}\n",
+                    "description": "%description.eggroll-tree-enhancer.folderTemplate%"
                 },
                 "eggroll-tree-enhancer.folderTimeoutTemplate": {
                     "type": "string",
-                    "default": "文件夹：{name} | 文件夹过于复杂，请在设置中增加计算时间限制或采用其他工具获取信息 | 修改于：{modifiedTime}",
-                    "description": "文件夹计算超时的显示模板。支持的占位符：\n- {name}: 文件夹名\n- {modifiedTime}: 格式化的修改时间\n- {maxCalculationTime}: 最大计算时间（毫秒）\n\n示例：\n- 中文：文件夹：{name} | 文件夹过于复杂，请在设置中增加计算时间限制或采用其他工具获取信息 | 修改于：{modifiedTime}\n- 英文：Folder: {name} | Too complex, increase calculation time limit in settings | Modified: {modifiedTime}\n- 简洁：{name} (timeout after {maxCalculationTime}ms)"
+                    "default": "详细信息：\n文件夹：{name}\n文件夹过于复杂，请在设置中增加计算时间限制或采用其他工具获取信息\n修改于：{modifiedTime}",
+                    "description": "%description.eggroll-tree-enhancer.folderTimeoutTemplate%"
                 },
                 "eggroll-tree-enhancer.dateTimeFormat": {
                     "type": "string",
-                    "default": "YYYY-MM-DD HH:mm",
-                    "description": "日期时间的显示格式。支持的占位符：\n- YYYY: 四位年份\n- MM: 两位月份（01-12）\n- DD: 两位日期（01-31）\n- HH: 两位小时（00-23）\n- mm: 两位分钟（00-59）\n- ss: 两位秒数（00-59）\n\n示例：\n- 中文格式：YYYY-MM-DD HH:mm\n- 美式格式：MM/DD/YYYY HH:mm\n- 欧式格式：DD.MM.YYYY HH:mm\n- 包含秒数：YYYY-MM-DD HH:mm:ss"
+                    "default": "YYYY-MM-DD HH:mm:ss",
+                    "description": "%description.eggroll-tree-enhancer.dateTimeFormat%"
                 }
             }
         }
@@ -102,7 +104,7 @@
     "devDependencies": {
         "@types/mocha": "^10.0.10",
         "@types/node": "20.x",
-        "@types/vscode": "^1.101.0",
+        "@types/vscode": "^1.76.0",
         "@typescript-eslint/eslint-plugin": "^8.31.1",
         "@typescript-eslint/parser": "^8.31.1",
         "@vscode/test-cli": "^0.0.11",

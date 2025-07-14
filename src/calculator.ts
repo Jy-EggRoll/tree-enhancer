@@ -3,7 +3,6 @@
  * 负责异步计算文件夹的大小、文件数量等信息
  */
 
-import * as fs from 'fs';
 import { DirectoryInfo } from './types';
 import { FileUtils } from './fileUtils';
 import { ConfigManager } from './config';

@@ -6,7 +6,9 @@
 
 ## 重大升级 | Major Upgrade
 
-现已支持自定义悬浮时显示的信息模板，也可以调整日期的格式。请在 Tree Enhancer 的设置中查看相关配置项。
+现已支持自定义悬浮时显示的信息模板，也可以调整日期的格式，几乎全部设置增加了本地化功能（参见“贡献”）。请在 Tree Enhancer 的设置中查看相关配置项。
+
+Now you can customize the hover display information template and adjust the date format. Almost all settings have been localized (see "Contributing"). Please check the relevant configuration items in the Tree Enhancer settings.
 
 ![自定义显示格式](自定义显示格式.png)
 
@@ -112,19 +114,11 @@ This extension provides the following configuration options:
 - **Unit Preference**: Users accustomed to traditional computer units can set `fileSizeBase` to 1024
 - **Problem Diagnosis**: Temporarily enable `debugMode` to view detailed logs when encountering issues
 
-## 📋 系统要求 | System Requirement
-
-- VS Code 高于 1.50.1 版本
-- 适用于 Windows、macOS 和 Linux
-
-- VS Code version above 1.50.1
-- Compatible with Windows, macOS, and Linux
-
 ## 🤝 贡献 | Contributing
 
-欢迎提交 Issue！
+如何国际化？您可以复制 `package.nls.json` 文件，增加您国家/地区地语言文件，如 `package.nls.zh-CN.json`，将键值对中的值翻译为您的语言，并提交 issue 或 PR。
 
-Welcome to submit issues!
+How to localize? You can copy the `package.nls.json` file, add your country's language file, such as `package.nls.zh-CN.json`, translate the values in the key-value pairs into your language, and submit an issue or PR.
 
 ---
 
