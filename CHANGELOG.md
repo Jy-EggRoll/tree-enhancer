@@ -1,5 +1,11 @@
 # 更新日志 | Change Log
 
+## 1.1.2
+
+1. 修改了显示字符串默认模板 | Modified the default template for display strings
+2. 完善 README 的展示效果 | Improved the display effects in the README
+3. 排除了 node_modules，显著地降低了扩展的大小 | Excluded node_modules, significantly reducing the size of the extension
+
 ## 1.1.1
 
 1. 降低了对 VS Code 的版本要求 | Lowered the version requirement for VS Code

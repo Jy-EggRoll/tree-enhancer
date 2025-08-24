@@ -26,7 +26,7 @@ import { FileDecorationProvider } from './provider';
 export function activate(context: vscode.ExtensionContext) {
     // 检查是否启用了调试模式，决定是否输出启动日志
     if (ConfigManager.isDebugMode()) {
-        console.log('Tree Enhancer 扩展已激活！');
+        console.log('Tree Enhancer is ACTIVE!');
     }
 
     // 创建并注册文件装饰提供者
@@ -41,7 +41,7 @@ export function activate(context: vscode.ExtensionContext) {
         // 检查是否是我们扩展的配置发生了变化
         if (ConfigManager.isConfigChanged(event)) {
             if (ConfigManager.isDebugMode()) {
-                console.log('扩展配置已更新，正在应用新设置');
+                console.log('Settings modified, updating new settings...');
             }
 
             // 清除文件装饰提供者的所有临时状态
@@ -57,7 +57,7 @@ export function activate(context: vscode.ExtensionContext) {
 
     // 输出成功注册的调试信息
     if (ConfigManager.isDebugMode()) {
-        console.log('文件装饰提供者已注册，配置变更监听已启用');
+        console.log('Succeeded');
     }
 }
 

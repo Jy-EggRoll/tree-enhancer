@@ -10,6 +10,7 @@ vsc-extension-quickstart.md
 **/*.map
 **/*.ts
 **/.vscode-test.*
+node_modules/
 
 # 排除演示图片
 兼容性.png
@@ -17,6 +18,8 @@ vsc-extension-quickstart.md
 文件效果演示.png
 日期格式调整.png
 自定义显示格式.png
+已知_bug.gif
+功能演示.gif
 
 # 排除工作区文件
 **/*.code-workspace

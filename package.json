@@ -1,106 +1,73 @@
 {
-    "name": "eggroll-tree-enhancer",
-    "displayName": "Tree Enhancer",
-    "description": "Show more information in the VS Code file explorer when hovering over files and folders | 在 VS Code 资源管理器中悬浮显示文件/文件夹的详细信息（大小、修改时间、文件数量等）",
-    "version": "1.1.1",
-    "publisher": "Jy-EggRoll",
-    "icon": "icon.png",
+    "activationEvents": [
+        "onStartupFinished"
+    ],
     "author": {
         "name": "EggRoll"
-    },
-    "license": "MIT",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/Jy-EggRoll/tree-enhancer.git"
     },
     "bugs": {
         "url": "https://github.com/Jy-EggRoll/tree-enhancer/issues"
     },
-    "homepage": "https://github.com/Jy-EggRoll/tree-enhancer#readme",
-    "keywords": [
-        "file",
-        "folder",
-        "explorer",
-        "size",
-        "tooltip",
-        "tree",
-        "enhancer",
-        "chinese",
-        "资源管理器",
-        "文件",
-        "显示"
-    ],
-    "engines": {
-        "vscode": "^1.76.0"
-    },
     "categories": [
         "Other"
     ],
-    "activationEvents": [
-        "onStartupFinished"
-    ],
-    "main": "./out/extension.js",
     "contributes": {
         "configuration": {
-            "title": "Tree Enhancer",
             "properties": {
-                "eggroll-tree-enhancer.maxCalculationTime": {
-                    "type": "number",
-                    "default": 5000,
-                    "minimum": 1000,
-                    "maximum": 60000,
-                    "description": "%description.eggroll-tree-enhancer.maxCalculationTime%"
+                "eggroll-tree-enhancer.dateTimeFormat": {
+                    "default": "YYYY-MM-DD HH:mm:ss",
+                    "description": "%description.eggroll-tree-enhancer.dateTimeFormat%",
+                    "type": "string"
+                },
+                "eggroll-tree-enhancer.debugMode": {
+                    "default": false,
+                    "description": "%description.eggroll-tree-enhancer.debugMode%",
+                    "type": "boolean"
                 },
                 "eggroll-tree-enhancer.fileSizeBase": {
-                    "type": "number",
+                    "default": 1000,
+                    "description": "%description.eggroll-tree-enhancer.fileSizeBase%",
                     "enum": [
                         1000,
                         1024
                     ],
-                    "default": 1000,
-                    "description": "%description.eggroll-tree-enhancer.fileSizeBase%"
-                },
-                "eggroll-tree-enhancer.debugMode": {
-                    "type": "boolean",
-                    "default": false,
-                    "description": "%description.eggroll-tree-enhancer.debugMode%"
+                    "type": "number"
                 },
                 "eggroll-tree-enhancer.fileTemplate": {
-                    "type": "string",
-                    "default": "详细信息：\n文件：{name}\n大小：{size}\n修改于：{modifiedTime}\n",
-                    "description": "%description.eggroll-tree-enhancer.fileTemplate%"
-                },
-                "eggroll-tree-enhancer.folderTemplate": {
-                    "type": "string",
-                    "default": "详细信息：\n文件夹：{name}\n大小：{size}\n子文件总数：{fileCount}\n子文件夹总数：{folderCount}\n修改于：{modifiedTime}\n",
-                    "description": ""
+                    "default": "Info: \nsize: {size}\nmodTime: {modifiedTime}\n",
+                    "description": "%description.eggroll-tree-enhancer.fileTemplate%",
+                    "type": "string"
                 },
                 "eggroll-tree-enhancer.folderCalculatingTemplate": {
-                    "type": "string",
-                    "default": "详细信息：\n文件夹：{name}\n正在计算\n修改于：{modifiedTime}\n",
-                    "description": "%description.eggroll-tree-enhancer.folderTemplate%"
+                    "default": "Info: \nCalculating...\nmodTime: {modifiedTime}\n",
+                    "description": "%description.eggroll-tree-enhancer.folderTemplate%",
+                    "type": "string"
+                },
+                "eggroll-tree-enhancer.folderTemplate": {
+                    "default": "Info: \nsize: {size}\nchildFile: {fileCount}\nchildFolder: {folderCount}\nmodTime: {modifiedTime}\n",
+                    "description": "",
+                    "type": "string"
                 },
                 "eggroll-tree-enhancer.folderTimeoutTemplate": {
-                    "type": "string",
-                    "default": "详细信息：\n文件夹：{name}\n文件夹过于复杂，请在设置中增加计算时间限制或采用其他工具获取信息\n修改于：{modifiedTime}",
-                    "description": "%description.eggroll-tree-enhancer.folderTimeoutTemplate%"
+                    "default": "Info: \nFolder is too complex, please increase the calculation time limit in the settings or use other tools to obtain information\nmodTime: {modifiedTime}",
+                    "description": "%description.eggroll-tree-enhancer.folderTimeoutTemplate%",
+                    "type": "string"
                 },
-                "eggroll-tree-enhancer.dateTimeFormat": {
-                    "type": "string",
-                    "default": "YYYY-MM-DD HH:mm:ss",
-                    "description": "%description.eggroll-tree-enhancer.dateTimeFormat%"
+                "eggroll-tree-enhancer.maxCalculationTime": {
+                    "default": 5000,
+                    "description": "%description.eggroll-tree-enhancer.maxCalculationTime%",
+                    "maximum": 60000,
+                    "minimum": 1000,
+                    "type": "number"
                 }
-            }
+            },
+            "title": "Tree Enhancer"
         }
     },
-    "scripts": {
-        "vscode:prepublish": "npm run compile",
-        "compile": "tsc -p ./",
-        "watch": "tsc -watch -p ./",
-        "pretest": "npm run compile && npm run lint",
-        "lint": "eslint src",
-        "test": "vscode-test"
+    "dependencies": {
+        "vsce": "^2.15.0"
     },
+    "description": "Show more information in the VS Code file explorer when hovering over files and folders | 在 VS Code 资源管理器中悬浮显示文件/文件夹的详细信息（大小、修改时间、文件数量等）",
     "devDependencies": {
         "@types/mocha": "^10.0.10",
         "@types/node": "20.x",
@@ -112,7 +79,40 @@
         "eslint": "^9.25.1",
         "typescript": "^5.8.3"
     },
-    "dependencies": {
-        "vsce": "^2.15.0"
-    }
+    "displayName": "Tree Enhancer",
+    "engines": {
+        "vscode": "^1.76.0"
+    },
+    "homepage": "https://github.com/Jy-EggRoll/tree-enhancer#readme",
+    "icon": "icon.png",
+    "keywords": [
+        "file",
+        "folder",
+        "explorer",
+        "size",
+        "tooltip",
+        "tree",
+        "enhancer",
+        "show size",
+        "资源管理器",
+        "文件",
+        "显示"
+    ],
+    "license": "MIT",
+    "main": "./out/extension.js",
+    "name": "eggroll-tree-enhancer",
+    "publisher": "Jy-EggRoll",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Jy-EggRoll/tree-enhancer.git"
+    },
+    "scripts": {
+        "compile": "tsc -p ./",
+        "lint": "eslint src",
+        "pretest": "npm run compile && npm run lint",
+        "test": "vscode-test",
+        "vscode:prepublish": "npm run compile",
+        "watch": "tsc -watch -p ./"
+    },
+    "version": "1.1.2"
 }
