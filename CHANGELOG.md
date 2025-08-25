@@ -1,5 +1,9 @@
 # 更新日志 | Change Log
 
+## 1.2.0
+
+更加友好的本地化支持选项 | Friendly nls settings
+
 ## 1.1.2
 
 1. 修改了显示字符串默认模板 | Modified the default template for display strings
