@@ -90,7 +90,7 @@ This extension provides the following configuration options:
 
 ## 🤝 Contributing
 
-How to localize? You can copy the `package.nls.json` file, add your country's language file, such as `package.nls.zh-CN.json`, translate the values in the key-value pairs into your language, and submit an issue or PR.
+How to localize? You can copy the `package.nls.json` file, add your country's language file, such as `package.nls.zh-cn.json`, translate the values in the key-value pairs into your language, and submit an issue or PR.
 
 ## 🔧 Developer Information
 
@@ -192,7 +192,7 @@ Blog: <https://eggroll.pages.dev>
 
 ## 🤝 贡献
 
-如何国际化？您可以复制 `package.nls.json` 文件，增加您国家/地区地语言文件，如 `package.nls.zh-CN.json`，将键值对中的值翻译为您的语言，并提交 issue 或 PR。
+如何国际化？您可以复制 `package.nls.json` 文件，增加您国家/地区地语言文件，如 `package.nls.zh-cn.json`，将键值对中的值翻译为您的语言，并提交 issue 或 PR。
 
 ## 🔧 开发者信息
 

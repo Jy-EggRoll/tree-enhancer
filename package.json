@@ -34,22 +34,22 @@
                     "type": "number"
                 },
                 "eggroll-tree-enhancer.fileTemplate": {
-                    "default": "Info: \nsize: {size}\nmodTime: {modifiedTime}\n",
+                    "default": "%default.eggroll-tree-enhancer.fileTemplate%",
                     "description": "%description.eggroll-tree-enhancer.fileTemplate%",
                     "type": "string"
                 },
                 "eggroll-tree-enhancer.folderCalculatingTemplate": {
-                    "default": "Info: \nCalculating...\nmodTime: {modifiedTime}\n",
+                    "default": "%default.eggroll-tree-enhancer.folderCalculatingTemplate%",
                     "description": "%description.eggroll-tree-enhancer.folderTemplate%",
                     "type": "string"
                 },
                 "eggroll-tree-enhancer.folderTemplate": {
-                    "default": "Info: \nsize: {size}\nchildFile: {fileCount}\nchildFolder: {folderCount}\nmodTime: {modifiedTime}\n",
-                    "description": "",
+                    "default": "%default.eggroll-tree-enhancer.folderTemplate%",
+                    "description": "%description.eggroll-tree-enhancer.folderTemplate%",
                     "type": "string"
                 },
                 "eggroll-tree-enhancer.folderTimeoutTemplate": {
-                    "default": "Info: \nFolder is too complex, please increase the calculation time limit in the settings or use other tools to obtain information\nmodTime: {modifiedTime}",
+                    "default": "%default.eggroll-tree-enhancer.folderTimeoutTemplate%",
                     "description": "%description.eggroll-tree-enhancer.folderTimeoutTemplate%",
                     "type": "string"
                 },
@@ -114,5 +114,5 @@
         "vscode:prepublish": "npm run compile",
         "watch": "tsc -watch -p ./"
     },
-    "version": "1.1.2"
+    "version": "1.2.0"
 }
