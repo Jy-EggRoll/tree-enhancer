@@ -29,6 +29,8 @@ export interface ExtensionConfig {
     debugMode: boolean;
     /** 文件模板 */
     fileTemplate: string;
+    /** 图片文件模板 */
+    imageFileTemplate: string;
     /** 文件夹模板 */
     folderTemplate: string;
     /** 文件夹计算中模板 */
@@ -60,6 +62,12 @@ export interface TemplateVariables {
     rawModifiedTime: Date;
     /** 最大计算时间（毫秒） */
     maxCalculationTime?: number;
+    /** 图片分辨率信息 */
+    resolution?: string;
+    /** 图片宽度 */
+    width?: number;
+    /** 图片高度 */
+    height?: number;
 }
 
 /**
@@ -71,3 +79,20 @@ export interface FileSizeUnits {
     /** 二进制单位（1024 进制） */
     binary: string[];
 }
+
+/**
+ * 图片尺寸信息
+ */
+export interface ImageDimensions {
+    /** 图片宽度 */
+    width: number;
+    /** 图片高度 */
+    height: number;
+}
+
+/**
+ * 支持的图片格式常量
+ */
+export const SUPPORTED_IMAGE_EXTENSIONS = [
+    '.jpg', '.jpeg', '.png', '.gif', '.webp', '.svg'
+] as const;

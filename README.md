@@ -36,6 +36,7 @@ Now you can customize the hover display information template and adjust the date
 
 - **File Size**: Displays file size in a human-readable format
 - **Modification Time**: Shows the last modified time of the file
+- **Image Resolution**: For supported image files (jpg, jpeg, png, gif, webp, svg), displays width and height information
 - **Formatted Display**: Friendly date and time format
 
 ### ⚙️ Flexible Configuration
@@ -71,6 +72,7 @@ This extension provides the following configuration options:
 - `eggroll-tree-enhancer.maxCalculationTime`: Maximum wait time for folder size calculation (in milliseconds), default is 5000ms, range 1000-60000 ms
 - `eggroll-tree-enhancer.fileSizeBase`: Base for file size calculation, can be 1000 (decimal) or 1024 (binary), default is 1000
 - `eggroll-tree-enhancer.debugMode`: Enable debug mode to output detailed logs, default is off
+- `eggroll-tree-enhancer.imageResolutionTemplate`: Template for displaying image resolution information, default is "Resolution: {width} * {height}"
 
 ### Configuration Example
 
@@ -78,7 +80,8 @@ This extension provides the following configuration options:
 {
     "eggroll-tree-enhancer.maxCalculationTime": 10000,
     "eggroll-tree-enhancer.fileSizeBase": 1024,
-    "eggroll-tree-enhancer.debugMode": false
+    "eggroll-tree-enhancer.debugMode": false,
+    "eggroll-tree-enhancer.imageResolutionTemplate": "Resolution: {width} * {height}"
 }
 ```
 
@@ -138,6 +141,7 @@ Blog: <https://eggroll.pages.dev>
 
 - **文件大小**：以易读格式显示文件大小
 - **修改时间**：显示文件最后修改时间
+- **图片分辨率**：对于支持的图片文件（jpg, jpeg, png, gif, webp, svg），显示宽度和高度信息
 - **格式化显示**：中文友好的日期时间格式
 
 ### ⚙️ 灵活配置
@@ -173,6 +177,7 @@ Blog: <https://eggroll.pages.dev>
 - `eggroll-tree-enhancer.maxCalculationTime`: 文件夹大小计算的最大等待时间（毫秒），默认 5000ms，范围 1000-60000 ms
 - `eggroll-tree-enhancer.fileSizeBase`: 文件大小计算基底，可选 1000（十进制）或 1024（二进制），默认 1000
 - `eggroll-tree-enhancer.debugMode`: 启用调试模式，输出详细日志，默认关闭
+- `eggroll-tree-enhancer.imageResolutionTemplate`: 图片分辨率信息显示模板，默认为"分辨率：{width}（宽） * {height}（高）"
 
 ### 配置示例
 
@@ -180,7 +185,8 @@ Blog: <https://eggroll.pages.dev>
 {
     "eggroll-tree-enhancer.maxCalculationTime": 10000,
     "eggroll-tree-enhancer.fileSizeBase": 1024,
-    "eggroll-tree-enhancer.debugMode": false
+    "eggroll-tree-enhancer.debugMode": false,
+    "eggroll-tree-enhancer.imageResolutionTemplate": "分辨率：{width}（宽） * {height}（高）"
 }
 ```
 

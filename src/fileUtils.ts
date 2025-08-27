@@ -6,6 +6,8 @@
 import * as fs from 'fs';
 import * as path from 'path';
 import * as vscode from 'vscode';
+import { imageSizeFromFile } from 'image-size/fromFile';
+import { SUPPORTED_IMAGE_EXTENSIONS, ImageDimensions } from './types';
 
 /**
  * 文件操作工具类
@@ -116,6 +118,39 @@ export class FileUtils {
         } else {
             // 其他类型的错误可能更重要
             console.warn('文件访问错误:', filePath, errorCode || error);
+        }
+    }
+
+    /**
+     * 检查文件是否为支持的图片格式
+     * 
+     * @param fileName 文件名
+     * @returns 是否为支持的图片格式
+     */
+    public static isSupportedImage(fileName: string): boolean {
+        const extension = path.extname(fileName).toLowerCase();
+        return SUPPORTED_IMAGE_EXTENSIONS.includes(extension as any);
+    }
+
+    /**
+     * 获取图片文件的分辨率信息
+     * 
+     * @param filePath 图片文件路径
+     * @returns 图片尺寸信息，失败时返回 null
+     */
+    public static async getImageDimensions(filePath: string): Promise<ImageDimensions | null> {
+        try {
+            const dimensions = await imageSizeFromFile(filePath);
+            if (dimensions.width && dimensions.height) {
+                return {
+                    width: dimensions.width,
+                    height: dimensions.height
+                };
+            }
+            return null;
+        } catch (error) {
+            // 图片读取失败，静默处理
+            return null;
         }
     }
 }

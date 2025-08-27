@@ -77,7 +77,7 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider {
                 tooltip = await this.handleDirectoryDecoration(uri, fileName, stats, config);
             } else {
                 // 处理普通文件情况
-                tooltip = this.handleFileDecoration(fileName, stats, config);
+                tooltip = await this.handleFileDecoration(fileName, stats, config, uri.fsPath);
             }
 
             return { tooltip };
@@ -94,12 +94,23 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider {
      * @param fileName 文件名
      * @param stats 文件统计信息
      * @param config 扩展配置
+     * @param filePath 文件完整路径
      * @returns 格式化后的工具提示文本
      */
-    private handleFileDecoration(fileName: string, stats: fs.Stats, config: any): string {
-        // 文件大小可以直接从统计信息中获取，无需复杂计算
-        const variables = Formatters.createFileVariables(fileName, stats.size, stats.mtime);
-        return Formatters.renderTemplate(config.fileTemplate, variables);
+    private async handleFileDecoration(fileName: string, stats: fs.Stats, config: any, filePath: string): Promise<string> {
+        // 检查是否为支持的图片格式
+        if (FileUtils.isSupportedImage(fileName)) {
+            // 尝试获取图片分辨率信息
+            const imageDimensions = await FileUtils.getImageDimensions(filePath);
+            const variables = Formatters.createFileVariables(fileName, stats.size, stats.mtime, imageDimensions || undefined);
+            // 使用专门的图片文件模板
+            const imageTemplate = config.imageFileTemplate || config.fileTemplate;
+            return Formatters.renderTemplate(imageTemplate, variables);
+        } else {
+            // 普通文件处理
+            const variables = Formatters.createFileVariables(fileName, stats.size, stats.mtime);
+            return Formatters.renderTemplate(config.fileTemplate, variables);
+        }
     }
 
     /**

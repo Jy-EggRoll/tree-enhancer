@@ -25,11 +25,12 @@ export class ConfigManager {
             maxCalculationTime: config.get<number>('maxCalculationTime', 5000),
             fileSizeBase: config.get<number>('fileSizeBase', 1000),
             debugMode: config.get<boolean>('debugMode', false),
-            fileTemplate: config.get<string>('fileTemplate', '文件：{name} | 大小：{size} | 修改于：{modifiedTime}'),
-            folderTemplate: config.get<string>('folderTemplate', '文件夹：{name} | 大小：{size} | 子文件总数：{fileCount} | 子文件夹总数：{folderCount} | 修改于：{modifiedTime}'),
-            folderCalculatingTemplate: config.get<string>('folderCalculatingTemplate', '文件夹：{name} | 正在计算 | 修改于：{modifiedTime}'),
-            folderTimeoutTemplate: config.get<string>('folderTimeoutTemplate', '文件夹：{name} | 文件夹过于复杂，请在设置中增加计算时间限制或采用其他工具获取信息 | 修改于：{modifiedTime}'),
-            dateTimeFormat: config.get<string>('dateTimeFormat', 'YYYY-MM-DD HH:mm')
+            fileTemplate: config.get<string>('fileTemplate', 'Info: \nsize: {size}\nmodTime: {modifiedTime}'),
+            imageFileTemplate: config.get<string>('imageFileTemplate', 'Info: \nsize: {size}\n{resolution}\nmodTime: {modifiedTime}'),
+            folderTemplate: config.get<string>('folderTemplate', 'Info: \nsize: {size}\nchildFile: {fileCount}\nchildFolder: {folderCount}\nmodTime: {modifiedTime}'),
+            folderCalculatingTemplate: config.get<string>('folderCalculatingTemplate', 'Info: \nCalculating...\nmodTime: {modifiedTime}'),
+            folderTimeoutTemplate: config.get<string>('folderTimeoutTemplate', 'Info: \nFolder is too complex, please increase the calculation time limit in the settings or use other tools to obtain information\nmodTime: {modifiedTime}'),
+            dateTimeFormat: config.get<string>('dateTimeFormat', 'YYYY-MM-DD HH:mm:ss')
         };
     }
 

@@ -3,7 +3,7 @@
  * 提供文件大小、日期时间和模板格式化功能
  */
 
-import { FileSizeUnits, TemplateVariables } from './types';
+import { FileSizeUnits, TemplateVariables, ImageDimensions } from './types';
 import { ConfigManager } from './config';
 
 /**
@@ -128,7 +128,42 @@ export class Formatters {
             result = result.replace(/{maxCalculationTime}/g, variables.maxCalculationTime.toString());
         }
 
+        // 替换图片分辨率相关变量，如果变量未定义则移除整个占位符
+        if (variables.resolution !== undefined) {
+            result = result.replace(/{resolution}/g, variables.resolution);
+        } else {
+            // 移除未定义的分辨率占位符
+            result = result.replace(/{resolution}/g, '');
+        }
+
+        if (variables.width !== undefined) {
+            result = result.replace(/{width}/g, variables.width.toString());
+        } else {
+            result = result.replace(/{width}/g, '');
+        }
+
+        if (variables.height !== undefined) {
+            result = result.replace(/{height}/g, variables.height.toString());
+        } else {
+            result = result.replace(/{height}/g, '');
+        }
+
         return result;
+    }
+
+    /**
+     * 格式化图片分辨率信息
+     * 
+     * @param dimensions 图片尺寸信息
+     * @param template 分辨率模板，如果不提供则从配置中读取
+     * @returns 格式化后的分辨率字符串
+     */
+    public static formatImageResolution(dimensions: ImageDimensions, template?: string): string {
+        const resolutionTemplate = template || ConfigManager.get<string>('imageResolutionTemplate', '{width} * {height}');
+
+        return resolutionTemplate
+            .replace(/{width}/g, dimensions.width.toString())
+            .replace(/{height}/g, dimensions.height.toString());
     }
 
     /**
@@ -137,20 +172,31 @@ export class Formatters {
      * @param fileName 文件名
      * @param fileSize 文件大小（字节）
      * @param modifiedTime 修改时间
+     * @param imageDimensions 图片尺寸信息（可选）
      * @returns 模板变量对象
      */
     public static createFileVariables(
         fileName: string,
         fileSize: number,
-        modifiedTime: Date
+        modifiedTime: Date,
+        imageDimensions?: ImageDimensions
     ): TemplateVariables {
-        return {
+        const variables: TemplateVariables = {
             name: fileName,
             size: this.formatFileSize(fileSize),
             rawSize: fileSize,
             modifiedTime: this.formatDate(modifiedTime),
             rawModifiedTime: modifiedTime
         };
+
+        // 如果是图片文件且有尺寸信息，添加分辨率相关变量
+        if (imageDimensions) {
+            variables.resolution = this.formatImageResolution(imageDimensions);
+            variables.width = imageDimensions.width;
+            variables.height = imageDimensions.height;
+        }
+
+        return variables;
     }
 
     /**

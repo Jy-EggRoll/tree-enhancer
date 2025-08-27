@@ -1,14 +1,18 @@
 {
     "default.eggroll-tree-enhancer.fileTemplate": "Info: \nsize: {size}\nmodTime: {modifiedTime}",
+    "default.eggroll-tree-enhancer.imageFileTemplate": "Info: \nsize: {size}\n{resolution}\nmodTime: {modifiedTime}",
     "default.eggroll-tree-enhancer.folderCalculatingTemplate": "Info: \nCalculating...\nmodTime: {modifiedTime}",
     "default.eggroll-tree-enhancer.folderTemplate": "Info: \nsize: {size}\nchildFile: {fileCount}\nchildFolder: {folderCount}\nmodTime: {modifiedTime}",
     "default.eggroll-tree-enhancer.folderTimeoutTemplate": "Info: \nFolder is too complex, please increase the calculation time limit in the settings or use other tools to obtain information\nmodTime: {modifiedTime}",
+    "default.eggroll-tree-enhancer.imageResolutionTemplate": "Resolution: {width} * {height}",
     "description.eggroll-tree-enhancer.dateTimeFormat": "Date and time display format. Supported placeholders:\n- YYYY: Four-digit year\n- MM: Two-digit month (01-12)\n- DD: Two-digit day (01-31)\n- HH: Two-digit hour (00-23)\n- mm: Two-digit minute (00-59)\n- ss: Two-digit second (00-59)",
     "description.eggroll-tree-enhancer.debugMode": "Enable debug mode. When enabled, detailed extension logs will be output to the console for troubleshooting.",
     "description.eggroll-tree-enhancer.fileSizeBase": "File size calculation base. Choose 1000 (decimal, using KB / MB / GB units) or 1024 (binary, using KiB / MiB / GiB units).",
     "description.eggroll-tree-enhancer.fileTemplate": "Display template for file hover tooltips. It is recommended to set this in settings.json. Supported placeholders:\n- {name}: File name\n- {size}: File size with automatic units\n- {rawSize}: Raw file size (in bytes)\n- {modifiedTime}: Formatted modification time",
+    "description.eggroll-tree-enhancer.imageFileTemplate": "Display template for image file hover tooltips. It is recommended to set this in settings.json. Supported placeholders:\n- {name}: File name\n- {size}: File size with automatic units\n- {rawSize}: Raw file size (in bytes)\n- {modifiedTime}: Formatted modification time\n- {resolution}: Image resolution\n- {width}: Image width\n- {height}: Image height",
     "description.eggroll-tree-enhancer.folderCalculatingTemplate": "Display template for folder calculating state. It is recommended to set this in settings.json. Supported placeholders:\n- {name}: Folder name\n- {modifiedTime}: Formatted modification time",
     "description.eggroll-tree-enhancer.folderTemplate": "Display template for folder hover tooltips. It is recommended to set this in settings.json. Supported placeholders:\n- {name}: Folder name\n- {size}: Folder size with automatic units\n- {rawSize}: Raw folder size (in bytes)\n- {fileCount}: Number of child files\n- {folderCount}: Number of child folders\n- {modifiedTime}: Formatted modification time",
     "description.eggroll-tree-enhancer.folderTimeoutTemplate": "Display template for folder calculation timeout. It is recommended to set this in settings.json. Supported placeholders:\n- {name}: Folder name\n- {modifiedTime}: Formatted modification time\n- {maxCalculationTime}: Maximum calculation time (ms)",
+    "description.eggroll-tree-enhancer.imageResolutionTemplate": "Display template for image resolution information. Supported placeholders:\n- {width}: Image width in pixels\n- {height}: Image height in pixels",
     "description.eggroll-tree-enhancer.maxCalculationTime": "Maximum wait time (ms) for folder size calculation. Calculation will stop and a message will be shown if this time is exceeded. The maximum is 60 seconds."
 }
