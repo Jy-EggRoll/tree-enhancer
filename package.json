@@ -38,11 +38,6 @@
                     "description": "%description.eggroll-tree-enhancer.fileTemplate%",
                     "type": "string"
                 },
-                "eggroll-tree-enhancer.imageFileTemplate": {
-                    "default": "%default.eggroll-tree-enhancer.imageFileTemplate%",
-                    "description": "%description.eggroll-tree-enhancer.imageFileTemplate%",
-                    "type": "string"
-                },
                 "eggroll-tree-enhancer.folderCalculatingTemplate": {
                     "default": "%default.eggroll-tree-enhancer.folderCalculatingTemplate%",
                     "description": "%description.eggroll-tree-enhancer.folderTemplate%",
@@ -56,6 +51,11 @@
                 "eggroll-tree-enhancer.folderTimeoutTemplate": {
                     "default": "%default.eggroll-tree-enhancer.folderTimeoutTemplate%",
                     "description": "%description.eggroll-tree-enhancer.folderTimeoutTemplate%",
+                    "type": "string"
+                },
+                "eggroll-tree-enhancer.imageFileTemplate": {
+                    "default": "%default.eggroll-tree-enhancer.imageFileTemplate%",
+                    "description": "%description.eggroll-tree-enhancer.imageFileTemplate%",
                     "type": "string"
                 },
                 "eggroll-tree-enhancer.imageResolutionTemplate": {
@@ -87,7 +87,9 @@
         "@typescript-eslint/parser": "^8.31.1",
         "@vscode/test-cli": "^0.0.11",
         "@vscode/test-electron": "^2.5.2",
+        "esbuild": "^0.25.9",
         "eslint": "^9.25.1",
+        "npm-run-all": "^4.1.5",
         "typescript": "^5.8.3"
     },
     "displayName": "Tree Enhancer",
@@ -110,7 +112,7 @@
         "显示"
     ],
     "license": "MIT",
-    "main": "./out/extension.js",
+    "main": "./dist/extension.js",
     "name": "eggroll-tree-enhancer",
     "publisher": "Jy-EggRoll",
     "repository": {
@@ -118,12 +120,17 @@
         "url": "https://github.com/Jy-EggRoll/tree-enhancer.git"
     },
     "scripts": {
-        "compile": "tsc -p ./",
+        "check-types": "tsc --noEmit",
+        "compile": "npm run check-types && node esbuild.js",
+        "compile-tests": "tsc -p . --outDir out",
         "lint": "eslint src",
-        "pretest": "npm run compile && npm run lint",
+        "package": "npm run check-types && node esbuild.js --production",
+        "pretest": "npm run compile-tests && npm run lint",
         "test": "vscode-test",
-        "vscode:prepublish": "npm run compile",
-        "watch": "tsc -watch -p ./"
+        "vscode:prepublish": "npm run package",
+        "watch": "npm-run-all -p watch:*",
+        "watch:esbuild": "node esbuild.js --watch",
+        "watch:tsc": "tsc --noEmit --watch --project tsconfig.json"
     },
-    "version": "1.3.0"
+    "version": "1.3.1"
 }

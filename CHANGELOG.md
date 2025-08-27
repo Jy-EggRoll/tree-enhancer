@@ -1,5 +1,9 @@
 # 更新日志 | Change Log
 
+## 1.3.1
+
+更换打包工具，紧急修复上一版本的错误 | Replace the packaging tool and urgently fix the errors in the previous version
+
 ## 1.3.0
 
 新增图片分辨率显示功能 | Added image resolution display feature
