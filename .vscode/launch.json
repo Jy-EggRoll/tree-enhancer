@@ -10,7 +10,8 @@
             "type": "extensionHost",
             "request": "launch",
             "args": [
-                "--extensionDevelopmentPath=${workspaceFolder}"
+                "--extensionDevelopmentPath=${workspaceFolder}",
+                "--profile=扩展测试" // 请配置一个没有任何扩展的配置文件，方便扩展开发
             ],
             "outFiles": [
                 "${workspaceFolder}/dist/**/*.js"
