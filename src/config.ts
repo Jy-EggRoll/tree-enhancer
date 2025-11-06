@@ -8,7 +8,7 @@ export class ConfigManager { // 配置管理器类，提供统一的配置访问
         const config = vscode.workspace.getConfiguration(this.CONFIG_SECTION);
 
         return {
-            maxCalculationTime: config.get<number>('maxCalculationTime', 5000),
+            maxCalculationTime: config.get<number>('maxCalculationTime', 100),
             fileSizeBase: config.get<number>('fileSizeBase', 1000),
             debugMode: config.get<boolean>('debugMode', false),
             fileTemplate: config.get<string>('fileTemplate', 'Info: \nsize: {size}\nmodTime: {modifiedTime}'),
@@ -16,7 +16,9 @@ export class ConfigManager { // 配置管理器类，提供统一的配置访问
             folderTemplate: config.get<string>('folderTemplate', 'Info: \nsize: {size}\nchildFile: {fileCount}\nchildFolder: {folderCount}\nmodTime: {modifiedTime}'),
             folderCalculatingTemplate: config.get<string>('folderCalculatingTemplate', 'Info: \nCalculating...\nmodTime: {modifiedTime}'),
             folderTimeoutTemplate: config.get<string>('folderTimeoutTemplate', 'Info: \nFolder is too complex, please increase the calculation time limit in the settings or use other tools to obtain information\nmodTime: {modifiedTime}'),
-            dateTimeFormat: config.get<string>('dateTimeFormat', 'YYYY-MM-DD HH:mm:ss')
+            dateTimeFormat: config.get<string>('dateTimeFormat', 'YYYY-MM-DD HH:mm:ss'),
+            startupDelay: config.get<number>('startupDelay', 5),
+            refreshInterval: config.get<number>('refreshInterval', 60)
         };
     }
 
@@ -38,5 +40,13 @@ export class ConfigManager { // 配置管理器类，提供统一的配置访问
 
     public static getFileSizeBase(): number { // 获取文件大小计算基底（1000 或 1024）
         return this.get<number>('fileSizeBase', 1000);
+    }
+
+    public static getStartupDelay(): number { // 获取启动延迟时间（秒）
+        return this.get<number>('startupDelay', 5);
+    }
+
+    public static getRefreshInterval(): number { // 获取刷新间隔时间（秒）
+        return this.get<number>('refreshInterval', 60);
     }
 }

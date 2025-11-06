@@ -64,10 +64,24 @@
                     "type": "string"
                 },
                 "eggroll-tree-enhancer.maxCalculationTime": {
-                    "default": 5000,
+                    "default": 100,
                     "description": "%description.eggroll-tree-enhancer.maxCalculationTime%",
                     "maximum": 60000,
-                    "minimum": 1000,
+                    "minimum": 10,
+                    "type": "number"
+                },
+                "eggroll-tree-enhancer.startupDelay": {
+                    "default": 5,
+                    "description": "%description.eggroll-tree-enhancer.startupDelay%",
+                    "maximum": 10,
+                    "minimum": 0,
+                    "type": "number"
+                },
+                "eggroll-tree-enhancer.refreshInterval": {
+                    "default": 60,
+                    "description": "%description.eggroll-tree-enhancer.refreshInterval%",
+                    "maximum": 600,
+                    "minimum": 0,
                     "type": "number"
                 }
             },

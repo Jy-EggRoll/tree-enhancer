@@ -15,6 +15,8 @@ export interface ExtensionConfig { // 扩展配置接口
     folderCalculatingTemplate: string; // 文件夹计算中模板
     folderTimeoutTemplate: string; // 文件夹超时模板
     dateTimeFormat: string; // 日期时间格式
+    startupDelay: number; // 启动延迟时间（秒）
+    refreshInterval: number; // 刷新间隔时间（秒）
 }
 
 export interface TemplateVariables { // 模板变量接口，用于替换模板中的占位符
