@@ -68,9 +68,14 @@ jobs:
             exit 1
           fi
 
-      - name: Package and publish extension
+      - name: Package extension
         run: |
-          # 直接发布，让 vsce 自动处理打包
+          # 先打包生成 .vsix 文件
+          pnpm vsce package --no-dependencies
+
+      - name: Publish to VS Code Marketplace
+        run: |
+          # 发布到市场
           pnpm vsce publish --no-dependencies --pat ${{ secrets.VSCE_TOKEN }}
         env:
           VSCE_TOKEN: ${{ secrets.VSCE_TOKEN }}
