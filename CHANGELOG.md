@@ -1,5 +1,9 @@
 # 更新日志 | Change Log
 
+## 1.3.2
+
+迁移到 pnpm，测试自动发布，优化仓库结构。
+
 ## 1.3.1
 
 更换打包工具，紧急修复上一版本的错误 | Replace the packaging tool and urgently fix the errors in the previous version
