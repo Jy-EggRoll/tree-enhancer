@@ -45,7 +45,16 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider { /
                 tooltip = await this.handleFileDecoration(fileName, stats, config, uri.fsPath);
             }
             if (ConfigManager.isDebugMode()) { console.log(`[返回结果] 为 ${fileName} 生成的工具提示: ${tooltip.substring(0, 100)}${tooltip.length > 100 ? '...' : ''}`); } // 调试：记录返回的工具提示（截断显示）
-            return { tooltip };
+
+            // 检查是否需要添加大文件标识
+            const decoration: vscode.FileDecoration = { tooltip };
+            if (!stats.isDirectory() && this.isLargeFile(stats.size, config)) { // 只为文件添加大文件标识，文件夹不需要
+                decoration.badge = 'L'; // 使用 L 标识大文件
+                decoration.color = new vscode.ThemeColor('charts.orange'); // 使用 VS Code 内置橙色
+                if (ConfigManager.isDebugMode()) { console.log(`[大文件标识] 为大文件 ${fileName} 添加 L 标识`); } // 调试：记录大文件标识
+            }
+
+            return decoration;
         } catch (error) { // 文件访问出错的处理
             if (ConfigManager.isDebugMode()) { console.error(`[提供装饰异常] 处理 ${uri.fsPath} 时发生错误:`, error); } // 调试：记录装饰提供过程中的异常
             FileUtils.logFileError(error, uri.fsPath);
@@ -273,7 +282,14 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider { /
         return true;
     }
 
+    private isLargeFile(fileSize: number, config: any): boolean { // 检查文件是否为大文件
+        const threshold = config.largeFileThreshold || 0; // 获取大文件阈值
+        if (threshold <= 0) return false; // 阈值为 0 表示关闭大文件识别
 
+        const base = config.fileSizeBase || 1000; // 使用用户设定的单位（MB 或 MiB）
+        const thresholdBytes = threshold * base * base; // 转换为字节
+        return fileSize >= thresholdBytes; // 判断文件大小是否超过阈值
+    }
 
     public refreshAll(): void { // 刷新所有文件装饰，触发 VS Code 重新获取所有文件的装饰信息
         this._onDidChangeFileDecorations.fire(undefined); // 触发所有文件装饰的刷新，undefined 参数表示刷新所有文件，而不是特定文件

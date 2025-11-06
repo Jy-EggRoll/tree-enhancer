@@ -18,7 +18,8 @@ export class ConfigManager { // 配置管理器类，提供统一的配置访问
             folderTimeoutTemplate: config.get<string>('folderTimeoutTemplate', 'Info: \nFolder is too complex, please increase the calculation time limit in the settings or use other tools to obtain information\nmodTime: {modifiedTime}'),
             dateTimeFormat: config.get<string>('dateTimeFormat', 'YYYY-MM-DD HH:mm:ss'),
             startupDelay: config.get<number>('startupDelay', 5),
-            refreshInterval: config.get<number>('refreshInterval', 60)
+            refreshInterval: config.get<number>('refreshInterval', 60),
+            largeFileThreshold: config.get<number>('largeFileThreshold', 50)
         };
     }
 
@@ -48,5 +49,9 @@ export class ConfigManager { // 配置管理器类，提供统一的配置访问
 
     public static getRefreshInterval(): number { // 获取刷新间隔时间（秒）
         return this.get<number>('refreshInterval', 60);
+    }
+
+    public static getLargeFileThreshold(): number { // 获取大文件识别阈值（MB/MiB）
+        return this.get<number>('largeFileThreshold', 50);
     }
 }

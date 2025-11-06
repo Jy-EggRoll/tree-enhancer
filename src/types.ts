@@ -17,6 +17,7 @@ export interface ExtensionConfig { // 扩展配置接口
     dateTimeFormat: string; // 日期时间格式
     startupDelay: number; // 启动延迟时间（秒）
     refreshInterval: number; // 刷新间隔时间（秒）
+    largeFileThreshold: number; // 大文件识别阈值（MB/MiB），0 表示关闭
 }
 
 export interface TemplateVariables { // 模板变量接口，用于替换模板中的占位符
