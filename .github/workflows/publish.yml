@@ -1,15 +1,15 @@
-name: Build and Publish Extension
+name: Publish Extension
 
 on:
   push:
     tags:
-      - '[0-9]+.[0-9]+.[0-9]+*'  # 匹配 x.y.z 格式的标签（支持预发布版本如 1.0.0-beta.1）
+      - '[0-9]+.[0-9]+.[0-9]+'  # 匹配 x.y.z 格式的正式版本标签（不包含 .dev）
 
 permissions:
   contents: write
 
 jobs:
-  build-and-publish:
+  publish:
     runs-on: ubuntu-latest
     
     steps:
@@ -70,7 +70,7 @@ jobs:
 
       - name: Package extension
         run: |
-          # 先打包生成 .vsix 文件
+          # 打包生成 .vsix 文件
           pnpm vsce package --no-dependencies
 
       - name: Publish to VS Code Marketplace
@@ -86,8 +86,8 @@ jobs:
           # 获取当前标签
           CURRENT_TAG="${{ steps.get_version.outputs.version }}"
           
-          # 获取所有版本标签，按版本号排序，找到当前标签之前的最新标签
-          PREVIOUS_TAG=$(git tag -l --sort=-version:refname | grep -E '^[0-9]+\.[0-9]+\.[0-9]+' | grep -v "^$CURRENT_TAG$" | head -n1)
+          # 获取所有正式版本标签，按版本号排序，找到当前标签之前的最新标签
+          PREVIOUS_TAG=$(git tag -l --sort=-version:refname | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | grep -v "^$CURRENT_TAG$" | head -n1)
           
           if [ -n "$PREVIOUS_TAG" ]; then
             echo "Found previous tag: $PREVIOUS_TAG"
@@ -113,7 +113,6 @@ jobs:
             echo "" >> release_notes.md
             
             # 尝试从 CHANGELOG 中提取当前版本的更新内容
-            # 这里使用一个简单的方法，您可以根据您的 CHANGELOG 格式调整
             awk -v version="$CURRENT_TAG" '
               /^##/ { 
                 if (found) exit
@@ -129,13 +128,13 @@ jobs:
           echo "## 提交记录" >> release_notes.md
           echo "" >> release_notes.md
           
-          # 生成提交记录
+          # 生成提交记录（排除开发版本相关的提交）
           if [ -z "$PREVIOUS_TAG" ]; then
             echo "生成从初始提交到 $CURRENT_TAG 的提交记录"
-            git log --pretty=format:"- %s (%h)" --no-merges >> release_notes.md
+            git log --pretty=format:"- %s (%h)" --no-merges --grep="\.dev" --invert-grep >> release_notes.md
           else
             echo "生成从 $PREVIOUS_TAG 到 $CURRENT_TAG 的提交记录"
-            git log "$PREVIOUS_TAG..$CURRENT_TAG" --pretty=format:"- %s (%h)" --no-merges >> release_notes.md
+            git log "$PREVIOUS_TAG..$CURRENT_TAG" --pretty=format:"- %s (%h)" --no-merges --grep="\.dev" --invert-grep >> release_notes.md
           fi
           
           # 如果没有提交记录，添加默认信息
@@ -161,7 +160,7 @@ jobs:
           files: |
             *.vsix
           draft: false
-          prerelease: ${{ contains(steps.get_version.outputs.version, '-') }}
+          prerelease: false
         env:
           GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
@@ -170,4 +169,4 @@ jobs:
         with:
           name: vsix-package-${{ steps.get_version.outputs.version }}
           path: "*.vsix"
-          retention-days: 30
+          retention-days: 90
