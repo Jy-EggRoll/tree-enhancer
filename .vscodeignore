@@ -14,14 +14,8 @@ vsc-extension-quickstart.md
 **/.vscode-test.*
 esbuild.js
 
-# 排除演示图片
-兼容性.png
-文件夹效果演示.png
-文件效果演示.png
-日期格式调整.png
-自定义显示格式.png
-已知_bug.gif
-功能演示.gif
+# 排除演示图片和资源文件夹
+assets/**
 
 # 排除工作区文件
 **/*.code-workspace

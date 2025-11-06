@@ -70,8 +70,7 @@ jobs:
 
       - name: Package and publish extension
         run: |
-          # 使用 vsce package 和 publish，跳过依赖检查
-          pnpm vsce package --no-dependencies
+          # 直接发布，让 vsce 自动处理打包
           pnpm vsce publish --no-dependencies --pat ${{ secrets.VSCE_TOKEN }}
         env:
           VSCE_TOKEN: ${{ secrets.VSCE_TOKEN }}
