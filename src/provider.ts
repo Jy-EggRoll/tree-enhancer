@@ -1,8 +1,3 @@
-/**
- * 文件装饰提供者模块
- * 负责为资源管理器中的文件和文件夹提供悬浮提示信息
- */
-
 import * as vscode from 'vscode';
 import * as fs from 'fs';
 import { DirectoryInfo } from './types';
@@ -11,300 +6,180 @@ import { FileUtils } from './fileUtils';
 import { Formatters } from './formatters';
 import { DirectoryCalculator } from './calculator';
 
-/**
- * 文件装饰提供者类
- * 负责为资源管理器中的文件和文件夹提供悬浮提示信息
- * 
- * 设计原则：
- * 1. 不使用缓存机制，确保信息实时性
- * 2. 每次悬浮都重新计算，保证准确性
- * 3. 异步计算避免阻塞界面
- * 4. 超时控制防止长时间等待
- */
-export class FileDecorationProvider implements vscode.FileDecorationProvider {
-    // 文件装饰变化事件发射器
-    // 当文件装饰需要更新时，触发此事件通知 VS Code 重新获取装饰信息
-    private _onDidChangeFileDecorations = new vscode.EventEmitter<vscode.Uri | vscode.Uri[] | undefined>();
+export class FileDecorationProvider implements vscode.FileDecorationProvider { // 文件装饰提供者类，负责为资源管理器中的文件和文件夹提供悬浮提示信息
+    private _onDidChangeFileDecorations = new vscode.EventEmitter<vscode.Uri | vscode.Uri[] | undefined>(); // 文件装饰变化事件发射器，当文件装饰需要更新时，触发此事件通知VS Code重新获取装饰信息
     readonly onDidChangeFileDecorations = this._onDidChangeFileDecorations.event;
+    private _calculatingDirs = new Set<string>(); // 正在计算中的目录集合，避免对同一目录重复启动计算，使用文件路径作为键
+    private _abortControllers = new Map<string, AbortController>(); // 存储取消控制器映射表，用于超时取消计算，键为文件路径，值为对应的AbortController实例
+    private _temporaryResults = new Map<string, DirectoryInfo>(); // 临时存储最近一次计算完成的结果，仅在当前悬浮会话中有效，不是缓存
 
-    // 正在计算中的目录集合，避免对同一目录重复启动计算
-    // 使用文件路径作为键，确保每个目录同时只有一个计算任务
-    private _calculatingDirs = new Set<string>();
-
-    // 存储取消控制器映射表，用于超时取消计算
-    // 键为文件路径，值为对应的 AbortController 实例
-    private _abortControllers = new Map<string, AbortController>();
-
-    // 临时存储最近一次计算完成的结果，仅在当前悬浮会话中有效
-    // 这不是缓存！每次用户重新悬浮时都会清除并重新计算
-    // 目的是在计算完成到界面刷新的短暂时间内能够显示结果
-    private _temporaryResults = new Map<string, DirectoryInfo>();
-
-    /**
-     * 提供文件装饰信息的核心方法
-     * 
-     * 此方法在用户悬浮鼠标到资源管理器中的文件或文件夹时被调用
-     * 
-     * @param uri 文件或文件夹的URI，包含完整路径信息
-     * @returns 文件装饰对象，包含工具提示等信息；如果出错则返回 undefined
-     * 
-     * 工作流程：
-     * 1. 获取文件/文件夹的基本统计信息（大小、修改时间等）
-     * 2. 对于普通文件：直接显示大小和修改时间
-     * 3. 对于文件夹：检查是否正在计算，如果没有则启动新的计算任务
-     * 4. 计算过程中显示"正在计算..."，完成后刷新显示实际结果
-     */
-    async provideFileDecoration(uri: vscode.Uri): Promise<vscode.FileDecoration | undefined> {
+    async provideFileDecoration(uri: vscode.Uri): Promise<vscode.FileDecoration | undefined> { // 提供文件装饰信息的核心方法，在用户悬浮鼠标到资源管理器中的文件或文件夹时被调用
+        if (ConfigManager.isDebugMode()) { console.log(`[悬浮事件] 用户悬浮到: ${uri.fsPath}`); } // 调试：记录用户悬浮事件
         try {
-            // 严格过滤不相关的路径
-            if (!FileUtils.shouldProcessPath(uri.fsPath)) {
+            if (!FileUtils.shouldProcessPath(uri.fsPath)) { // 严格过滤不相关的路径
+                if (ConfigManager.isDebugMode()) { console.log(`[路径过滤] 跳过路径: ${uri.fsPath}`); } // 调试：记录被过滤的路径
                 return undefined;
             }
-
-            // 获取文件或文件夹的基本统计信息
-            const stats = await FileUtils.getFileStats(uri.fsPath);
+            const stats = await FileUtils.getFileStats(uri.fsPath); // 获取文件或文件夹的基本统计信息
             if (!stats) {
+                if (ConfigManager.isDebugMode()) { console.warn(`[文件访问] 无法获取文件信息: ${uri.fsPath}`); } // 调试：记录无法访问的文件
                 return undefined; // 无法获取文件信息
             }
-
             const fileName = FileUtils.getFileName(uri.fsPath);
             const config = ConfigManager.getConfig();
-
+            const fileType = stats.isDirectory() ? '文件夹' : '文件'; // 确定文件类型
+            if (ConfigManager.isDebugMode()) { console.log(`[文件类型] ${fileType}: ${fileName} (路径: ${uri.fsPath})`); } // 调试：记录文件类型和基本信息
             let tooltip: string;
-
-            if (stats.isDirectory()) {
-                // 处理文件夹情况
+            if (stats.isDirectory()) { // 处理文件夹情况
                 tooltip = await this.handleDirectoryDecoration(uri, fileName, stats, config);
-            } else {
-                // 处理普通文件情况
+            } else { // 处理普通文件情况
                 tooltip = await this.handleFileDecoration(fileName, stats, config, uri.fsPath);
             }
-
+            if (ConfigManager.isDebugMode()) { console.log(`[返回结果] 为 ${fileName} 生成的工具提示: ${tooltip.substring(0, 100)}${tooltip.length > 100 ? '...' : ''}`); } // 调试：记录返回的工具提示（截断显示）
             return { tooltip };
-        } catch (error) {
-            // 文件访问出错的处理
+        } catch (error) { // 文件访问出错的处理
+            if (ConfigManager.isDebugMode()) { console.error(`[提供装饰异常] 处理 ${uri.fsPath} 时发生错误:`, error); } // 调试：记录装饰提供过程中的异常
             FileUtils.logFileError(error, uri.fsPath);
             return undefined;
         }
     }
 
-    /**
-     * 处理文件的装饰信息
-     * 
-     * @param fileName 文件名
-     * @param stats 文件统计信息
-     * @param config 扩展配置
-     * @param filePath 文件完整路径
-     * @returns 格式化后的工具提示文本
-     */
-    private async handleFileDecoration(fileName: string, stats: fs.Stats, config: any, filePath: string): Promise<string> {
-        // 检查是否为支持的图片格式
-        if (FileUtils.isSupportedImage(fileName)) {
-            // 尝试获取图片分辨率信息
-            const imageDimensions = await FileUtils.getImageDimensions(filePath);
+    private async handleFileDecoration(fileName: string, stats: fs.Stats, config: any, filePath: string): Promise<string> { // 处理文件的装饰信息
+        if (ConfigManager.isDebugMode()) { console.log(`[文件处理] 开始处理文件: ${fileName}, 大小: ${stats.size} 字节`); } // 调试：记录开始处理文件
+        if (FileUtils.isSupportedImage(fileName)) { // 检查是否为支持的图片格式
+            if (ConfigManager.isDebugMode()) { console.log(`[图片文件] 检测到支持的图片格式: ${fileName}`); } // 调试：记录图片文件检测
+            const imageDimensions = await FileUtils.getImageDimensions(filePath); // 尝试获取图片分辨率信息
+            if (ConfigManager.isDebugMode() && imageDimensions) { console.log(`[图片尺寸] ${fileName} 分辨率: ${imageDimensions.width}x${imageDimensions.height}`); } // 调试：记录图片尺寸
             const variables = Formatters.createFileVariables(fileName, stats.size, stats.mtime, imageDimensions || undefined);
-            // 使用专门的图片文件模板
-            const imageTemplate = config.imageFileTemplate || config.fileTemplate;
+            const imageTemplate = config.imageFileTemplate || config.fileTemplate; // 使用专门的图片文件模板
             return Formatters.renderTemplate(imageTemplate, variables);
-        } else {
-            // 普通文件处理
+        } else { // 普通文件处理
+            if (ConfigManager.isDebugMode()) { console.log(`[普通文件] 处理普通文件: ${fileName}`); } // 调试：记录普通文件处理
             const variables = Formatters.createFileVariables(fileName, stats.size, stats.mtime);
             return Formatters.renderTemplate(config.fileTemplate, variables);
         }
     }
 
-    /**
-     * 处理文件夹的装饰信息
-     * 
-     * @param uri 文件夹URI
-     * @param fileName 文件夹名
-     * @param stats 文件夹统计信息
-     * @param config 扩展配置
-     * @returns Promise<string> 格式化后的工具提示文本
-     */
-    private async handleDirectoryDecoration(
+    private async handleDirectoryDecoration( // 处理文件夹的装饰信息
         uri: vscode.Uri,
         fileName: string,
         stats: fs.Stats,
         config: any
     ): Promise<string> {
         const cacheKey = uri.fsPath;
-
-        // 首先检查是否有临时计算结果
-        const tempResult = this._temporaryResults.get(cacheKey);
-        if (tempResult) {
-            // 有临时结果，显示完整信息
+        if (ConfigManager.isDebugMode()) { console.log(`[文件夹处理] 开始处理文件夹: ${fileName}`); } // 调试：记录开始处理文件夹
+        const tempResult = this._temporaryResults.get(cacheKey); // 首先检查是否有临时计算结果
+        if (tempResult) { // 有临时结果，显示完整信息
+            if (ConfigManager.isDebugMode()) { console.log(`[临时结果] 找到文件夹 ${fileName} 的缓存结果:`, tempResult); } // 调试：记录找到的临时结果
             const variables = tempResult.isTimeout
                 ? Formatters.createTimeoutVariables(fileName, stats.mtime, config.maxCalculationTime)
                 : Formatters.createFolderVariables(fileName, tempResult.size, tempResult.fileCount, tempResult.folderCount, stats.mtime);
-
             const template = tempResult.isTimeout ? config.folderTimeoutTemplate : config.folderTemplate;
-
-            // 清除临时结果，确保下次悬浮时重新计算
-            this._temporaryResults.delete(cacheKey);
-
+            this._temporaryResults.delete(cacheKey); // 清除临时结果，确保下次悬浮时重新计算
             return Formatters.renderTemplate(template, variables);
         }
-
-        if (this._calculatingDirs.has(cacheKey)) {
-            // 如果当前文件夹正在计算中，显示计算状态
+        if (this._calculatingDirs.has(cacheKey)) { // 如果当前文件夹正在计算中，显示计算状态
+            if (ConfigManager.isDebugMode()) { console.log(`[计算状态] 文件夹 ${fileName} 正在计算中...`); } // 调试：记录正在计算的状态
             const variables = Formatters.createCalculatingVariables(fileName, stats.mtime);
             return Formatters.renderTemplate(config.folderCalculatingTemplate, variables);
         }
-
-        // 文件夹当前没有在计算中，也没有临时结果，启动新的计算任务
-        return await this.startDirectoryCalculation(uri, fileName, stats, config);
+        if (ConfigManager.isDebugMode()) { console.log(`[启动计算] 文件夹 ${fileName} 需要开始新的计算任务`); } // 调试：记录需要启动新计算
+        return await this.startDirectoryCalculation(uri, fileName, stats, config); // 文件夹当前没有在计算中，也没有临时结果，启动新的计算任务
     }
 
-    /**
-     * 启动文件夹计算任务
-     * 
-     * @param uri 文件夹URI
-     * @param fileName 文件夹名
-     * @param stats 文件夹统计信息
-     * @param config 扩展配置
-     * @returns Promise<string> 初始状态的工具提示文本
-     */
-    private async startDirectoryCalculation(
+    private async startDirectoryCalculation( // 启动文件夹计算任务
         uri: vscode.Uri,
         fileName: string,
         stats: fs.Stats,
         config: any
     ): Promise<string> {
         const cacheKey = uri.fsPath;
-
-        // 标记为计算中并启动详细计算
-        this._calculatingDirs.add(cacheKey);
-
+        this._calculatingDirs.add(cacheKey); // 标记为计算中并启动详细计算
+        if (ConfigManager.isDebugMode()) { console.log(`[计算开始] 文件夹 ${fileName} 已标记为计算中，开始异步计算`); } // 调试：记录计算开始
         try {
-            // 尝试快速获取文件夹的直接子项数量（不递归）
-            const directChildren = await DirectoryCalculator.getDirectChildrenCount(uri.fsPath);
-
-            // 创建包含估算信息的变量对象
-            const estimateInfo = `计算中（预估 ${directChildren.fileCount}+ 文件，${directChildren.folderCount}+ 文件夹）`;
+            const directChildren = await DirectoryCalculator.getDirectChildrenCount(uri.fsPath); // 尝试快速获取文件夹的直接子项数量（不递归）
+            const estimateInfo = `计算中（预估 ${directChildren.fileCount}+ 文件，${directChildren.folderCount}+ 文件夹）`; // 创建包含估算信息的变量对象
             const variables = {
                 ...Formatters.createCalculatingVariables(fileName, stats.mtime),
                 estimate: estimateInfo
             };
-
-            // 如果模板支持估算信息占位符，使用它；否则使用基本模板
-            let displayTemplate = config.folderCalculatingTemplate;
+            let displayTemplate = config.folderCalculatingTemplate; // 如果模板支持估算信息占位符，使用它；否则使用基本模板
             if (displayTemplate.includes('{estimate}')) {
                 displayTemplate = displayTemplate.replace(/{estimate}/g, estimateInfo);
             }
-
-        } catch (quickError) {
-            // 如果连快速读取都失败，使用基本的计算中模板
+        } catch (quickError) { // 如果连快速读取都失败，使用基本的计算中模板
         }
-
-        // 异步启动完整的递归计算任务
-        this.calculateAndUpdateDirectoryInfo(uri)
+        this.calculateAndUpdateDirectoryInfo(uri) // 异步启动完整的递归计算任务
             .then(() => {
-                // 计算成功完成，触发界面刷新
-                this._onDidChangeFileDecorations.fire(uri);
+                if (ConfigManager.isDebugMode()) { console.log(`[计算完成] 文件夹 ${fileName} 计算成功，触发界面刷新`); } // 调试：记录计算完成
+                this._onDidChangeFileDecorations.fire(uri); // 计算成功完成，触发界面刷新
             })
             .catch((error) => {
-                // 计算出错或超时，清理状态并刷新界面
-                this.handleCalculationError(error, cacheKey);
+                if (ConfigManager.isDebugMode()) { console.warn(`[计算失败] 文件夹 ${fileName} 计算失败:`, error); } // 调试：记录计算失败
+                this.handleCalculationError(error, cacheKey); // 计算出错或超时，清理状态并刷新界面
                 this._onDidChangeFileDecorations.fire(uri);
             });
-
-        // 返回当前计算中状态
-        const variables = Formatters.createCalculatingVariables(fileName, stats.mtime);
+        const variables = Formatters.createCalculatingVariables(fileName, stats.mtime); // 返回当前计算中状态
         return Formatters.renderTemplate(config.folderCalculatingTemplate, variables);
     }
 
-    /**
-     * 计算并更新文件夹信息的私有方法
-     * 
-     * @param uri 文件夹的URI
-     * @returns Promise<void> 无返回值，但会更新内部状态并触发界面刷新
-     */
-    private async calculateAndUpdateDirectoryInfo(uri: vscode.Uri): Promise<void> {
+    private async calculateAndUpdateDirectoryInfo(uri: vscode.Uri): Promise<void> { // 计算并更新文件夹信息的私有方法
         const cacheKey = uri.fsPath;
-
+        const fileName = FileUtils.getFileName(uri.fsPath);
+        if (ConfigManager.isDebugMode()) { console.log(`[深度计算] 开始计算文件夹 ${fileName} 的详细信息`); } // 调试：记录深度计算开始
         try {
-            // 使用计算器进行带超时的计算
-            const result = await DirectoryCalculator.calculateWithTimeout(uri.fsPath);
-
-            // 存储临时结果，供下一次 provideFileDecoration 调用时使用
-            this._temporaryResults.set(cacheKey, result);
-
-            // 标记该文件夹计算已完成
-            this._calculatingDirs.delete(cacheKey);
+            const result = await DirectoryCalculator.calculateWithTimeout(uri.fsPath); // 使用计算器进行带超时的计算
+            if (ConfigManager.isDebugMode()) { console.log(`[深度计算成功] 文件夹 ${fileName} 结果:`, result); } // 调试：记录深度计算成功
+            this._temporaryResults.set(cacheKey, result); // 存储临时结果，供下一次provideFileDecoration调用时使用
+            this._calculatingDirs.delete(cacheKey); // 标记该文件夹计算已完成
             this._abortControllers.delete(cacheKey);
-
-        } catch (error) {
-            // 处理计算过程中的各种错误情况
-            if ((error as Error).message === 'Calculation aborted') {
-                // 这是超时取消的情况
+        } catch (error) { // 处理计算过程中的各种错误情况
+            if ((error as Error).message === 'Calculation aborted') { // 这是超时取消的情况
+                if (ConfigManager.isDebugMode()) { console.warn(`[计算超时] 文件夹 ${fileName} 计算超时，设置超时标记`); } // 调试：记录计算超时
                 this._temporaryResults.set(cacheKey, {
                     size: 0,
                     fileCount: 0,
                     folderCount: 0,
                     isTimeout: true
                 });
-            } else {
-                // 其他类型的错误
+            } else { // 其他类型的错误
                 if (ConfigManager.isDebugMode()) {
-                    console.error(`计算文件夹信息时发生错误: ${uri.fsPath}`, error);
+                    console.error(`[深度计算错误] 计算文件夹 ${fileName} 信息时发生错误: ${uri.fsPath}`, error);
                 }
             }
-
-            // 清理计算状态
-            this._calculatingDirs.delete(cacheKey);
+            this._calculatingDirs.delete(cacheKey); // 清理计算状态
             this._abortControllers.delete(cacheKey);
-
-            // 重新抛出错误，让调用方知道计算失败
-            throw error;
+            throw error; // 重新抛出错误，让调用方知道计算失败
         }
     }
 
-    /**
-     * 处理计算错误
-     * 
-     * @param error 错误对象
-     * @param cacheKey 缓存键
-     */
-    private handleCalculationError(error: any, cacheKey: string): void {
+    private handleCalculationError(error: any, cacheKey: string): void { // 处理计算错误
         if ((error as Error).message !== 'Calculation aborted' && ConfigManager.isDebugMode()) {
             console.error('计算文件夹信息时出错:', error);
         }
-
-        // 清理状态
-        this._calculatingDirs.delete(cacheKey);
+        this._calculatingDirs.delete(cacheKey); // 清理状态
         this._abortControllers.delete(cacheKey);
     }
 
-    /**
-     * 清除所有内部状态
-     * 
-     * 当配置发生变更时调用，清除所有缓存和计算状态
-     * 确保下次访问时使用新的配置重新计算
-     */
-    public clearAllStates(): void {
-        // 清除所有正在计算的标记
-        this._calculatingDirs.clear();
+    public clearAllStates(): void { // 清除所有内部状态，当配置发生变更时调用，清除所有缓存和计算状态
+        if (ConfigManager.isDebugMode()) { console.log(`[状态清理] 开始清理所有内部状态`); } // 调试：记录状态清理开始
+        const calculatingCount = this._calculatingDirs.size;
+        const abortCount = this._abortControllers.size;
+        const resultCount = this._temporaryResults.size;
 
-        // 取消所有正在进行的计算任务
-        for (const [path, controller] of this._abortControllers) {
+        this._calculatingDirs.clear(); // 清除所有正在计算的标记
+        for (const [path, controller] of this._abortControllers) { // 取消所有正在进行的计算任务
             controller.abort();
         }
         this._abortControllers.clear();
+        this._temporaryResults.clear(); // 清除所有临时结果
 
-        // 清除所有临时结果
-        this._temporaryResults.clear();
+        if (ConfigManager.isDebugMode()) { // 调试：记录清理统计
+            console.log(`[状态清理完成] 清理了 ${calculatingCount} 个计算中的文件夹, ${abortCount} 个取消控制器, ${resultCount} 个临时结果`);
+        }
     }
 
-    /**
-     * 刷新所有文件装饰
-     * 
-     * 触发 VS Code 重新获取所有文件的装饰信息
-     * 这会导致 provideFileDecoration 方法被重新调用
-     */
-    public refreshAll(): void {
-        // 触发所有文件装饰的刷新
-        // undefined 参数表示刷新所有文件，而不是特定文件
-        this._onDidChangeFileDecorations.fire(undefined);
+    public refreshAll(): void { // 刷新所有文件装饰，触发VS Code重新获取所有文件的装饰信息
+        this._onDidChangeFileDecorations.fire(undefined); // 触发所有文件装饰的刷新，undefined参数表示刷新所有文件，而不是特定文件
     }
 }

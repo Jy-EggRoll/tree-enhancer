@@ -20,7 +20,7 @@
                     "type": "string"
                 },
                 "eggroll-tree-enhancer.debugMode": {
-                    "default": false,
+                    "default": true,
                     "description": "%description.eggroll-tree-enhancer.debugMode%",
                     "type": "boolean"
                 },
