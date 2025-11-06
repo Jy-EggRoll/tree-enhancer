@@ -12,12 +12,19 @@ interface FolderCacheEntry { // 文件夹缓存条目
     mtime: number; // 文件夹修改时间
 }
 
+interface FileCacheEntry { // 文件缓存条目
+    size: number; // 文件大小
+    imageDimensions?: { width: number; height: number }; // 图片尺寸（如果是图片）
+    mtime: number; // 文件修改时间
+}
+
 export class FileDecorationProvider implements vscode.FileDecorationProvider { // 文件装饰提供者类，负责为资源管理器中的文件和文件夹提供装饰信息
     private _onDidChangeFileDecorations = new vscode.EventEmitter<vscode.Uri | vscode.Uri[] | undefined>(); // 文件装饰变化事件发射器，当文件装饰需要更新时，触发此事件通知VS Code重新获取装饰信息
     readonly onDidChangeFileDecorations = this._onDidChangeFileDecorations.event;
     private _calculatingDirs = new Set<string>(); // 正在计算中的目录集合，避免对同一目录重复启动计算，使用文件路径作为键
     private _abortControllers = new Map<string, AbortController>(); // 存储取消控制器映射表，用于超时取消计算，键为文件路径，值为对应的AbortController实例
     private _folderCache = new Map<string, FolderCacheEntry>(); // 文件夹计算结果缓存，避免重复计算和死循环
+    private _fileCache = new Map<string, FileCacheEntry>(); // 文件信息缓存，避免重复读取文件大小和图片尺寸
 
     async provideFileDecoration(uri: vscode.Uri): Promise<vscode.FileDecoration | undefined> { // 提供文件装饰信息的核心方法，VS Code 自动调用以获取文件装饰
         if (ConfigManager.isDebugMode()) { console.log(`[装饰请求] 请求装饰: ${uri.fsPath}`); } // 调试：记录装饰请求
@@ -52,15 +59,41 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider { /
 
     private async handleFileDecoration(fileName: string, stats: fs.Stats, config: any, filePath: string): Promise<string> { // 处理文件的装饰信息
         if (ConfigManager.isDebugMode()) { console.log(`[文件处理] 开始处理文件: ${fileName}, 大小: ${stats.size} 字节`); } // 调试：记录开始处理文件
+        
+        // 检查文件缓存，mtime预检查避免无意义的重复计算
+        const cacheKey = filePath;
+        const cached = this._fileCache.get(cacheKey);
+        if (cached && cached.mtime === stats.mtime.getTime()) {
+            if (ConfigManager.isDebugMode()) { console.log(`[文件缓存命中] 文件 ${fileName} mtime未变，使用缓存`); } // 调试：记录缓存命中
+            const variables = Formatters.createFileVariables(fileName, cached.size, stats.mtime, cached.imageDimensions);
+            const template = cached.imageDimensions ? (config.imageFileTemplate || config.fileTemplate) : config.fileTemplate;
+            return Formatters.renderTemplate(template, variables);
+        }
+        
         if (FileUtils.isSupportedImage(fileName)) { // 检查是否为支持的图片格式
             if (ConfigManager.isDebugMode()) { console.log(`[图片文件] 检测到支持的图片格式: ${fileName}`); } // 调试：记录图片文件检测
             const imageDimensions = await FileUtils.getImageDimensions(filePath); // 尝试获取图片分辨率信息
             if (ConfigManager.isDebugMode() && imageDimensions) { console.log(`[图片尺寸] ${fileName} 分辨率: ${imageDimensions.width}x${imageDimensions.height}`); } // 调试：记录图片尺寸
+            
+            // 缓存图片文件信息
+            this._fileCache.set(cacheKey, {
+                size: stats.size,
+                imageDimensions: imageDimensions || undefined,
+                mtime: stats.mtime.getTime()
+            });
+            
             const variables = Formatters.createFileVariables(fileName, stats.size, stats.mtime, imageDimensions || undefined);
             const imageTemplate = config.imageFileTemplate || config.fileTemplate; // 使用专门的图片文件模板
             return Formatters.renderTemplate(imageTemplate, variables);
         } else { // 普通文件处理
             if (ConfigManager.isDebugMode()) { console.log(`[普通文件] 处理普通文件: ${fileName}`); } // 调试：记录普通文件处理
+            
+            // 缓存普通文件信息
+            this._fileCache.set(cacheKey, {
+                size: stats.size,
+                mtime: stats.mtime.getTime()
+            });
+            
             const variables = Formatters.createFileVariables(fileName, stats.size, stats.mtime);
             return Formatters.renderTemplate(config.fileTemplate, variables);
         }
@@ -190,18 +223,20 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider { /
         if (ConfigManager.isDebugMode()) { console.log(`[状态清理] 开始清理所有内部状态`); } // 调试：记录状态清理开始
         const calculatingCount = this._calculatingDirs.size;
         const abortCount = this._abortControllers.size;
-        const cacheCount = this._folderCache.size;
+        const folderCacheCount = this._folderCache.size;
+        const fileCacheCount = this._fileCache.size;
 
         this._calculatingDirs.clear(); // 清除所有正在计算的标记
         for (const [path, controller] of this._abortControllers) { // 取消所有正在进行的计算任务
             controller.abort();
         }
         this._abortControllers.clear();
-        this._folderCache.clear(); // 清除所有缓存
+        this._folderCache.clear(); // 清除所有文件夹缓存
+        this._fileCache.clear(); // 清除所有文件缓存
         this.stopPeriodicRefresh(); // 停止定期刷新
 
         if (ConfigManager.isDebugMode()) { // 调试：记录清理统计
-            console.log(`[状态清理完成] 清理了 ${calculatingCount} 个计算中的文件夹, ${abortCount} 个取消控制器, ${cacheCount} 个缓存条目`);
+            console.log(`[状态清理完成] 清理了 ${calculatingCount} 个计算中的文件夹, ${abortCount} 个取消控制器, ${folderCacheCount} 个文件夹缓存, ${fileCacheCount} 个文件缓存`);
         }
     }
 
