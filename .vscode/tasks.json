@@ -8,55 +8,6 @@
             "group": "build",
             "presentation": {
                 "panel": "shared"
-            },
-            "problemMatcher": []
-        },
-        {
-            "label": "npm: compile-tests",
-            "type": "npm",
-            "script": "compile-tests",
-            "group": "build",
-            "presentation": {
-                "panel": "shared"
-            },
-            "problemMatcher": "$tsc"
-        },
-        {
-            "label": "watch",
-            "dependsOn": [
-                "npm: watch:tsc",
-                "npm: watch:esbuild"
-            ],
-            "presentation": {
-                "reveal": "never"
-            },
-            "group": {
-                "kind": "build",
-                "isDefault": true
-            }
-        },
-        {
-            "type": "npm",
-            "script": "watch:esbuild",
-            "group": "build",
-            "problemMatcher": [],
-            "isBackground": true,
-            "label": "npm: watch:esbuild",
-            "presentation": {
-                "group": "watch",
-                "reveal": "never"
-            }
-        },
-        {
-            "type": "npm",
-            "script": "watch:tsc",
-            "group": "build",
-            "problemMatcher": "$tsc-watch",
-            "isBackground": true,
-            "label": "npm: watch:tsc",
-            "presentation": {
-                "group": "watch",
-                "reveal": "never"
             }
         }
     ]

@@ -5,13 +5,10 @@ src/**
 out/
 node_modules/
 .gitignore
-.yarnrc
-vsc-extension-quickstart.md
 **/tsconfig.json
 **/eslint.config.mjs
 **/*.map
 **/*.ts
-**/.vscode-test.*
 esbuild.js
 
 # 排除演示图片和资源文件夹
