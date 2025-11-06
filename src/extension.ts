@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import { ConfigManager } from './config';
 import { FileDecorationProvider } from './provider';
 
-export function activate(context: vscode.ExtensionContext) { // 扩展激活函数，在VS Code启动时或首次使用扩展功能时被调用
+export function activate(context: vscode.ExtensionContext) { // 扩展激活函数，在 VS Code 启动时或首次使用扩展功能时被调用
     if (ConfigManager.isDebugMode()) { // 检查是否启用了调试模式，决定是否输出启动日志
         console.log(`正在激活扩展: Tree Enhancer`);
         console.log(`[扩展信息] 扩展路径: ${context.extensionPath}`);
@@ -65,6 +65,6 @@ export function activate(context: vscode.ExtensionContext) { // 扩展激活函�
     }
 }
 
-export function deactivate() { // 扩展停用函数，在扩展被卸载或VS Code关闭时调用
+export function deactivate() { // 扩展停用函数，在扩展被卸载或 VS Code 关闭时调用
     // 目前没有需要手动清理的资源，如果将来添加了需要手动清理的资源（如定时器、网络连接等），在这里处理
 }

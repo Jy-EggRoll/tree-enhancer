@@ -7,7 +7,7 @@ export interface DirectoryInfo { // 文件夹信息计算结果
 
 export interface ExtensionConfig { // 扩展配置接口
     maxCalculationTime: number; // 最大计算时间（毫秒）
-    fileSizeBase: number; // 文件大小计算基底（1000或1024）
+    fileSizeBase: number; // 文件大小计算基底（1000 或 1024）
     debugMode: boolean; // 调试模式开关
     fileTemplate: string; // 文件模板
     imageFileTemplate: string; // 图片文件模板
@@ -34,8 +34,8 @@ export interface TemplateVariables { // 模板变量接口，用于替换模板�
 }
 
 export interface FileSizeUnits { // 文件大小单位数组
-    decimal: string[]; // 十进制单位（1000进制）
-    binary: string[]; // 二进制单位（1024进制）
+    decimal: string[]; // 十进制单位（1000 进制）
+    binary: string[]; // 二进制单位（1024 进制）
 }
 
 export interface ImageDimensions { // 图片尺寸信息

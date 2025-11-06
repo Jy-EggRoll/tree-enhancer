@@ -7,14 +7,14 @@ export class Formatters { // 格式化工具类，封装各种数据格式化逻
         binary: ['B', 'KiB', 'MiB', 'GiB', 'TiB', 'PiB']
     };
 
-    public static formatFileSize(bytes: number, base?: number): string { // 格式化文件大小为人类可读的字符串，支持1000和1024两种计算基底
-        if (bytes === 0) return '0 B'; // 如果文件大小为0，直接返回
+    public static formatFileSize(bytes: number, base?: number): string { // 格式化文件大小为人类可读的字符串，支持 1000 和 1024 两种计算基底
+        if (bytes === 0) return '0 B'; // 如果文件大小为 0，直接返回
         const calculationBase = base || ConfigManager.getFileSizeBase(); // 获取计算基底，优先使用参数，否则从配置读取
         const sizes = calculationBase === 1024 ? this.SIZE_UNITS.binary : this.SIZE_UNITS.decimal; // 根据基底选择对应的单位数组
         const i = Math.floor(Math.log(bytes) / Math.log(calculationBase)); // 计算单位索引：确定应该使用哪个单位
         const unitIndex = Math.min(i, sizes.length - 1); // 确保索引不超出数组范围
         const value = bytes / Math.pow(calculationBase, unitIndex); // 计算最终数值：将字节数除以对应的基底的幂次
-        return parseFloat(value.toFixed(2)) + ' ' + sizes[unitIndex]; // 格式化数值：保留2位小数，并拼接单位
+        return parseFloat(value.toFixed(2)) + ' ' + sizes[unitIndex]; // 格式化数值：保留 2 位小数，并拼接单位
     }
 
     public static formatDate(date: Date, format?: string): string { // 格式化日期时间，支持自定义格式模板
