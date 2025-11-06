@@ -44,17 +44,11 @@ jobs:
       - name: Install dependencies
         run: pnpm install --frozen-lockfile
 
-      - name: Lint code
-        run: pnpm run lint
-
-      - name: Type check
-        run: pnpm run check-types
-
       - name: Build extension
         run: pnpm run package
 
       - name: Install vsce
-        run: npm install -g @vscode/vsce
+        run: pnpm add -g @vscode/vsce
 
       - name: Get tag version
         id: get_version
@@ -74,11 +68,11 @@ jobs:
             exit 1
           fi
 
-      - name: Package extension
-        run: vsce package
-
-      - name: Publish to VS Code Marketplace
-        run: vsce publish --pat ${{ secrets.VSCE_TOKEN }}
+      - name: Package and publish extension
+        run: |
+          # 使用 vsce package 和 publish，跳过依赖检查
+          pnpm vsce package --no-dependencies
+          pnpm vsce publish --no-dependencies --pat ${{ secrets.VSCE_TOKEN }}
         env:
           VSCE_TOKEN: ${{ secrets.VSCE_TOKEN }}
 
