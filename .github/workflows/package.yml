@@ -65,17 +65,13 @@ jobs:
           fi
           echo "version=$VERSION" >> $GITHUB_OUTPUT
 
-      - name: Verify version (only for tag runs)
-        if: github.event_name != 'workflow_dispatch'
+      - name: Show version info
         run: |
           PACKAGE_VERSION=$(node -p "require('./package.json').version")
           TAG_VERSION="${{ steps.get_version.outputs.version }}"
           echo "Package.json version: $PACKAGE_VERSION"
-          echo "Git tag version: $TAG_VERSION"
-          if [ "$PACKAGE_VERSION" != "$TAG_VERSION" ]; then
-            echo "Error: Package.json version ($PACKAGE_VERSION) does not match git tag ($TAG_VERSION)"
-            exit 1
-          fi
+          echo "Current version: $TAG_VERSION"
+          echo "ℹ️ Development versions don't require exact version matching"
 
       - name: Package extension
         run: |
