@@ -1,0 +1,146 @@
+{
+    "activationEvents": [
+        "onStartupFinished"
+    ],
+    "author": {
+        "name": "EggRoll"
+    },
+    "bugs": {
+        "url": "https://github.com/Jy-EggRoll/tree-enhancer/issues"
+    },
+    "categories": [
+        "Other"
+    ],
+    "contributes": {
+        "configuration": {
+            "properties": {
+                "eggroll-tree-enhancer.dateTimeFormat": {
+                    "default": "YYYY-MM-DD HH:mm:ss",
+                    "description": "%description.eggroll-tree-enhancer.dateTimeFormat%",
+                    "type": "string"
+                },
+                "eggroll-tree-enhancer.debugMode": {
+                    "default": true,
+                    "description": "%description.eggroll-tree-enhancer.debugMode%",
+                    "type": "boolean"
+                },
+                "eggroll-tree-enhancer.fileSizeBase": {
+                    "default": 1000,
+                    "description": "%description.eggroll-tree-enhancer.fileSizeBase%",
+                    "enum": [
+                        1000,
+                        1024
+                    ],
+                    "type": "number"
+                },
+                "eggroll-tree-enhancer.fileTemplate": {
+                    "default": "%default.eggroll-tree-enhancer.fileTemplate%",
+                    "description": "%description.eggroll-tree-enhancer.fileTemplate%",
+                    "type": "string"
+                },
+                "eggroll-tree-enhancer.folderCalculatingTemplate": {
+                    "default": "%default.eggroll-tree-enhancer.folderCalculatingTemplate%",
+                    "description": "%description.eggroll-tree-enhancer.folderTemplate%",
+                    "type": "string"
+                },
+                "eggroll-tree-enhancer.folderTemplate": {
+                    "default": "%default.eggroll-tree-enhancer.folderTemplate%",
+                    "description": "%description.eggroll-tree-enhancer.folderTemplate%",
+                    "type": "string"
+                },
+                "eggroll-tree-enhancer.folderTimeoutTemplate": {
+                    "default": "%default.eggroll-tree-enhancer.folderTimeoutTemplate%",
+                    "description": "%description.eggroll-tree-enhancer.folderTimeoutTemplate%",
+                    "type": "string"
+                },
+                "eggroll-tree-enhancer.imageFileTemplate": {
+                    "default": "%default.eggroll-tree-enhancer.imageFileTemplate%",
+                    "description": "%description.eggroll-tree-enhancer.imageFileTemplate%",
+                    "type": "string"
+                },
+                "eggroll-tree-enhancer.imageResolutionTemplate": {
+                    "default": "%default.eggroll-tree-enhancer.imageResolutionTemplate%",
+                    "description": "%description.eggroll-tree-enhancer.imageResolutionTemplate%",
+                    "type": "string"
+                },
+                "eggroll-tree-enhancer.maxCalculationTime": {
+                    "default": 100,
+                    "description": "%description.eggroll-tree-enhancer.maxCalculationTime%",
+                    "maximum": 60000,
+                    "minimum": 10,
+                    "type": "number"
+                },
+                "eggroll-tree-enhancer.startupDelay": {
+                    "default": 5,
+                    "description": "%description.eggroll-tree-enhancer.startupDelay%",
+                    "maximum": 10,
+                    "minimum": 0,
+                    "type": "number"
+                },
+                "eggroll-tree-enhancer.refreshInterval": {
+                    "default": 60,
+                    "description": "%description.eggroll-tree-enhancer.refreshInterval%",
+                    "maximum": 600,
+                    "minimum": 0,
+                    "type": "number"
+                },
+                "eggroll-tree-enhancer.largeFileThreshold": {
+                    "default": 50,
+                    "description": "%description.eggroll-tree-enhancer.largeFileThreshold%",
+                    "maximum": 1000,
+                    "minimum": 0,
+                    "type": "number"
+                }
+            },
+            "title": "Tree Enhancer"
+        }
+    },
+    "dependencies": {
+        "image-size": "^2.0.2"
+    },
+    "description": "Show more information in the VS Code file explorer when hovering over files and folders | 在 VS Code 资源管理器中悬浮显示文件/文件夹的详细信息（大小、修改时间、文件数量等）",
+    "devDependencies": {
+        "@types/node": "20.x",
+        "@types/vscode": "^1.76.0",
+        "@vscode/test-cli": "^0.0.11",
+        "depcheck": "^1.4.7",
+        "esbuild": "^0.25.9",
+        "eslint": "^9.25.1",
+        "npm-run-all": "^4.1.5",
+        "typescript": "^5.8.3",
+        "vsce": "^2.15.0"
+    },
+    "displayName": "Tree Enhancer",
+    "engines": {
+        "vscode": "^1.76.0"
+    },
+    "homepage": "https://github.com/Jy-EggRoll/tree-enhancer#readme",
+    "icon": "icon.png",
+    "keywords": [
+        "file",
+        "folder",
+        "explorer",
+        "size",
+        "tooltip",
+        "tree",
+        "enhancer",
+        "show size",
+        "资源管理器",
+        "文件",
+        "显示"
+    ],
+    "license": "MIT",
+    "main": "./dist/extension.js",
+    "name": "eggroll-tree-enhancer",
+    "publisher": "Jy-EggRoll",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Jy-EggRoll/tree-enhancer.git"
+    },
+    "scripts": {
+        "check-types": "tsc --noEmit",
+        "compile": "npm run check-types && node esbuild.js",
+        "package": "npm run check-types && node esbuild.js --production"
+    },
+    "version": "1.3.3"
+}
