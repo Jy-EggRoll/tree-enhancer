@@ -3,7 +3,7 @@ name: Package Extension
 on:
   push:
     tags:
-      - '[0-9]+.[0-9]+.[0-9]+.dev'  # 匹配 x.y.z.dev 格式的开发版本标签
+      - '[0-9]+.[0-9]+.[0-9]+.dev.[0-9]+'  # 匹配 x.y.z.dev.num 格式的开发版本标签
   workflow_dispatch:  # 支持手动运行
 
 permissions:
