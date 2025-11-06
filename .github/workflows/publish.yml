@@ -105,12 +105,10 @@ jobs:
           
           # 创建发布说明文件
           echo "# VS Code Tree Enhancer v$CURRENT_TAG" > release_notes.md
-          echo "" >> release_notes.md
           
           # 检查是否有 CHANGELOG.md 文件并提取相关版本信息
           if [ -f "CHANGELOG.md" ]; then
             echo "## 更新内容" >> release_notes.md
-            echo "" >> release_notes.md
             
             # 尝试从 CHANGELOG 中提取当前版本的更新内容
             awk -v version="$CURRENT_TAG" '
@@ -143,8 +141,11 @@ jobs:
           fi
           
           echo "" >> release_notes.md
+          echo "" >> release_notes.md
           echo "---" >> release_notes.md
+          echo "" >> release_notes.md
           echo "📦 **安装方式：**" >> release_notes.md
+          echo "" >> release_notes.md
           echo "- 通过 VS Code 扩展市场搜索 \"Tree Enhancer\" 安装" >> release_notes.md
           echo "- 或下载 .vsix 文件手动安装" >> release_notes.md
           
