@@ -19,3 +19,9 @@ assets/**
 
 # 排除工作区文件
 **/*.code-workspace
+
+# 排除工作流等文件
+.github
+
+# 排除 lock 文件
+pnpm-lock.yaml
