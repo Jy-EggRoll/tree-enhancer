@@ -59,7 +59,7 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider { /
 
     private async handleFileDecoration(fileName: string, stats: fs.Stats, config: any, filePath: string): Promise<string> { // 处理文件的装饰信息
         if (ConfigManager.isDebugMode()) { console.log(`[文件处理] 开始处理文件: ${fileName}, 大小: ${stats.size} 字节`); } // 调试：记录开始处理文件
-        
+
         // 检查文件缓存，mtime预检查避免无意义的重复计算
         const cacheKey = filePath;
         const cached = this._fileCache.get(cacheKey);
@@ -69,31 +69,31 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider { /
             const template = cached.imageDimensions ? (config.imageFileTemplate || config.fileTemplate) : config.fileTemplate;
             return Formatters.renderTemplate(template, variables);
         }
-        
+
         if (FileUtils.isSupportedImage(fileName)) { // 检查是否为支持的图片格式
             if (ConfigManager.isDebugMode()) { console.log(`[图片文件] 检测到支持的图片格式: ${fileName}`); } // 调试：记录图片文件检测
             const imageDimensions = await FileUtils.getImageDimensions(filePath); // 尝试获取图片分辨率信息
             if (ConfigManager.isDebugMode() && imageDimensions) { console.log(`[图片尺寸] ${fileName} 分辨率: ${imageDimensions.width}x${imageDimensions.height}`); } // 调试：记录图片尺寸
-            
+
             // 缓存图片文件信息
             this._fileCache.set(cacheKey, {
                 size: stats.size,
                 imageDimensions: imageDimensions || undefined,
                 mtime: stats.mtime.getTime()
             });
-            
+
             const variables = Formatters.createFileVariables(fileName, stats.size, stats.mtime, imageDimensions || undefined);
             const imageTemplate = config.imageFileTemplate || config.fileTemplate; // 使用专门的图片文件模板
             return Formatters.renderTemplate(imageTemplate, variables);
         } else { // 普通文件处理
             if (ConfigManager.isDebugMode()) { console.log(`[普通文件] 处理普通文件: ${fileName}`); } // 调试：记录普通文件处理
-            
+
             // 缓存普通文件信息
             this._fileCache.set(cacheKey, {
                 size: stats.size,
                 mtime: stats.mtime.getTime()
             });
-            
+
             const variables = Formatters.createFileVariables(fileName, stats.size, stats.mtime);
             return Formatters.renderTemplate(config.fileTemplate, variables);
         }
