@@ -122,7 +122,6 @@ jobs:
             ' CHANGELOG.md >> release_notes.md
           fi
           
-          echo "" >> release_notes.md
           echo "## 提交记录" >> release_notes.md
           echo "" >> release_notes.md
           
