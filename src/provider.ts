@@ -74,14 +74,14 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider { /
     ): Promise<string> {
         const cacheKey = uri.fsPath;
         if (ConfigManager.isDebugMode()) { console.log(`[文件夹处理] 开始处理文件夹: ${fileName}`); } // 调试：记录开始处理文件夹
-        
+
         // 检查缓存，优先进行mtime预检查避免无意义的计算
         const cached = this._folderCache.get(cacheKey);
         if (cached) {
             // mtime预检查：如果修改时间没变，直接使用缓存，避免无意义重计算
             if (cached.mtime === stats.mtime.getTime()) {
                 if (ConfigManager.isDebugMode()) { console.log(`[mtime未变] 文件夹 ${fileName} 修改时间未变，直接使用缓存`); } // 调试：记录mtime未变
-                const variables = cached.result.isTimeout 
+                const variables = cached.result.isTimeout
                     ? Formatters.createTimeoutVariables(fileName, stats.mtime, config.maxCalculationTime)
                     : Formatters.createFolderVariables(fileName, cached.result.size, cached.result.fileCount, cached.result.folderCount, stats.mtime);
                 const template = cached.result.isTimeout ? config.folderTimeoutTemplate : config.folderTemplate;
@@ -90,13 +90,13 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider { /
                 if (ConfigManager.isDebugMode()) { console.log(`[mtime变化] 文件夹 ${fileName} 修改时间变化，缓存失效`); } // 调试：记录mtime变化
             }
         }
-        
+
         if (this._calculatingDirs.has(cacheKey)) { // 如果当前文件夹正在计算中，显示计算状态
             if (ConfigManager.isDebugMode()) { console.log(`[计算状态] 文件夹 ${fileName} 正在计算中...`); } // 调试：记录正在计算的状态
             const variables = Formatters.createCalculatingVariables(fileName, stats.mtime);
             return Formatters.renderTemplate(config.folderCalculatingTemplate, variables);
         }
-        
+
         if (ConfigManager.isDebugMode()) { console.log(`[启动计算] 文件夹 ${fileName} 需要开始新的计算任务`); } // 调试：记录需要启动新计算
         return await this.startDirectoryCalculation(uri, fileName, stats, config); // 启动新的计算任务
     }
@@ -142,25 +142,25 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider { /
         const fileName = FileUtils.getFileName(uri.fsPath);
         const stats = await FileUtils.getFileStats(uri.fsPath); // 获取文件夹统计信息用于缓存
         if (!stats) return; // 无法获取统计信息，退出
-        
+
         if (ConfigManager.isDebugMode()) { console.log(`[深度计算] 开始计算文件夹 ${fileName} 的详细信息`); } // 调试：记录深度计算开始
         try {
             const result = await DirectoryCalculator.calculateWithTimeout(uri.fsPath); // 使用计算器进行带超时的计算
             if (ConfigManager.isDebugMode()) { console.log(`[深度计算成功] 文件夹 ${fileName} 结果:`, result); } // 调试：记录深度计算成功
-            
+
             // 存储到缓存
             this._folderCache.set(cacheKey, {
                 result,
                 timestamp: Date.now(),
                 mtime: stats.mtime.getTime()
             });
-            
+
             this._calculatingDirs.delete(cacheKey); // 标记该文件夹计算已完成
             this._abortControllers.delete(cacheKey);
         } catch (error) { // 处理计算过程中的各种错误情况
             if ((error as Error).message === 'Calculation aborted') { // 这是超时取消的情况
                 if (ConfigManager.isDebugMode()) { console.warn(`[计算超时] 文件夹 ${fileName} 计算超时`); } // 调试：记录计算超时
-                
+
                 // 超时也要缓存，避免重复尝试
                 this._folderCache.set(cacheKey, {
                     result: { size: 0, fileCount: 0, folderCount: 0, isTimeout: true },
@@ -238,7 +238,7 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider { /
         if (cached.mtime !== currentStats.mtime.getTime()) {
             return false;
         }
-        
+
         return true;
     }
 
