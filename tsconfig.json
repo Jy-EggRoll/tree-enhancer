@@ -1,0 +1,13 @@
+{
+	"compilerOptions": {
+		"module": "node20",
+		"target": "es2023",
+		"outDir": "out",
+		"lib": [
+			"ES2023"
+		],
+		"sourceMap": true,
+		"rootDir": "src",
+		"strict": true
+	}
+}
