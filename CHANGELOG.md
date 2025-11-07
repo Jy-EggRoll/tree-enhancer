@@ -6,13 +6,14 @@
    - 引入智能刷新机制，定期刷新文件装饰，避免频繁全量刷新 | Introduced intelligent refresh mechanism to periodically refresh file decorations, avoiding frequent full refreshes
    - 优化缓存机制，减少重复计算 | Optimized caching mechanism to reduce redundant calculations
 2. 新增大文件标识功能，用类似 Git 扩展的样式标识大文件 | Added large file identification feature, marking large files with a style similar to Git extension
-  ![大文件](assets/images/大文件标注.png)
+  ![大文件标注](assets/images/大文件标注.png)
 3. 修复大量问题 | Fixed numerous issues
 4. 优化代码结构，提高可维护性 | Improved code structure for better maintainability
 5. 移除大量不必要的依赖 | Removed numerous unnecessary dependencies
 6. 增设配置项 startupDelay，允许用户延迟扩展的激活时间 | Added configuration option startupDelay to allow users to delay extension activation time
 7. 增设配置项 refreshInterval，允许用户自定义定期刷新的时间间隔 | Added configuration option refreshInterval to allow users to customize the interval for periodic refreshes
 8. 增设配置项 largeFileThresholdMB，允许用户自定义大文件的大小阈值 | Added configuration option largeFileThresholdMB to allow users to customize the size threshold for large files
+9. 修复了之前的版本提示信息不更新的问题 | Fixed the issue of outdated version prompt messages in previous versions
 
 ## 1.3.3
 
