@@ -11,13 +11,13 @@ export class ConfigManager { // 配置管理器类，提供统一的配置访问
             maxCalculationTime: config.get<number>('maxCalculationTime', 100),
             fileSizeBase: config.get<number>('fileSizeBase', 1000),
             debugMode: config.get<boolean>('debugMode', false),
-            fileTemplate: config.get<string>('fileTemplate', 'Info: \nsize: {size}\nmodTime: {modifiedTime}'),
-            imageFileTemplate: config.get<string>('imageFileTemplate', 'Info: \nsize: {size}\n{resolution}\nmodTime: {modifiedTime}'),
-            folderTemplate: config.get<string>('folderTemplate', 'Info: \nsize: {size}\nchildFile: {fileCount}\nchildFolder: {folderCount}\nmodTime: {modifiedTime}'),
-            folderCalculatingTemplate: config.get<string>('folderCalculatingTemplate', 'Info: \nCalculating...\nmodTime: {modifiedTime}'),
-            folderTimeoutTemplate: config.get<string>('folderTimeoutTemplate', 'Info: \nFolder is too complex, please increase the calculation time limit in the settings or use other tools to obtain information\nmodTime: {modifiedTime}'),
+            fileTemplate: config.get<string>('fileTemplate', 'Please restart VS Code to apply the localization tooltip.'),
+            imageFileTemplate: config.get<string>('imageFileTemplate', 'Please restart VS Code to apply the localization tooltip.'),
+            folderTemplate: config.get<string>('folderTemplate', 'Please restart VS Code to apply the localization tooltip.'),
+            folderCalculatingTemplate: config.get<string>('folderCalculatingTemplate', 'Please restart VS Code to apply the localization tooltip.'),
+            folderTimeoutTemplate: config.get<string>('folderTimeoutTemplate', 'Please restart VS Code to apply the localization tooltip.'),
             dateTimeFormat: config.get<string>('dateTimeFormat', 'YYYY-MM-DD HH:mm:ss'),
-            startupDelay: config.get<number>('startupDelay', 5),
+            startupDelay: config.get<number>('startupDelay', 0),
             refreshInterval: config.get<number>('refreshInterval', 60),
             largeFileThreshold: config.get<number>('largeFileThreshold', 50)
         };
@@ -44,7 +44,7 @@ export class ConfigManager { // 配置管理器类，提供统一的配置访问
     }
 
     public static getStartupDelay(): number { // 获取启动延迟时间（秒）
-        return this.get<number>('startupDelay', 5);
+        return this.get<number>('startupDelay', 0);
     }
 
     public static getRefreshInterval(): number { // 获取刷新间隔时间（秒）

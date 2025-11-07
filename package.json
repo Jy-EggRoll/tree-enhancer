@@ -85,7 +85,7 @@
                     "type": "number"
                 },
                 "tree-enhancer.startupDelay": {
-                    "default": 5,
+                    "default": 0,
                     "description": "%description.tree-enhancer.startupDelay%",
                     "maximum": 10,
                     "minimum": 0,
