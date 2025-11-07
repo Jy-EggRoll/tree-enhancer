@@ -14,79 +14,79 @@
     "contributes": {
         "configuration": {
             "properties": {
-                "eggroll-tree-enhancer.dateTimeFormat": {
+                "tree-enhancer.dateTimeFormat": {
                     "default": "YYYY-MM-DD HH:mm:ss",
-                    "description": "%description.eggroll-tree-enhancer.dateTimeFormat%",
+                    "description": "%description.tree-enhancer.dateTimeFormat%",
                     "type": "string"
                 },
-                "eggroll-tree-enhancer.debugMode": {
+                "tree-enhancer.debugMode": {
                     "default": false,
-                    "description": "%description.eggroll-tree-enhancer.debugMode%",
+                    "description": "%description.tree-enhancer.debugMode%",
                     "type": "boolean"
                 },
-                "eggroll-tree-enhancer.fileSizeBase": {
+                "tree-enhancer.fileSizeBase": {
                     "default": 1000,
-                    "description": "%description.eggroll-tree-enhancer.fileSizeBase%",
+                    "description": "%description.tree-enhancer.fileSizeBase%",
                     "enum": [
                         1000,
                         1024
                     ],
                     "type": "number"
                 },
-                "eggroll-tree-enhancer.fileTemplate": {
-                    "default": "%default.eggroll-tree-enhancer.fileTemplate%",
-                    "description": "%description.eggroll-tree-enhancer.fileTemplate%",
+                "tree-enhancer.fileTemplate": {
+                    "default": "%default.tree-enhancer.fileTemplate%",
+                    "description": "%description.tree-enhancer.fileTemplate%",
                     "type": "string"
                 },
-                "eggroll-tree-enhancer.folderCalculatingTemplate": {
-                    "default": "%default.eggroll-tree-enhancer.folderCalculatingTemplate%",
-                    "description": "%description.eggroll-tree-enhancer.folderTemplate%",
+                "tree-enhancer.folderCalculatingTemplate": {
+                    "default": "%default.tree-enhancer.folderCalculatingTemplate%",
+                    "description": "%description.tree-enhancer.folderTemplate%",
                     "type": "string"
                 },
-                "eggroll-tree-enhancer.folderTemplate": {
-                    "default": "%default.eggroll-tree-enhancer.folderTemplate%",
-                    "description": "%description.eggroll-tree-enhancer.folderTemplate%",
+                "tree-enhancer.folderTemplate": {
+                    "default": "%default.tree-enhancer.folderTemplate%",
+                    "description": "%description.tree-enhancer.folderTemplate%",
                     "type": "string"
                 },
-                "eggroll-tree-enhancer.folderTimeoutTemplate": {
-                    "default": "%default.eggroll-tree-enhancer.folderTimeoutTemplate%",
-                    "description": "%description.eggroll-tree-enhancer.folderTimeoutTemplate%",
+                "tree-enhancer.folderTimeoutTemplate": {
+                    "default": "%default.tree-enhancer.folderTimeoutTemplate%",
+                    "description": "%description.tree-enhancer.folderTimeoutTemplate%",
                     "type": "string"
                 },
-                "eggroll-tree-enhancer.imageFileTemplate": {
-                    "default": "%default.eggroll-tree-enhancer.imageFileTemplate%",
-                    "description": "%description.eggroll-tree-enhancer.imageFileTemplate%",
+                "tree-enhancer.imageFileTemplate": {
+                    "default": "%default.tree-enhancer.imageFileTemplate%",
+                    "description": "%description.tree-enhancer.imageFileTemplate%",
                     "type": "string"
                 },
-                "eggroll-tree-enhancer.imageResolutionTemplate": {
-                    "default": "%default.eggroll-tree-enhancer.imageResolutionTemplate%",
-                    "description": "%description.eggroll-tree-enhancer.imageResolutionTemplate%",
+                "tree-enhancer.imageResolutionTemplate": {
+                    "default": "%default.tree-enhancer.imageResolutionTemplate%",
+                    "description": "%description.tree-enhancer.imageResolutionTemplate%",
                     "type": "string"
                 },
-                "eggroll-tree-enhancer.largeFileThreshold": {
+                "tree-enhancer.largeFileThreshold": {
                     "default": 50,
-                    "description": "%description.eggroll-tree-enhancer.largeFileThreshold%",
+                    "description": "%description.tree-enhancer.largeFileThreshold%",
                     "maximum": 1000,
                     "minimum": 0,
                     "type": "number"
                 },
-                "eggroll-tree-enhancer.maxCalculationTime": {
+                "tree-enhancer.maxCalculationTime": {
                     "default": 100,
-                    "description": "%description.eggroll-tree-enhancer.maxCalculationTime%",
+                    "description": "%description.tree-enhancer.maxCalculationTime%",
                     "maximum": 60000,
                     "minimum": 10,
                     "type": "number"
                 },
-                "eggroll-tree-enhancer.refreshInterval": {
+                "tree-enhancer.refreshInterval": {
                     "default": 60,
-                    "description": "%description.eggroll-tree-enhancer.refreshInterval%",
+                    "description": "%description.tree-enhancer.refreshInterval%",
                     "maximum": 600,
                     "minimum": 0,
                     "type": "number"
                 },
-                "eggroll-tree-enhancer.startupDelay": {
+                "tree-enhancer.startupDelay": {
                     "default": 5,
-                    "description": "%description.eggroll-tree-enhancer.startupDelay%",
+                    "description": "%description.tree-enhancer.startupDelay%",
                     "maximum": 10,
                     "minimum": 0,
                     "type": "number"
@@ -131,7 +131,7 @@
     ],
     "license": "MIT",
     "main": "./dist/extension.js",
-    "name": "eggroll-tree-enhancer",
+    "name": "tree-enhancer",
     "publisher": "Jy-EggRoll",
     "repository": {
         "type": "git",

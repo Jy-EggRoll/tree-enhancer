@@ -2,7 +2,7 @@ import * as vscode from 'vscode';
 import { ExtensionConfig } from './types';
 
 export class ConfigManager { // 配置管理器类，提供统一的配置访问接口和默认值管理
-    private static readonly CONFIG_SECTION = 'eggroll-tree-enhancer'; // 配置命名空间
+    private static readonly CONFIG_SECTION = 'tree-enhancer'; // 配置命名空间
 
     public static getConfig(): ExtensionConfig { // 获取完整的扩展配置
         const config = vscode.workspace.getConfiguration(this.CONFIG_SECTION);
