@@ -1,5 +1,13 @@
 # 更新日志 | Change Log
 
+## 1.5.0
+
+引入全新的文件监视器，去除原来的轮询机制 | Introduced a brand-new file watcher, removing the previous polling mechanism
+
+目前解决了大部分的文件信息缓存不同步问题 | Currently resolved most issues related to file information cache desynchronization
+
+文件夹信息尚未解决 | Folder information issues are yet to be resolved
+
 ## 1.4.1
 
 增加启动延迟，提升插件性能 | Added startup delay to improve plugin performance

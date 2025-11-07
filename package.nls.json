@@ -16,6 +16,5 @@
     "description.tree-enhancer.imageResolutionTemplate": "Display template for image resolution information. Supported placeholders:\n- {width}: Image width in pixels\n- {height}: Image height in pixels",
     "description.tree-enhancer.largeFileThreshold": "Large file recognition threshold in user-configured units (MB or MiB). Files exceeding this size will display an orange 'L' badge. Set to 0 to disable large file recognition.",
     "description.tree-enhancer.maxCalculationTime": "Maximum wait time (milliseconds) for folder size calculation. Calculation will stop and show a message if this time is exceeded. Default is 100ms, ensuring high performance. For large, complex folders (e.g., node_modules), 100ms is usually insufficient. If you need to include them, increase this value (max 60 seconds), but note this may affect performance.",
-    "description.tree-enhancer.refreshInterval": "Automatic refresh interval (in seconds) for file decorations. Set to 0 to disable automatic refresh. Defaults to 60 seconds, ensuring file information stays up-to-date without manual intervention.",
     "description.tree-enhancer.startupDelay": "Delay (in seconds) before the extension starts working after VS Code startup. This significantly prevents high CPU usage during startup. Set to 0 for no delay (calculates immediately on startup)."
 }

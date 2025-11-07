@@ -21,11 +21,8 @@ export function activate(context: vscode.ExtensionContext) { // 扩展激活函�
         const providerDisposable = vscode.window.registerFileDecorationProvider(fileDecorationProvider);
         context.subscriptions.push(providerDisposable);
 
-        // 启动定期刷新（如果配置了）
-        const config = ConfigManager.getConfig();
-        if (config.refreshInterval > 0) {
-            fileDecorationProvider.startPeriodicRefresh(); // 启动定期刷新机制
-        }
+        // 启动文件系统监视器
+        fileDecorationProvider.startFileSystemWatcher();
 
         const configChangeDisposable = vscode.workspace.onDidChangeConfiguration(event => { // 监听配置变更事件，当用户修改扩展配置时，自动刷新所有文件装饰以应用新设置
             if (ConfigManager.isConfigChanged(event)) { // 检查是否是我们扩展的配置发生了变化
@@ -35,13 +32,9 @@ export function activate(context: vscode.ExtensionContext) { // 扩展激活函�
                 }
                 fileDecorationProvider.clearAllStates(); // 清除文件装饰提供者的所有临时状态，这样下次装饰请求时会使用新的配置重新计算
 
-                // 根据新配置启动或停止定期刷新
-                const newConfig = ConfigManager.getConfig();
-                if (newConfig.refreshInterval > 0) {
-                    fileDecorationProvider.startPeriodicRefresh();
-                } else {
-                    fileDecorationProvider.stopPeriodicRefresh();
-                }
+                // 重启文件系统监视器以应用新配置
+                fileDecorationProvider.stopFileSystemWatcher();
+                fileDecorationProvider.startFileSystemWatcher();
 
                 fileDecorationProvider.refreshAll(); // 触发所有文件装饰的刷新
             }

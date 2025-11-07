@@ -16,6 +16,5 @@
     "description.tree-enhancer.imageResolutionTemplate": "图片分辨率信息的显示模板。支持的占位符：\n- {width}: 图片宽度（像素）\n- {height}: 图片高度（像素）",
     "description.tree-enhancer.largeFileThreshold": "大文件识别阈值，使用用户设定的单位（MB 或 MiB）。超过此大小的文件将显示橙色的 L 标识。设置为 0 表示关闭大文件识别功能。",
     "description.tree-enhancer.maxCalculationTime": "文件夹大小计算的最大等待时间（毫秒）。超过此时间将停止计算并显示提示信息。默认设置为 100 毫秒，这使得插件拥有很高的性能。对于 node_modules 等大型复杂文件夹，100 ms 通常不足以完成计算。如果您确实希望将这些文件纳入计算，可以适当增加此值（最大支持计算 60 秒），但请注意这可能会影响性能。",
-    "description.tree-enhancer.refreshInterval": "文件装饰的自动刷新间隔（秒）。设置为 0 表示不自动刷新。默认为 60 秒，这确保文件信息保持最新而无需手动干预。",
     "description.tree-enhancer.startupDelay": "VS Code 启动后扩展开始工作的延迟时间（秒）。这可以显著防止启动时的高 CPU 占用。设置为 0 表示不延迟，启动时立即进行计算。"
 }

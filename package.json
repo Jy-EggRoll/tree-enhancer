@@ -77,13 +77,6 @@
                     "minimum": 10,
                     "type": "number"
                 },
-                "tree-enhancer.refreshInterval": {
-                    "default": 60,
-                    "description": "%description.tree-enhancer.refreshInterval%",
-                    "maximum": 600,
-                    "minimum": 0,
-                    "type": "number"
-                },
                 "tree-enhancer.startupDelay": {
                     "default": 5,
                     "description": "%description.tree-enhancer.startupDelay%",
@@ -142,5 +135,5 @@
         "compile": "npm run check-types && node esbuild.js",
         "package": "npm run check-types && node esbuild.js --production"
     },
-    "version": "1.4.1"
+    "version": "1.5.0"
 }

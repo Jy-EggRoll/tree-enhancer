@@ -1,5 +1,6 @@
 import * as vscode from 'vscode';
 import * as fs from 'fs';
+import * as path from 'path';
 import { DirectoryInfo } from './types';
 import { ConfigManager } from './config';
 import { FileUtils } from './fileUtils';
@@ -25,9 +26,10 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider { /
     private _abortControllers = new Map<string, AbortController>(); // 存储取消控制器映射表，用于超时取消计算，键为文件路径，值为对应的 AbortController 实例
     private _folderCache = new Map<string, FolderCacheEntry>(); // 文件夹计算结果缓存，避免重复计算和死循环
     private _fileCache = new Map<string, FileCacheEntry>(); // 文件信息缓存，避免重复读取文件大小和图片尺寸
+    private _fileSystemWatcher?: vscode.FileSystemWatcher; // 文件系统监视器，监听文件变化
 
     async provideFileDecoration(uri: vscode.Uri): Promise<vscode.FileDecoration | undefined> { // 提供文件装饰信息的核心方法，VS Code 自动调用以获取文件装饰
-        if (ConfigManager.isDebugMode()) { console.log(`[装饰请求] 请求装饰: ${uri.fsPath}`); } // 调试：记录装饰请求
+        if (ConfigManager.isDebugMode()) { console.log(`[装饰请求] VS Code 请求文件装饰: ${uri.fsPath}`); }
         try {
             const stats = await FileUtils.getFileStats(uri.fsPath); // 获取文件或文件夹的基本统计信息
             if (!stats) {
@@ -37,14 +39,14 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider { /
             const fileName = FileUtils.getFileName(uri.fsPath);
             const config = ConfigManager.getConfig();
             const fileType = stats.isDirectory() ? '文件夹' : '文件'; // 确定文件类型
-            if (ConfigManager.isDebugMode()) { console.log(`[文件类型] ${fileType}: ${fileName} (路径: ${uri.fsPath})`); } // 调试：记录文件类型和基本信息
+            if (ConfigManager.isDebugMode()) { console.log(`[装饰流程] 处理${fileType}: ${fileName}, mtime: ${stats.mtime.toISOString()}`); }
             let tooltip: string;
             if (stats.isDirectory()) { // 处理文件夹情况
                 tooltip = await this.handleDirectoryDecoration(uri, fileName, stats, config);
             } else { // 处理普通文件情况
                 tooltip = await this.handleFileDecoration(fileName, stats, config, uri.fsPath);
             }
-            if (ConfigManager.isDebugMode()) { console.log(`[返回结果] 为 ${fileName} 生成的工具提示: ${tooltip.substring(0, 100)}${tooltip.length > 100 ? '...' : ''}`); } // 调试：记录返回的工具提示（截断显示）
+            if (ConfigManager.isDebugMode()) { console.log(`[装饰完成] ${fileName} 装饰生成完毕`); }
 
             // 检查是否需要添加大文件标识
             const decoration: vscode.FileDecoration = { tooltip };
@@ -238,40 +240,10 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider { /
         this._abortControllers.clear();
         this._folderCache.clear(); // 清除所有文件夹缓存
         this._fileCache.clear(); // 清除所有文件缓存
-        this.stopPeriodicRefresh(); // 停止定期刷新
+        this.stopFileSystemWatcher(); // 停止文件系统监视器
 
         if (ConfigManager.isDebugMode()) { // 调试：记录清理统计
             console.log(`[状态清理完成] 清理了 ${calculatingCount} 个计算中的文件夹, ${abortCount} 个取消控制器, ${folderCacheCount} 个文件夹缓存, ${fileCacheCount} 个文件缓存`);
-        }
-    }
-
-    private _refreshTimer: NodeJS.Timeout | undefined; // 定时刷新器，用于定期更新文件装饰
-
-    public startPeriodicRefresh(): void { // 启动定期刷新机制
-        const config = ConfigManager.getConfig();
-        if (config.refreshInterval <= 0) { // 如果刷新间隔为 0 或负数，禁用自动刷新
-            return;
-        }
-
-        if (this._refreshTimer) { // 如果已有定时器，先清除
-            clearInterval(this._refreshTimer);
-        }
-
-        this._refreshTimer = setInterval(() => {
-            if (ConfigManager.isDebugMode()) { console.log(`[定期刷新] 执行智能刷新，间隔: ${config.refreshInterval} 秒`); } // 调试：记录定期刷新
-            // 不执行全量刷新，因为基于mtime的缓存机制已经能确保数据准确性
-            // 只在必要时清理过期的计算状态，避免强制重绘所有装饰
-            this.cleanupStaleCalculations();
-        }, config.refreshInterval * 1000);
-
-        if (ConfigManager.isDebugMode()) { console.log(`[定期刷新] 已启动定期刷新，间隔: ${config.refreshInterval} 秒`); } // 调试：记录定期刷新启动
-    }
-
-    public stopPeriodicRefresh(): void { // 停止定期刷新
-        if (this._refreshTimer) {
-            clearInterval(this._refreshTimer);
-            this._refreshTimer = undefined;
-            if (ConfigManager.isDebugMode()) { console.log(`[定期刷新] 已停止定期刷新`); } // 调试：记录定期刷新停止
         }
     }
 
@@ -303,6 +275,139 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider { /
     }
 
     public refreshAll(): void { // 刷新所有文件装饰，触发 VS Code 重新获取所有文件的装饰信息
+        if (ConfigManager.isDebugMode()) {
+            console.log(`[全量刷新] 通知 VS Code 重新获取所有文件装饰，基于缓存的 mtime 检查确保高效执行`);
+        }
         this._onDidChangeFileDecorations.fire(undefined); // 触发所有文件装饰的刷新，undefined 参数表示刷新所有文件，而不是特定文件
+    }
+
+    public refreshSpecific(uri: vscode.Uri): void { // 精准刷新单个文件或文件夹，纯粹的谁变化刷新谁
+        // 清除变化文件的缓存
+        this._fileCache.delete(uri.fsPath);
+        this._folderCache.delete(uri.fsPath);
+
+        if (ConfigManager.isDebugMode()) {
+            console.log(`[精准刷新] 刷新单个项目: ${uri.fsPath}`);
+        }
+
+        // 只刷新变化的文件或文件夹，最简洁的策略
+        this._onDidChangeFileDecorations.fire(uri);
+    }
+
+
+
+    public startFileSystemWatcher(): void { // 启动文件系统监视器，监听工作空间中的文件变化
+        if (this._fileSystemWatcher) {
+            return; // 已经启动，避免重复启动
+        }
+
+        if (!vscode.workspace.workspaceFolders || vscode.workspace.workspaceFolders.length === 0) {
+            if (ConfigManager.isDebugMode()) {
+                console.log(`[文件监视器] 没有工作空间文件夹，跳过启动文件监视器`);
+            }
+            return;
+        }
+
+        if (ConfigManager.isDebugMode()) {
+            console.log(`[文件监视器] 正在启动文件系统监视器...`);
+        }
+
+        // 监听工作空间文件夹中的文件变化，排除不必要的目录
+        this._fileSystemWatcher = vscode.workspace.createFileSystemWatcher(
+            '**/*',
+            false, // 不忽略创建事件
+            false, // 不忽略修改事件
+            false  // 不忽略删除事件
+        );
+
+        // 监听文件和文件夹变化事件
+        this._fileSystemWatcher.onDidChange(uri => {
+            if (this.shouldIgnoreFile(uri)) return; // 过滤不需要监视的文件/文件夹
+            if (ConfigManager.isDebugMode()) {
+                this.logFileSystemEvent('变化', uri);
+            }
+            this.handleFileChange(uri);
+        });
+
+        // 监听文件和文件夹创建事件
+        this._fileSystemWatcher.onDidCreate(uri => {
+            if (this.shouldIgnoreFile(uri)) return; // 过滤不需要监视的文件/文件夹
+            if (ConfigManager.isDebugMode()) {
+                this.logFileSystemEvent('创建', uri);
+            }
+            this.handleFileChange(uri);
+        });
+
+        // 监听文件和文件夹删除事件
+        this._fileSystemWatcher.onDidDelete(uri => {
+            if (this.shouldIgnoreFile(uri)) return; // 过滤不需要监视的文件/文件夹
+            if (ConfigManager.isDebugMode()) {
+                this.logFileSystemEvent('删除', uri);
+            }
+            this.handleFileDelete(uri);
+        });
+
+        if (ConfigManager.isDebugMode()) {
+            console.log(`[文件监视器] 文件系统监视器启动完成`);
+        }
+    }
+
+    public stopFileSystemWatcher(): void { // 停止文件系统监视器
+        if (this._fileSystemWatcher) {
+            if (ConfigManager.isDebugMode()) {
+                console.log(`[文件监视器] 正在停止文件系统监视器...`);
+            }
+            this._fileSystemWatcher.dispose();
+            this._fileSystemWatcher = undefined;
+        }
+    }
+
+    private shouldIgnoreFile(uri: vscode.Uri): boolean { // 检查是否应忽略此文件或目录
+        const filePath = uri.fsPath;
+        const ignoredPaths = ['.git', 'node_modules']; // 需要在监视器中忽略的路径
+
+        for (const ignoredPath of ignoredPaths) {
+            if (filePath.includes(path.sep + ignoredPath + path.sep) ||
+                filePath.endsWith(path.sep + ignoredPath)) {
+                if (ConfigManager.isDebugMode()) {
+                    console.log(`[文件监视器] 忽略变化: ${filePath} (匹配忽略规则: ${ignoredPath})`);
+                }
+                return true;
+            }
+        }
+        return false;
+    }
+
+    private logFileSystemEvent(eventType: string, uri: vscode.Uri): void { // 简洁的文件系统事件日志
+        console.log(`[文件监视器] 检测到${eventType}: ${uri.fsPath}`);
+    }
+
+    private handleFileChange(uri: vscode.Uri): void { // 处理文件或文件夹变化事件
+        if (ConfigManager.isDebugMode()) {
+            console.log(`[刷新触发] 精准刷新: ${uri.fsPath}`);
+        }
+        this.refreshSpecific(uri); // 纯粹的谁变化刷新谁
+    }
+
+    private handleFileDelete(uri: vscode.Uri): void { // 处理文件或文件夹删除事件
+        const filePath = uri.fsPath;
+
+        // 清除被删除项目的缓存和计算状态
+        this._fileCache.delete(filePath);
+        this._folderCache.delete(filePath);
+
+        if (this._calculatingDirs.has(filePath)) { // 取消可能正在进行的计算
+            const controller = this._abortControllers.get(filePath);
+            if (controller) {
+                controller.abort();
+                this._abortControllers.delete(filePath);
+            }
+            this._calculatingDirs.delete(filePath);
+        }
+
+        if (ConfigManager.isDebugMode()) {
+            console.log(`[删除处理] → 清理缓存: ${filePath}`);
+        }
+        // 删除事件不需要刷新，依赖 VS Code 原生机制
     }
 }
