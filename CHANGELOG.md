@@ -1,9 +1,5 @@
 # 更新日志 | Change Log
 
-## 1.4.1
-
-修复市场发布问题 | Fixed marketplace publishing issue
-
 ## 1.4.0
 
 1. 大幅优化扩展的性能 | Significant performance optimizations
