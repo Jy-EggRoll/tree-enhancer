@@ -1,5 +1,9 @@
 # 更新日志 | Change Log
 
+## 1.4.1
+
+增加启动延迟，提升插件性能 | Added startup delay to improve plugin performance
+
 ## 1.4.0
 
 1. 大幅优化扩展的性能 | Significant performance optimizations

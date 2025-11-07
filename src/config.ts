@@ -17,7 +17,7 @@ export class ConfigManager { // 配置管理器类，提供统一的配置访问
             folderCalculatingTemplate: config.get<string>('folderCalculatingTemplate', 'Please restart VS Code to apply the localization tooltip.'),
             folderTimeoutTemplate: config.get<string>('folderTimeoutTemplate', 'Please restart VS Code to apply the localization tooltip.'),
             dateTimeFormat: config.get<string>('dateTimeFormat', 'YYYY-MM-DD HH:mm:ss'),
-            startupDelay: config.get<number>('startupDelay', 0),
+            startupDelay: config.get<number>('startupDelay', 5),
             refreshInterval: config.get<number>('refreshInterval', 60),
             largeFileThreshold: config.get<number>('largeFileThreshold', 50)
         };
@@ -44,7 +44,7 @@ export class ConfigManager { // 配置管理器类，提供统一的配置访问
     }
 
     public static getStartupDelay(): number { // 获取启动延迟时间（秒）
-        return this.get<number>('startupDelay', 0);
+        return this.get<number>('startupDelay', 5);
     }
 
     public static getRefreshInterval(): number { // 获取刷新间隔时间（秒）

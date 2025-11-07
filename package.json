@@ -85,7 +85,7 @@
                     "type": "number"
                 },
                 "tree-enhancer.startupDelay": {
-                    "default": 0,
+                    "default": 5,
                     "description": "%description.tree-enhancer.startupDelay%",
                     "maximum": 10,
                     "minimum": 0,
@@ -142,5 +142,5 @@
         "compile": "npm run check-types && node esbuild.js",
         "package": "npm run check-types && node esbuild.js --production"
     },
-    "version": "1.4.0"
+    "version": "1.4.1"
 }
