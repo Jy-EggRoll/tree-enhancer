@@ -20,7 +20,7 @@
                     "type": "string"
                 },
                 "eggroll-tree-enhancer.debugMode": {
-                    "default": true,
+                    "default": false,
                     "description": "%description.eggroll-tree-enhancer.debugMode%",
                     "type": "boolean"
                 },
@@ -63,18 +63,18 @@
                     "description": "%description.eggroll-tree-enhancer.imageResolutionTemplate%",
                     "type": "string"
                 },
+                "eggroll-tree-enhancer.largeFileThreshold": {
+                    "default": 50,
+                    "description": "%description.eggroll-tree-enhancer.largeFileThreshold%",
+                    "maximum": 1000,
+                    "minimum": 0,
+                    "type": "number"
+                },
                 "eggroll-tree-enhancer.maxCalculationTime": {
                     "default": 100,
                     "description": "%description.eggroll-tree-enhancer.maxCalculationTime%",
                     "maximum": 60000,
                     "minimum": 10,
-                    "type": "number"
-                },
-                "eggroll-tree-enhancer.startupDelay": {
-                    "default": 5,
-                    "description": "%description.eggroll-tree-enhancer.startupDelay%",
-                    "maximum": 10,
-                    "minimum": 0,
                     "type": "number"
                 },
                 "eggroll-tree-enhancer.refreshInterval": {
@@ -84,10 +84,10 @@
                     "minimum": 0,
                     "type": "number"
                 },
-                "eggroll-tree-enhancer.largeFileThreshold": {
-                    "default": 50,
-                    "description": "%description.eggroll-tree-enhancer.largeFileThreshold%",
-                    "maximum": 1000,
+                "eggroll-tree-enhancer.startupDelay": {
+                    "default": 5,
+                    "description": "%description.eggroll-tree-enhancer.startupDelay%",
+                    "maximum": 10,
                     "minimum": 0,
                     "type": "number"
                 }
