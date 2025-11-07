@@ -131,7 +131,7 @@
     ],
     "license": "MIT",
     "main": "./dist/extension.js",
-    "name": "tree-enhancer",
+    "name": "eggroll-tree-enhancer",
     "publisher": "Jy-EggRoll",
     "repository": {
         "type": "git",
