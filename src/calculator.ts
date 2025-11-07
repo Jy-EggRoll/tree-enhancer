@@ -1,4 +1,4 @@
-import { DirectoryInfo } from './types'; // 类型定义，描述目录信息结构  
+import { DirectoryInfo } from './types'; // 类型定义，描述目录信息结构
 import { FileUtils } from './fileUtils'; // 文件工具类，封装文件系统操作
 import { ConfigManager } from './config'; // 配置管理器，获取全局配置
 
@@ -40,31 +40,6 @@ export class DirectoryCalculator { // 文件夹信息计算器，递归统计文
             if (signal?.aborted || (error as Error).message === 'Calculation aborted') { throw error; } // 取消操作抛出
             if (ConfigManager.isDebugMode()) { console.error(`计算目录信息失败: ${dirPath}`, error); }
             return { size: 0, fileCount: 0, folderCount: 0 }; // 失败返回 0
-        }
-    }
-
-    public static async getDirectChildrenCount(dirPath: string): Promise<{ // 快速获取文件夹的直接子项数量（不递归）
-        fileCount: number;
-        folderCount: number;
-    }> {
-        if (ConfigManager.isDebugMode()) { console.log(`快速扫描文件夹: ${dirPath}`); } // 调试：记录快速扫描开始
-        try {
-            const items = await FileUtils.getDirectoryEntries(dirPath);
-            let fileCount = 0;
-            let folderCount = 0;
-
-            for (const item of items) {
-                if (item.isFile()) {
-                    fileCount++;
-                } else if (item.isDirectory()) {
-                    folderCount++;
-                }
-            }
-            if (ConfigManager.isDebugMode()) { console.log(`快速扫描结果: ${dirPath} - 文件=${fileCount}, 文件夹=${folderCount}`); } // 调试：记录快速扫描结果
-            return { fileCount, folderCount };
-        } catch (error) {
-            if (ConfigManager.isDebugMode()) { console.warn(`无法读取目录: ${dirPath}`, error); }
-            return { fileCount: 0, folderCount: 0 };
         }
     }
 

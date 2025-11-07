@@ -150,19 +150,7 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider { /
         const cacheKey = uri.fsPath;
         this._calculatingDirs.add(cacheKey); // 标记为计算中并启动详细计算
         if (ConfigManager.isDebugMode()) { console.log(`[计算开始] 文件夹 ${fileName} 已标记为计算中，开始异步计算`); } // 调试：记录计算开始
-        try {
-            const directChildren = await DirectoryCalculator.getDirectChildrenCount(uri.fsPath); // 尝试快速获取文件夹的直接子项数量（不递归）
-            const estimateInfo = `计算中（预估 ${directChildren.fileCount}+ 文件，${directChildren.folderCount}+ 文件夹）`; // 创建包含估算信息的变量对象
-            const variables = {
-                ...Formatters.createCalculatingVariables(fileName, stats.mtime),
-                estimate: estimateInfo
-            };
-            let displayTemplate = config.folderCalculatingTemplate; // 如果模板支持估算信息占位符，使用它；否则使用基本模板
-            if (displayTemplate.includes('{estimate}')) {
-                displayTemplate = displayTemplate.replace(/{estimate}/g, estimateInfo);
-            }
-        } catch (quickError) { // 如果连快速读取都失败，使用基本的计算中模板
-        }
+
         this.calculateAndUpdateDirectoryInfo(uri) // 异步启动完整的递归计算任务
             .then(() => {
                 if (ConfigManager.isDebugMode()) { console.log(`[计算完成] 文件夹 ${fileName} 计算成功，触发界面刷新`); } // 调试：记录计算完成
