@@ -9,15 +9,19 @@
 ## 功能演示
 
 - 文件大小显示：悬浮在文件上时，显示文件的大小，支持所有文件类型。
+
   ![文件大小显示](assets/gifs/文件大小显示.gif)
 
 - 文件夹详情显示：悬浮在文件夹上时，显示文件夹的总大小、包含的文件数量和子文件夹数量。
+
   ![文件夹详情显示](assets/gifs/文件夹详情显示.gif)
 
 - 媒体文件元信息展示：对于媒体文件做了特殊优化，可以读取其元信息，如图片的分辨率（当前版本只支持图片，日后会逐渐加入更多媒体文件类型）。
+
   ![媒体文件元信息展示](assets/gifs/媒体文件元信息显示.gif)
 
 - 大文件标注：对于大文件，会用类似 Git 扩展的样式进行标识（追加一个 L 标志，可以和 Git 标志共存），方便用户识别，和 Git 的集成性非常好。假如您的工作区是 Git 仓库，这将有效提示用户，避免误提交大文件。纵使您不使用 Git 仓库，该标识也有助于您识别大文件。
+
   ![大文件标注](assets/images/大文件标注.png)
 
   ![与 Git 的集成](assets/images/与_Git_的集成.png)
@@ -33,6 +37,7 @@
 ## 已知问题
 
 - 当目录中包含错误、警告、高优先级提示（VS Code 显示“包含强调项”）时，该高优先级提示将覆盖本扩展的悬停信息。这是 VS Code 自身的机制，目前暂无解决方案。待“包含强调项”状态解除后，本扩展功能将自动恢复。
+
   ![已知问题](assets/gifs/已知问题.gif)
 
 ## 性能优化
@@ -70,15 +75,19 @@ A lightweight, high-performance VS Code extension designed to enhance the native
 ## Feature Demonstrations
 
 - File Size Display: Hover over a file to show its size, supporting all file types.
+
   ![File Size Display](assets/gifs/文件大小显示.gif)
 
 - Folder Details Display: Hover over a folder to show its total size, number of contained files, and number of subfolders.
+
   ![Folder Details Display](assets/gifs/文件夹详情显示.gif)
 
 - Media File Metadata Display: Specialized optimization for media files allows reading their metadata, such as image resolution (only images are supported in the current version; more media file types will be gradually added in the future).
+
   ![Media File Metadata Display](assets/gifs/媒体文件元信息显示.gif)
 
 - Large File Marking: Large files are identified with a style similar to Git extensions (appending an "L" marker that can coexist with Git markers), making it easy for users to recognize. The integration with Git is excellent. If your workspace is a Git repository, this will effectively remind users to avoid accidentally committing large files. Even if you don't use a Git repository, this marker helps you identify large files.
+
   ![Large File Marking](assets/images/大文件标注.png)
 
   ![Integration with Git](assets/images/与_Git_的集成.png)
@@ -94,6 +103,7 @@ You can search for `tree-enhancer` in VS Code's settings to locate the configura
 ## Known Issues
 
 - When a directory contains errors, warnings, or high-priority notifications (VS Code displays "Contains emphasis items"), the high-priority notification will override the hover information of this extension. This is VS Code's own mechanism, and there is currently no solution. Once the "Contains emphasis items" status is lifted, the extension's functionality will automatically resume.
+
   ![Known Issue](assets/gifs/已知问题.gif)
 
 ## Performance Optimization
