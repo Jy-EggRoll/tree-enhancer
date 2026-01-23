@@ -1,7 +1,6 @@
 import * as vscode from "vscode";
 import { imageSize } from "image-size";
 import { SUPPORTED_IMAGE_EXTENSIONS, ImageDimensions } from "./types";
-// import { ConfigManager } from "./config";
 import { log } from "./extension";
 
 export class FileUtils {
