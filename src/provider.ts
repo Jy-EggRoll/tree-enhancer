@@ -55,10 +55,9 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider {
                 !FileUtils.isDirectory(stats) &&
                 this.isLargeFile(stats.size, config)
             ) {
-                // 只为文件添加大文件标识，文件夹不需要
                 decoration.badge = "L"; // 使用 L 标识大文件
 
-                log.info(`[大文件标识] 为大文件 ${fileName} 添加 L 标识`);
+                log.info(`[大文件] ${fileName} 已添加 L 标识`);
             }
 
             return decoration;
@@ -80,12 +79,6 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider {
         config: any,
         filePath: string,
     ): Promise<string> {
-        // 处理文件的装饰信息
-
-        log.info(
-            `[文件处理] 开始处理文件: ${fileName}, 大小: ${stats.size} 字节`,
-        );
-
         // 检查文件缓存，mtime 预检查避免无意义的重复计算
         const cacheKey = filePath;
         const cached = this._fileCache.get(cacheKey);
@@ -106,10 +99,6 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider {
         }
 
         if (FileUtils.isSupportedImage(fileName)) {
-            // 检查是否为支持的图片格式
-
-            log.info(`[图片文件] 检测到支持的图片格式: ${fileName}`);
-
             const imageTemplate =
                 config.imageFileTemplate || config.fileTemplate; // 使用专门的图片文件模板
             const needsImageDimensions = /{resolution}|{width}|{height}/.test(
@@ -120,9 +109,9 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider {
                 : null;
             if (imageDimensions) {
                 log.info(
-                    `[图片尺寸] ${fileName} 分辨率: ${imageDimensions.width}x${imageDimensions.height}`,
+                    `[图片文件] ${fileName} 分辨率: ${imageDimensions.width} * ${imageDimensions.height}`,
                 );
-            } // 调试：记录图片尺寸
+            }
 
             // 缓存图片文件信息
             this._fileCache.set(cacheKey, {
@@ -140,11 +129,6 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider {
             );
             return Formatters.renderTemplate(imageTemplate, variables);
         } else {
-            // 普通文件处理
-
-            log.info(`[普通文件] 处理普通文件: ${fileName}`);
-
-            // 缓存普通文件信息
             this._fileCache.set(cacheKey, {
                 size: stats.size,
                 mtime: stats.mtime,

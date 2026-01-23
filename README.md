@@ -1,5 +1,9 @@
 # 文件树增强（Tree Enhancer）
 
+**注意：此介绍处于不精确的状态，因为最近有几项大型更新正在进行中，部分功能和界面可能会有所变化。**
+
+**Note: This introduction is not accurate, as several major updates are currently underway, and some features and interfaces may change.**
+
 [GotoEnglishVersion](#englishversion)
 
 一款轻量级、高性能的 VSCode 扩展，用于增强原生文件资源管理器。通过悬停操作即时显示文件与目录的详细元数据，如大小、子项计数等。
