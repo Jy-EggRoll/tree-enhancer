@@ -1,7 +1,8 @@
 import * as vscode from "vscode";
 import { imageSize } from "image-size";
 import { SUPPORTED_IMAGE_EXTENSIONS, ImageDimensions } from "./types";
-import { ConfigManager } from "./config";
+// import { ConfigManager } from "./config";
+import { log } from "./extension";
 
 export class FileUtils {
     // 文件操作工具类，封装文件系统操作和路径处理逻辑
@@ -48,7 +49,7 @@ export class FileUtils {
     public static logFileError(error: any, filePath: string): void {
         // 记录文件访问错误，智能地记录不同类型的文件访问错误
         const errorCode = error?.code;
-        console.warn("文件访问错误:", filePath, errorCode || error); // 简单直接记录错误即可，不需要复杂处理
+        log.warn("文件访问错误:", filePath, errorCode || error);
     }
 
     public static isSupportedImage(fileName: string): boolean {

@@ -12,13 +12,10 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(log);
 
     log.info(`正在激活扩展：Tree Enhancer`);
-    log.info(`扩展路径：${context.extensionPath}`);
-    log.info(`扩展版本：${context.extension.packageJSON.version}`);
-    log.info(`当前配置：`, ConfigManager.getConfig());
+    // log.info(`扩展版本：${context.extension.packageJSON.version}`);
+    // log.info(`当前配置：`, ConfigManager.getConfig());
 
     const startupDelay = ConfigManager.getStartupDelay() * 1000; // 获取配置中设置的启动延迟秒数，并转换为毫秒（setTimeout 接收毫秒单位）
-
-    // 再次判断调试模式，控制启动延迟相关日志的输出
     log.info(`将在 ${ConfigManager.getStartupDelay()} 秒后启动文件装饰提供者`);
 
     // 延迟启动文件装饰提供者
@@ -39,17 +36,15 @@ export function activate(context: vscode.ExtensionContext) {
                     // 调用配置管理器方法，判断变更的配置是否属于当前扩展的配置项
                     // 检查是否是我们扩展的配置发生了变化
                     log.info(`[配置变更] 设置已修改，正在更新新设置`);
-                    log.info(`[配置变更] 新配置：`, ConfigManager.getConfig());
+                    // log.info(`[配置变更] 新配置：`, ConfigManager.getConfig());
 
-                    fileDecorationProvider.clearAllStates(); // 清空文件装饰提供者的所有临时状态缓存，避免旧配置状态影响新配置的生效
+                    // fileDecorationProvider.clearAllStates(); // 清空文件装饰提供者的所有临时状态缓存，避免旧配置状态影响新配置的生效
 
                     fileDecorationProvider.refreshAll(); // 触发所有文件/文件夹的装饰刷新操作，立即应用新配置的装饰规则
                 }
             });
         context.subscriptions.push(configChangeDisposable); // 将配置变更监听器的销毁对象加入上下文订阅，确保扩展卸载时自动移除监听器
 
-        // 调试模式下输出延迟启动完成的日志
-        // 输出成功注册的调试信息
         log.info(`[延迟启动完成] 文件装饰提供者已注册`);
     }, startupDelay); // 传入之前计算的延迟毫秒数，作为定时器的延迟执行时长
 
@@ -62,11 +57,7 @@ export function activate(context: vscode.ExtensionContext) {
         },
     });
 
-    // 调试模式下输出扩展激活完成的日志
-    // 输出激活完成的调试信息
-    log.info(
-        `[激活完成] 扩展已成功激活：Tree Enhancer，将在 ${ConfigManager.getStartupDelay()} 秒后开始工作`,
-    );
+    log.info(`[激活完成] 扩展已成功激活`);
 }
 
-export function deactivate() {} // 没有需要清理的资源，不处理
+export function deactivate() {}
