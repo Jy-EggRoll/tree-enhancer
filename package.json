@@ -1,0 +1,130 @@
+{
+    "activationEvents": [
+        "onStartupFinished"
+    ],
+    "author": {
+        "name": "EggRoll"
+    },
+    "bugs": {
+        "url": "https://github.com/Jy-EggRoll/tree-enhancer/issues"
+    },
+    "categories": [
+        "Other"
+    ],
+    "contributes": {
+        "configuration": {
+            "properties": {
+                "tree-enhancer.dateTimeFormat": {
+                    "default": "YYYY-MM-DD HH:mm:ss",
+                    "description": "%description.tree-enhancer.dateTimeFormat%",
+                    "type": "string"
+                },
+                "tree-enhancer.fileSizeBase": {
+                    "default": 1000,
+                    "description": "%description.tree-enhancer.fileSizeBase%",
+                    "enum": [
+                        1000,
+                        1024
+                    ],
+                    "type": "number"
+                },
+                "tree-enhancer.fileTemplate": {
+                    "default": {
+                        "fileString": "%default.tree-enhancer.fileTemplate%"
+                    },
+                    "description": "%description.tree-enhancer.fileTemplate%",
+                    "type": "object"
+                },
+                "tree-enhancer.imageFileTemplate": {
+                    "default": {
+                        "imageFileString": "%default.tree-enhancer.imageFileTemplate%"
+                    },
+                    "description": "%description.tree-enhancer.imageFileTemplate%",
+                    "type": "object"
+                },
+                "tree-enhancer.imageResolutionTemplate": {
+                    "default": "%default.tree-enhancer.imageResolutionTemplate%",
+                    "description": "%description.tree-enhancer.imageResolutionTemplate%",
+                    "type": "string"
+                },
+                "tree-enhancer.largeFileThreshold": {
+                    "default": 20,
+                    "description": "%description.tree-enhancer.largeFileThreshold%",
+                    "maximum": 1000,
+                    "minimum": 0,
+                    "type": "number"
+                },
+                "tree-enhancer.maxCalculationTime": {
+                    "default": 100,
+                    "description": "%description.tree-enhancer.maxCalculationTime%",
+                    "maximum": 60000,
+                    "minimum": 10,
+                    "type": "number"
+                },
+                "tree-enhancer.startupDelay": {
+                    "default": 0,
+                    "description": "%description.tree-enhancer.startupDelay%",
+                    "maximum": 10,
+                    "minimum": 0,
+                    "type": "number"
+                }
+            },
+            "title": "Tree Enhancer"
+        }
+    },
+    "dependencies": {
+        "image-size": "^2.0.2"
+    },
+    "description": "Show more information in the VSCode file explorer when hovering over files and folders | 在 VSCode 资源管理器中悬浮显示文件/文件夹的详细信息（大小、修改时间、文件数量等）",
+    "devDependencies": {
+        "@types/node": "20.x",
+        "@types/vscode": "^1.76.0",
+        "@vscode/test-cli": "^0.0.11",
+        "depcheck": "^1.4.7",
+        "esbuild": "^0.25.9",
+        "npm-run-all": "^4.1.5",
+        "typescript": "^5.8.3",
+        "vsce": "^2.15.0"
+    },
+    "displayName": "Tree Enhancer",
+    "engines": {
+        "vscode": "^1.76.0"
+    },
+    "homepage": "https://github.com/Jy-EggRoll/tree-enhancer#readme",
+    "icon": "icon.png",
+    "keywords": [
+        "file",
+        "folder",
+        "explorer",
+        "size",
+        "tooltip",
+        "tree",
+        "enhancer",
+        "show size",
+        "资源管理器",
+        "文件",
+        "显示"
+    ],
+    "license": "MIT",
+    "main": "./dist/extension.js",
+    "name": "eggroll-tree-enhancer",
+    "publisher": "Jy-EggRoll",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Jy-EggRoll/tree-enhancer.git"
+    },
+    "scripts": {
+        "vscode:prepublish": "pnpm run package",
+        "compile": "pnpm run check-types && node esbuild.js",
+        "watch": "npm-run-all -p watch:*",
+        "watch:esbuild": "node esbuild.js --watch",
+        "watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
+        "package": "pnpm run check-types && node esbuild.js --production",
+        "compile-tests": "tsc -p . --outDir out",
+        "watch-tests": "tsc -p . -w --outDir out",
+        "pretest": "pnpm run compile-tests && pnpm run compile",
+        "check-types": "tsc --noEmit",
+        "test": "vscode-test"
+    },
+    "version": "1.5.0"
+}
