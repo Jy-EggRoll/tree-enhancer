@@ -1,117 +1,117 @@
 name: Package Extension
 
 on:
-  push:
-    tags:
-      - '[0-9]+.[0-9]+.[0-9]+.dev.[0-9]+'  # 匹配 x.y.z.dev.n 格式的开发版本标签
-  workflow_dispatch:  # 支持手动运行
+    push:
+        tags:
+            - "[0-9]+.[0-9]+.[0-9]+.dev.[0-9]+" # 匹配 x.y.z.dev.n 格式的开发版本标签
+    workflow_dispatch: # 支持手动运行
 
 permissions:
-  contents: write
+    contents: write
 
 jobs:
-  package:
-    runs-on: ubuntu-latest
-    
-    steps:
-      - name: Checkout code
-        uses: actions/checkout@v4
-        with:
-          fetch-depth: 0
+    package:
+        runs-on: ubuntu-latest
 
-      - name: Setup Node.js
-        uses: actions/setup-node@v4
-        with:
-          node-version: '20'
+        steps:
+            - name: Checkout code
+              uses: actions/checkout@v4
+              with:
+                  fetch-depth: 0
 
-      - name: Setup pnpm
-        uses: pnpm/action-setup@v4
-        with:
-          version: latest
+            - name: Setup Node.js
+              uses: actions/setup-node@v4
+              with:
+                  node-version: "20"
 
-      - name: Get pnpm store directory
-        shell: bash
-        run: |
-          echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
+            - name: Setup pnpm
+              uses: pnpm/action-setup@v4
+              with:
+                  version: latest
 
-      - name: Setup pnpm cache
-        uses: actions/cache@v4
-        with:
-          path: ${{ env.STORE_PATH }}
-          key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
-          restore-keys: |
-            ${{ runner.os }}-pnpm-store-
+            - name: Get pnpm store directory
+              shell: bash
+              run: |
+                  echo "STORE_PATH=$(pnpm store path --silent)" >> $GITHUB_ENV
 
-      - name: Install dependencies
-        run: pnpm install --frozen-lockfile
+            - name: Setup pnpm cache
+              uses: actions/cache@v4
+              with:
+                  path: ${{ env.STORE_PATH }}
+                  key: ${{ runner.os }}-pnpm-store-${{ hashFiles('**/pnpm-lock.yaml') }}
+                  restore-keys: |
+                      ${{ runner.os }}-pnpm-store-
 
-      - name: Build extension
-        run: pnpm run package
+            - name: Install dependencies
+              run: pnpm install --frozen-lockfile
 
-      - name: Install vsce
-        run: pnpm add -g @vscode/vsce
+            - name: Build extension
+              run: pnpm run package
 
-      - name: Get version info
-        id: get_version
-        run: |
-          if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-            # 手动运行时，从 package.json 获取版本
-            VERSION=$(node -p "require('./package.json').version")
-            echo "Manual run - using package.json version: $VERSION"
-          else
-            # Tag 触发时，从 tag 获取版本
-            VERSION=${GITHUB_REF#refs/tags/}
-            echo "Tag triggered - using tag version: $VERSION"
-          fi
-          echo "version=$VERSION" >> $GITHUB_OUTPUT
+            - name: Install vsce
+              run: pnpm add -g @vscode/vsce
 
-      - name: Show version info
-        run: |
-          PACKAGE_VERSION=$(node -p "require('./package.json').version")
-          TAG_VERSION="${{ steps.get_version.outputs.version }}"
-          echo "Package.json version: $PACKAGE_VERSION"
-          echo "Current version: $TAG_VERSION"
-          echo "ℹ️ Development versions don't require exact version matching"
+            - name: Get version info
+              id: get_version
+              run: |
+                  if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
+                    # 手动运行时，从 package.json 获取版本
+                    VERSION=$(node -p "require('./package.json').version")
+                    echo "Manual run - using package.json version: $VERSION"
+                  else
+                    # Tag 触发时，从 tag 获取版本
+                    VERSION=${GITHUB_REF#refs/tags/}
+                    echo "Tag triggered - using tag version: $VERSION"
+                  fi
+                  echo "version=$VERSION" >> $GITHUB_OUTPUT
 
-      - name: Package extension
-        run: |
-          # 打包生成 .vsix 文件（仅打包，不发布）
-          pnpm vsce package --no-dependencies
+            - name: Show version info
+              run: |
+                  PACKAGE_VERSION=$(node -p "require('./package.json').version")
+                  TAG_VERSION="${{ steps.get_version.outputs.version }}"
+                  echo "Package.json version: $PACKAGE_VERSION"
+                  echo "Current version: $TAG_VERSION"
+                  echo "ℹ️ Development versions don't require exact version matching"
 
-      - name: Create development release (for tag runs only)
-        if: github.event_name != 'workflow_dispatch'
-        uses: softprops/action-gh-release@v2
-        with:
-          tag_name: ${{ steps.get_version.outputs.version }}
-          name: "Tree Enhancer v${{ steps.get_version.outputs.version }} (开发版)"
-          body: |
-            # 🚧 开发版本 - 仅供测试
+            - name: Package extension
+              run: |
+                  # 打包生成 .vsix 文件（仅打包，不发布）
+                  pnpm vsce package --no-dependencies
 
-            这是一个开发版本，用于内部测试。请不要在生产环境中使用。
+            - name: Create development release (for tag runs only)
+              if: github.event_name != 'workflow_dispatch'
+              uses: softprops/action-gh-release@v2
+              with:
+                  tag_name: ${{ steps.get_version.outputs.version }}
+                  name: "Tree Enhancer v${{ steps.get_version.outputs.version }} (开发版)"
+                  body: |
+                      # 🚧 开发版本 - 仅供测试
 
-            ## 版本信息
-            - 版本号: ${{ steps.get_version.outputs.version }}
-            - 构建时间: ${{ github.run_id }}
-            - 提交: ${{ github.sha }}
+                      这是一个开发版本，用于内部测试。请不要在生产环境中使用。
 
-            ## 注意事项
-            ⚠️ 此版本不会发布到 VS Code 市场
-            ⚠️ 仅通过 GitHub Release 提供下载
-            ⚠️ 可能包含未经充分测试的功能
+                      ## 版本信息
+                      - 版本号: ${{ steps.get_version.outputs.version }}
+                      - 构建时间: ${{ github.run_id }}
+                      - 提交: ${{ github.sha }}
 
-            ---
+                      ## 注意事项
+                      ⚠️ 此版本不会发布到 VS Code 市场
+                      ⚠️ 仅通过 GitHub Release 提供下载
+                      ⚠️ 可能包含未经充分测试的功能
 
-            📦 **安装方式：** 下载 .vsix 文件并在 VS Code 中手动安装
-          files: |
-            *.vsix
-          draft: false
-          prerelease: true
-        env:
-          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+                      ---
 
-      - name: Upload VSIX artifact
-        uses: actions/upload-artifact@v4
-        with:
-          name: vsix-package-${{ steps.get_version.outputs.version }}
-          path: "*.vsix"
-          retention-days: 30
+                      📦 **安装方式：** 下载 .vsix 文件并在 VS Code 中手动安装
+                  files: |
+                      *.vsix
+                  draft: false
+                  prerelease: true
+              env:
+                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+            - name: Upload VSIX artifact
+              uses: actions/upload-artifact@v4
+              with:
+                  name: vsix-package-${{ steps.get_version.outputs.version }}
+                  path: "*.vsix"
+                  retention-days: 30

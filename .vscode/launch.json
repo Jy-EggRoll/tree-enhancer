@@ -5,7 +5,7 @@
                 "--extensionDevelopmentPath=${workspaceFolder}",
                 "--profile=扩展测试" // 配置一个没有任何扩展的配置文件，方便扩展开发，这样就不会产生任何冲突
             ],
-            "name": "Run Extension",
+            "name": "启动扩展",
             "outFiles": [
                 "${workspaceFolder}/dist/**/*.js"
             ],
