@@ -1,6 +1,7 @@
 import { DirectoryInfo } from "./types"; // 类型定义，描述目录信息结构
 import { FileUtils } from "./fileUtils"; // 文件工具类，封装文件系统操作
 import { ConfigManager } from "./config"; // 配置管理器，获取全局配置
+import { log } from "./extension"
 
 export class DirectoryCalculator {
     // 文件夹信息计算器，递归统计文件夹大小、文件数、文件夹数，支持取消
@@ -13,7 +14,7 @@ export class DirectoryCalculator {
             throw new Error("Calculation aborted");
         } // 检查是否被取消
         if (ConfigManager.isDebugMode()) {
-            console.log(`开始计算文件夹: ${dirPath}`);
+            log.info(`开始计算文件夹: ${dirPath}`);
         } // 调试：记录开始计算
         try {
             let totalSize = 0; // 总大小
@@ -21,7 +22,7 @@ export class DirectoryCalculator {
             let folderCount = 0; // 文件夹数
             const items = await FileUtils.getDirectoryEntries(dirPath); // 读取目录内容
             if (ConfigManager.isDebugMode()) {
-                console.log(`文件夹 ${dirPath} 包含 ${items.length} 个项目`);
+                log.info(`文件夹 ${dirPath} 包含 ${items.length} 个项目`);
             } // 调试：记录项目数量
             for (const item of items) {
                 // 遍历每个项目
@@ -61,7 +62,7 @@ export class DirectoryCalculator {
                 }
             }
             if (ConfigManager.isDebugMode()) {
-                console.log(
+                log.info(
                     `文件夹 ${dirPath} 计算完成: 大小=${totalSize}, 文件=${fileCount}, 文件夹=${folderCount}`,
                 );
             } // 调试：记录计算结果
@@ -87,17 +88,13 @@ export class DirectoryCalculator {
     ): Promise<DirectoryInfo> {
         const timeout = timeoutMs || ConfigManager.getMaxCalculationTime();
         if (ConfigManager.isDebugMode()) {
-            console.log(
-                `开始带超时的文件夹计算: ${dirPath}, 超时=${timeout}ms`,
-            );
+            log.info(`开始带超时的文件夹计算: ${dirPath}, 超时=${timeout}ms`);
         } // 调试：记录超时计算开始
         const abortController = new AbortController(); // 创建取消控制器，用于实现超时功能
         const timeoutId = setTimeout(() => {
             // 设置超时定时器
             if (ConfigManager.isDebugMode()) {
-                console.log(
-                    `文件夹计算超时，已取消: ${dirPath} (${timeout}ms)`,
-                );
+                log.info(`文件夹计算超时，已取消: ${dirPath} (${timeout}ms)`);
             }
             abortController.abort(); // 发送取消信号
         }, timeout);
@@ -109,7 +106,7 @@ export class DirectoryCalculator {
             ); // 开始计算文件夹信息
             clearTimeout(timeoutId); // 计算成功完成，清除超时定时器
             if (ConfigManager.isDebugMode()) {
-                console.log(
+                log.info(
                     `文件夹计算完成: ${dirPath}, 大小: ${result.size}, 文件: ${result.fileCount}, 文件夹: ${result.folderCount}`,
                 );
             }
