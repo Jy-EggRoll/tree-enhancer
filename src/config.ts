@@ -12,33 +12,32 @@ export class ConfigManager {
         return {
             maxCalculationTime: config.get<number>("maxCalculationTime", 100),
             fileSizeBase: config.get<number>("fileSizeBase", 1000),
-            debugMode: config.get<boolean>("debugMode", false),
             fileTemplate: config.get<string>(
                 "fileTemplate",
-                "Please restart VS Code to apply the localization tooltip.",
+                "Please restart VSCode to apply the localization tooltip.",
             ),
             imageFileTemplate: config.get<string>(
                 "imageFileTemplate",
-                "Please restart VS Code to apply the localization tooltip.",
+                "Please restart VSCode to apply the localization tooltip.",
             ),
             folderTemplate: config.get<string>(
                 "folderTemplate",
-                "Please restart VS Code to apply the localization tooltip.",
+                "Please restart VSCode to apply the localization tooltip.",
             ),
             folderCalculatingTemplate: config.get<string>(
                 "folderCalculatingTemplate",
-                "Please restart VS Code to apply the localization tooltip.",
+                "Please restart VSCode to apply the localization tooltip.",
             ),
             folderTimeoutTemplate: config.get<string>(
                 "folderTimeoutTemplate",
-                "Please restart VS Code to apply the localization tooltip.",
+                "Please restart VSCode to apply the localization tooltip.",
             ),
             dateTimeFormat: config.get<string>(
                 "dateTimeFormat",
                 "YYYY-MM-DD HH:mm:ss",
             ),
-            startupDelay: config.get<number>("startupDelay", 5),
-            largeFileThreshold: config.get<number>("largeFileThreshold", 50),
+            startupDelay: config.get<number>("startupDelay", 0),
+            largeFileThreshold: config.get<number>("largeFileThreshold", 20),
         };
     }
 
@@ -56,16 +55,6 @@ export class ConfigManager {
         return event.affectsConfiguration(this.CONFIG_SECTION);
     }
 
-    public static isDebugMode(): boolean {
-        // 获取调试模式状态
-        return this.get<boolean>("debugMode", false);
-    }
-
-    public static getMaxCalculationTime(): number {
-        // 获取最大计算时间（毫秒）
-        return this.get<number>("maxCalculationTime", 5000);
-    }
-
     public static getFileSizeBase(): number {
         // 获取文件大小计算基底（1000 或 1024）
         return this.get<number>("fileSizeBase", 1000);
@@ -73,7 +62,7 @@ export class ConfigManager {
 
     public static getStartupDelay(): number {
         // 获取启动延迟时间（秒）
-        return this.get<number>("startupDelay", 5);
+        return this.get<number>("startupDelay", 0);
     }
 
     public static getLargeFileThreshold(): number {

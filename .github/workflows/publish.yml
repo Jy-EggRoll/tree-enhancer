@@ -75,7 +75,7 @@ jobs:
                   # 打包生成 .vsix 文件，禁用依赖项检查
                   pnpm vsce package --no-dependencies
 
-            - name: Publish to VS Code Marketplace
+            - name: Publish to VSCode Marketplace
               run: |
                   # 发布到市场
                   pnpm vsce publish --no-dependencies --pat ${{ secrets.VSCE_TOKEN }}
@@ -106,7 +106,7 @@ jobs:
                   PREVIOUS_TAG="${{ steps.previous_tag.outputs.previous_tag }}"
 
                   # 创建发布说明文件
-                  echo "# VS Code Tree Enhancer v$CURRENT_TAG" > release_notes.md
+                  echo "# VSCode Tree Enhancer v$CURRENT_TAG" > release_notes.md
 
                   # 检查是否有 CHANGELOG.md 文件并提取相关版本信息
                   if [ -f "CHANGELOG.md" ]; then
@@ -147,7 +147,7 @@ jobs:
                   echo "" >> release_notes.md
                   echo "📦 **安装方式：**" >> release_notes.md
                   echo "" >> release_notes.md
-                  echo "- 通过 VS Code 扩展市场搜索 \"Tree Enhancer\" 安装" >> release_notes.md
+                  echo "- 通过 VSCode 扩展市场搜索 \"Tree Enhancer\" 安装" >> release_notes.md
                   echo "- 或下载 .vsix 文件手动安装" >> release_notes.md
 
                   echo "生成的发布说明:"

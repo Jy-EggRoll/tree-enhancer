@@ -95,13 +95,13 @@ jobs:
                       - 提交: ${{ github.sha }}
 
                       ## 注意事项
-                      ⚠️ 此版本不会发布到 VS Code 市场
+                      ⚠️ 此版本不会发布到 VSCode 市场
                       ⚠️ 仅通过 GitHub Release 提供下载
                       ⚠️ 可能包含未经充分测试的功能
 
                       ---
 
-                      📦 **安装方式：** 下载 .vsix 文件并在 VS Code 中手动安装
+                      📦 **安装方式：** 下载 .vsix 文件并在 VSCode 中手动安装
                   files: |
                       *.vsix
                   draft: false

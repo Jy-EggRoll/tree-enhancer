@@ -47,7 +47,6 @@ export class FileUtils {
 
     public static logFileError(error: any, filePath: string): void {
         // 记录文件访问错误，智能地记录不同类型的文件访问错误
-        if (!ConfigManager.isDebugMode()) return; // 只在调试模式下记录错误
         const errorCode = error?.code;
         console.warn("文件访问错误:", filePath, errorCode || error); // 简单直接记录错误即可，不需要复杂处理
     }

@@ -19,11 +19,6 @@
                     "description": "%description.tree-enhancer.dateTimeFormat%",
                     "type": "string"
                 },
-                "tree-enhancer.debugMode": {
-                    "default": false,
-                    "description": "%description.tree-enhancer.debugMode%",
-                    "type": "boolean"
-                },
                 "tree-enhancer.fileSizeBase": {
                     "default": 1000,
                     "description": "%description.tree-enhancer.fileSizeBase%",
@@ -64,7 +59,7 @@
                     "type": "string"
                 },
                 "tree-enhancer.largeFileThreshold": {
-                    "default": 50,
+                    "default": 20,
                     "description": "%description.tree-enhancer.largeFileThreshold%",
                     "maximum": 1000,
                     "minimum": 0,
@@ -78,7 +73,7 @@
                     "type": "number"
                 },
                 "tree-enhancer.startupDelay": {
-                    "default": 5,
+                    "default": 0,
                     "description": "%description.tree-enhancer.startupDelay%",
                     "maximum": 10,
                     "minimum": 0,
@@ -91,7 +86,7 @@
     "dependencies": {
         "image-size": "^2.0.2"
     },
-    "description": "Show more information in the VS Code file explorer when hovering over files and folders | 在 VS Code 资源管理器中悬浮显示文件/文件夹的详细信息（大小、修改时间、文件数量等）",
+    "description": "Show more information in the VSCode file explorer when hovering over files and folders | 在 VSCode 资源管理器中悬浮显示文件/文件夹的详细信息（大小、修改时间、文件数量等）",
     "devDependencies": {
         "@types/node": "20.x",
         "@types/vscode": "^1.76.0",

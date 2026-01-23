@@ -10,7 +10,6 @@ export interface ExtensionConfig {
     // 扩展配置接口
     maxCalculationTime: number; // 最大计算时间（毫秒）
     fileSizeBase: number; // 文件大小计算基底（1000 或 1024）
-    debugMode: boolean; // 调试模式开关
     fileTemplate: string; // 文件模板
     imageFileTemplate: string; // 图片文件模板
     folderTemplate: string; // 文件夹模板

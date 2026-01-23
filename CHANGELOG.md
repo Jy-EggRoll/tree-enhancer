@@ -15,11 +15,11 @@
 ## 1.4.0
 
 1. 大幅优化扩展的性能 | Significant performance optimizations
-   - 引入智能刷新机制，定期刷新文件装饰，避免频繁全量刷新 | Introduced intelligent refresh mechanism to periodically refresh file decorations, avoiding frequent full refreshes
-   - 优化缓存机制，减少重复计算 | Optimized caching mechanism to reduce redundant calculations
+    - 引入智能刷新机制，定期刷新文件装饰，避免频繁全量刷新 | Introduced intelligent refresh mechanism to periodically refresh file decorations, avoiding frequent full refreshes
+    - 优化缓存机制，减少重复计算 | Optimized caching mechanism to reduce redundant calculations
 2. 新增大文件标识功能，用类似 Git 扩展的样式标识大文件 | Added large file identification feature, marking large files with a style similar to Git extension
 
-  ![大文件标注](assets/images/大文件标注.png)
+![大文件标注](assets/images/大文件标注.png)
 
 3. 修复大量问题 | Fixed numerous issues
 4. 优化代码结构，提高可维护性 | Improved code structure for better maintainability
@@ -62,7 +62,7 @@
 
 ## 1.1.1
 
-1. 降低了对 VS Code 的版本要求 | Lowered the version requirement for VS Code
+1. 降低了对 VSCode 的版本要求 | Lowered the version requirement for VSCode
 2. 增加了本地化功能 | Added localization support
 
 ## 1.1.0
