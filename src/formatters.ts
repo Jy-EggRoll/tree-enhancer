@@ -75,12 +75,12 @@ export class Formatters {
                 variables.folderCount.toString(),
             );
         }
-        if (variables.maxCalculationTime !== undefined) {
-            result = result.replace(
-                /{maxCalculationTime}/g,
-                variables.maxCalculationTime.toString(),
-            );
-        }
+        // if (variables.maxCalculationTime !== undefined) {
+        //     result = result.replace(
+        //         /{maxCalculationTime}/g,
+        //         variables.maxCalculationTime.toString(),
+        //     );
+        // }
 
         if (variables.resolution !== undefined) {
             // 替换图片分辨率相关变量，如果变量未定义则移除整个占位符

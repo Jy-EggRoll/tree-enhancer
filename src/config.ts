@@ -13,12 +13,12 @@ export class ConfigManager {
             "fileTemplate",
             { fileString: "Please restart VSCode" },
         );
+
         const rawImageFileTemplate = config.get<{
             imageFileString?: string;
         }>("imageFileTemplate", { imageFileString: "Please restart VSCode" });
 
         return {
-            maxCalculationTime: config.get<number>("maxCalculationTime", 100),
             fileSizeBase: config.get<number>("fileSizeBase", 1000),
             fileTemplate: rawFileTemplate.fileString || "Please restart VSCode",
             imageFileTemplate:

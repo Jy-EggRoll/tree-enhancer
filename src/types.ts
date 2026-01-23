@@ -8,7 +8,7 @@
 
 // 扩展配置接口
 export interface ExtensionConfig {
-    maxCalculationTime: number; // 最大计算时间（毫秒）
+    // maxCalculationTime: number; // 最大计算时间（毫秒）
     fileSizeBase: number; // 文件大小计算基底（1000 或 1024）
     fileTemplate: string; // 文件模板
     imageFileTemplate: string; // 图片文件模板
@@ -26,7 +26,7 @@ export interface TemplateVariables {
     folderCount?: number; // 文件夹数量
     modifiedTime: string; // 格式化后的修改时间
     rawModifiedTime: Date; // 原始修改时间
-    maxCalculationTime?: number; // 最大计算时间（毫秒）
+    // maxCalculationTime?: number; // 最大计算时间（毫秒）
     resolution?: string; // 图片分辨率信息
     width?: number; // 图片宽度
     height?: number; // 图片高度

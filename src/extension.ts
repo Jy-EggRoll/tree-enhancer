@@ -35,17 +35,25 @@ export function activate(context: vscode.ExtensionContext) {
                 if (ConfigManager.isConfigChanged(event)) {
                     // 调用配置管理器方法，判断变更的配置是否属于当前扩展的配置项
                     // 检查是否是我们扩展的配置发生了变化
-                    log.info(`[配置变更] 设置已修改，正在更新新设置`);
-                    // log.info(`[配置变更] 新配置：`, ConfigManager.getConfig());
-
-                    // fileDecorationProvider.clearAllStates(); // 清空文件装饰提供者的所有临时状态缓存，避免旧配置状态影响新配置的生效
 
                     fileDecorationProvider.refreshAll(); // 触发所有文件/文件夹的装饰刷新操作，立即应用新配置的装饰规则
+                    log.info(
+                        `[配置变更] 设置已修改，正在刷新所有文件装饰`,
+                    );
                 }
             });
         context.subscriptions.push(configChangeDisposable); // 将配置变更监听器的销毁对象加入上下文订阅，确保扩展卸载时自动移除监听器
 
-        log.info(`[延迟启动完成] 文件装饰提供者已注册`);
+        // 只在文档保存时刷新对应文件装饰，避免因每次编辑（每次按键）触发大量刷新导致高负载或看似死循环
+        const changeListener = vscode.workspace.onDidSaveTextDocument(
+            (document) => {
+                fileDecorationProvider.refreshSpecific(document.uri);
+                log.info(
+                    `[文件保存] ${document.uri.fsPath} 已保存，正在刷新对应文件装饰`,
+                );
+            },
+        );
+        context.subscriptions.push(changeListener);
     }, startupDelay); // 传入之前计算的延迟毫秒数，作为定时器的延迟执行时长
 
     // 将启动定时器添加到订阅中，确保扩展卸载时能够正确清理

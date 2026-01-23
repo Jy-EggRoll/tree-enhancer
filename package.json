@@ -54,13 +54,6 @@
                     "minimum": 0,
                     "type": "number"
                 },
-                "tree-enhancer.maxCalculationTime": {
-                    "default": 100,
-                    "description": "%description.tree-enhancer.maxCalculationTime%",
-                    "maximum": 60000,
-                    "minimum": 10,
-                    "type": "number"
-                },
                 "tree-enhancer.startupDelay": {
                     "default": 0,
                     "description": "%description.tree-enhancer.startupDelay%",
