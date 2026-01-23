@@ -4,13 +4,6 @@ import { FileUtils } from "./fileUtils";
 import { Formatters } from "./formatters";
 import { log } from "./extension";
 
-// interface FileCacheEntry {
-//     // 文件缓存条目
-//     size: number; // 文件大小
-//     imageDimensions?: { width: number; height: number }; // 图片尺寸（如果是图片）
-//     mtime: number; // 文件修改时间
-// }
-
 // 文件装饰提供者类，负责为资源管理器中的文件和文件夹提供装饰信息
 export class FileDecorationProvider implements vscode.FileDecorationProvider {
     private _onDidChangeFileDecorations = new vscode.EventEmitter<
@@ -76,25 +69,6 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider {
         config: any,
         filePath: string,
     ): Promise<string> {
-        // 检查文件缓存，mtime 预检查避免无意义的重复计算
-        // const cacheKey = filePath;
-        // const cached = this._fileCache.get(cacheKey);
-        // if (cached && cached.mtime === stats.mtime) {
-        //     log.info(`[文件缓存命中] 文件 ${fileName} mtime 未变，使用缓存`);
-
-        //     const modifiedTime = new Date(stats.mtime);
-        //     const variables = Formatters.createFileVariables(
-        //         fileName,
-        //         cached.size,
-        //         modifiedTime,
-        //         cached.imageDimensions,
-        //     );
-        //     const template = cached.imageDimensions
-        //         ? config.imageFileTemplate || config.fileTemplate
-        //         : config.fileTemplate;
-        //     return Formatters.renderTemplate(template, variables);
-        // }
-
         if (FileUtils.isSupportedImage(fileName)) {
             const imageTemplate =
                 config.imageFileTemplate || config.fileTemplate; // 使用专门的图片文件模板
@@ -126,11 +100,6 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider {
             );
             return Formatters.renderTemplate(imageTemplate, variables);
         } else {
-            // this._fileCache.set(cacheKey, {
-            //     size: stats.size,
-            //     mtime: stats.mtime,
-            // });
-
             const modifiedTime = new Date(stats.mtime);
             const variables = Formatters.createFileVariables(
                 fileName,
@@ -141,21 +110,8 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider {
         }
     }
 
-    // public clearAllStates(): void {
-    //     // 清除所有内部状态，当配置发生变更时调用，清除所有缓存和计算状态
-
-    //     log.info(`[状态清理] 开始清理所有内部状态`);
-
-    //     const fileCacheCount = this._fileCache.size;
-
-    //     this._fileCache.clear(); // 清除所有文件缓存
-
-    //     // 调试：记录清理统计
-    //     log.info(`[状态清理完成] 清理了 ${fileCacheCount} 个文件缓存`);
-    // }
-
+    // 检查文件是否为大文件
     private isLargeFile(fileSize: number, config: any): boolean {
-        // 检查文件是否为大文件
         const threshold = config.largeFileThreshold || 0; // 获取大文件阈值
         if (threshold <= 0) return false; // 阈值为 0 表示关闭大文件识别
 
@@ -164,21 +120,13 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider {
         return fileSize >= thresholdBytes; // 判断文件大小是否超过阈值
     }
 
+    // 刷新所有文件装饰，触发 VSCode 重新获取所有文件的装饰信息
     public refreshAll(): void {
-        // 刷新所有文件装饰，触发 VSCode 重新获取所有文件的装饰信息
-
-        log.info(`[完全刷新] 通知 VSCode 重新获取所有文件装饰`);
-
         this._onDidChangeFileDecorations.fire(undefined); // 触发所有文件装饰的刷新，undefined 参数表示刷新所有文件，而不是特定文件
+        log.info(`[完全刷新] 已经重新渲染所有文件装饰`);
     }
 
     public refreshSpecific(uri: vscode.Uri): void {
-        // 精准刷新单个文件或文件夹，纯粹的谁变化刷新谁
-        // 清除变化文件的缓存
-        // this._fileCache.delete(uri.fsPath);
-
-        // log.info(`[精准刷新] 刷新单个项目: ${uri.fsPath}`);
-
         // 只刷新变化的文件或文件夹，最简洁的策略
         this._onDidChangeFileDecorations.fire(uri);
     }

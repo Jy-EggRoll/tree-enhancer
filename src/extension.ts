@@ -2,7 +2,7 @@ import * as vscode from "vscode"; // 导入 VSCode 的核心 API 模块，提供
 import { ConfigManager } from "./config"; // 导入自定义的配置管理模块，负责扩展配置的读取、修改检测等核心配置逻辑
 import { FileDecorationProvider } from "./provider"; // 导入自定义的文件装饰提供者模块，用于实现资源管理器中文件/文件夹的装饰增强功能
 
-// 定义一个完善的消息输出入口，而不是把消息输出到控制台
+// 定义一个完善的消息输出入口，而不是把消息输出到控制台，这样用户可以在“输出”面板中查看扩展日志，方便调试和问题排查
 export const log = vscode.window.createOutputChannel("Tree Enhancer", {
     log: true,
 });
@@ -20,41 +20,36 @@ export function activate(context: vscode.ExtensionContext) {
 
     // 延迟启动文件装饰提供者
     const startupTimer = setTimeout(() => {
-        // 创建延迟执行的定时器，按配置的延迟时长启动文件装饰核心逻辑
-        const fileDecorationProvider = new FileDecorationProvider(); // 实例化文件装饰提供者对象，该对象实现文件/文件夹的装饰逻辑
+        const fileDecorationProvider = new FileDecorationProvider(); // 实例化文件装饰提供者对象
         const providerDisposable = vscode.window.registerFileDecorationProvider(
             // 向 VSCode 注册文件装饰提供者，使扩展能接管资源管理器的文件装饰逻辑
             fileDecorationProvider, // 传入实例化的文件装饰提供者对象作为注册参数
         );
-        context.subscriptions.push(providerDisposable); // 将文件装饰提供者的销毁对象加入上下文订阅，确保扩展卸载时自动销毁该提供者
 
+        // 注册 VSCode 配置变更事件监听器，监听所有配置项的修改操作，当用户修改扩展配置时，自动刷新所有文件装饰以应用新设置
         const configChangeDisposable =
             vscode.workspace.onDidChangeConfiguration((event) => {
-                // 注册 VSCode 配置变更事件监听器，监听所有配置项的修改操作
-                // 监听配置变更事件，当用户修改扩展配置时，自动刷新所有文件装饰以应用新设置
                 if (ConfigManager.isConfigChanged(event)) {
-                    // 调用配置管理器方法，判断变更的配置是否属于当前扩展的配置项
-                    // 检查是否是我们扩展的配置发生了变化
-
                     fileDecorationProvider.refreshAll(); // 触发所有文件/文件夹的装饰刷新操作，立即应用新配置的装饰规则
-                    log.info(
-                        `[配置变更] 设置已修改，正在刷新所有文件装饰`,
-                    );
+                    log.info(`[配置变更] 设置已修改，已经刷新所有文件装饰`);
                 }
             });
-        context.subscriptions.push(configChangeDisposable); // 将配置变更监听器的销毁对象加入上下文订阅，确保扩展卸载时自动移除监听器
 
-        // 只在文档保存时刷新对应文件装饰，避免因每次编辑（每次按键）触发大量刷新导致高负载或看似死循环
+        // 在文档保存时刷新对应文件装饰，而非刷新所有，这可以确保在 VSCode 中编辑过的文件保存后，装饰信息能及时更新（主要用于确保修改时间正确）
         const changeListener = vscode.workspace.onDidSaveTextDocument(
             (document) => {
                 fileDecorationProvider.refreshSpecific(document.uri);
                 log.info(
-                    `[文件保存] ${document.uri.fsPath} 已保存，正在刷新对应文件装饰`,
+                    `[文件保存] ${document.uri.fsPath} 已保存，已经刷新对应文件装饰`,
                 );
             },
         );
+
+        // 将各个可释放资源添加到扩展上下文的订阅中，确保扩展卸载时能够正确清理
+        context.subscriptions.push(configChangeDisposable);
         context.subscriptions.push(changeListener);
-    }, startupDelay); // 传入之前计算的延迟毫秒数，作为定时器的延迟执行时长
+        context.subscriptions.push(providerDisposable);
+    }, startupDelay);
 
     // 将启动定时器添加到订阅中，确保扩展卸载时能够正确清理
     context.subscriptions.push({
