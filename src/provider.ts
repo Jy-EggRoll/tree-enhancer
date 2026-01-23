@@ -1,6 +1,4 @@
 import * as vscode from "vscode";
-import * as fs from "fs";
-import * as path from "path";
 import { DirectoryInfo } from "./types";
 import { ConfigManager } from "./config";
 import { FileUtils } from "./fileUtils";
@@ -33,7 +31,6 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider {
     private _abortControllers = new Map<string, AbortController>(); // 存储取消控制器映射表，用于超时取消计算，键为文件路径，值为对应的 AbortController 实例
     private _folderCache = new Map<string, FolderCacheEntry>(); // 文件夹计算结果缓存，避免重复计算和死循环
     private _fileCache = new Map<string, FileCacheEntry>(); // 文件信息缓存，避免重复读取文件大小和图片尺寸
-    private _fileSystemWatcher?: vscode.FileSystemWatcher; // 文件系统监视器，监听文件变化
 
     async provideFileDecoration(
         uri: vscode.Uri,
@@ -52,14 +49,14 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider {
             }
             const fileName = FileUtils.getFileName(uri.fsPath);
             const config = ConfigManager.getConfig();
-            const fileType = stats.isDirectory() ? "文件夹" : "文件"; // 确定文件类型
+            const fileType = FileUtils.isDirectory(stats) ? "文件夹" : "文件"; // 确定文件类型
             if (ConfigManager.isDebugMode()) {
                 log.info(
-                    `[装饰流程] 处理${fileType}: ${fileName}, mtime: ${stats.mtime.toISOString()}`,
+                    `[装饰流程] 处理${fileType}: ${fileName}, mtime: ${new Date(stats.mtime).toISOString()}`,
                 );
             }
             let tooltip: string;
-            if (stats.isDirectory()) {
+            if (FileUtils.isDirectory(stats)) {
                 // 处理文件夹情况
                 tooltip = await this.handleDirectoryDecoration(
                     uri,
@@ -82,7 +79,10 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider {
 
             // 检查是否需要添加大文件标识
             const decoration: vscode.FileDecoration = { tooltip };
-            if (!stats.isDirectory() && this.isLargeFile(stats.size, config)) {
+            if (
+                !FileUtils.isDirectory(stats) &&
+                this.isLargeFile(stats.size, config)
+            ) {
                 // 只为文件添加大文件标识，文件夹不需要
                 decoration.badge = "L"; // 使用 L 标识大文件
                 decoration.color = new vscode.ThemeColor("charts.orange"); // 使用 VS Code 内置橙色
@@ -107,7 +107,7 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider {
 
     private async handleFileDecoration(
         fileName: string,
-        stats: fs.Stats,
+        stats: vscode.FileStat,
         config: any,
         filePath: string,
     ): Promise<string> {
@@ -121,16 +121,17 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider {
         // 检查文件缓存，mtime 预检查避免无意义的重复计算
         const cacheKey = filePath;
         const cached = this._fileCache.get(cacheKey);
-        if (cached && cached.mtime === stats.mtime.getTime()) {
+        if (cached && cached.mtime === stats.mtime) {
             if (ConfigManager.isDebugMode()) {
                 log.info(
                     `[文件缓存命中] 文件 ${fileName} mtime 未变，使用缓存`,
                 );
             } // 调试：记录缓存命中
+            const modifiedTime = new Date(stats.mtime);
             const variables = Formatters.createFileVariables(
                 fileName,
                 cached.size,
-                stats.mtime,
+                modifiedTime,
                 cached.imageDimensions,
             );
             const template = cached.imageDimensions
@@ -144,8 +145,14 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider {
             if (ConfigManager.isDebugMode()) {
                 log.info(`[图片文件] 检测到支持的图片格式: ${fileName}`);
             } // 调试：记录图片文件检测
-            const imageDimensions =
-                await FileUtils.getImageDimensions(filePath); // 尝试获取图片分辨率信息
+            const imageTemplate =
+                config.imageFileTemplate || config.fileTemplate; // 使用专门的图片文件模板
+            const needsImageDimensions = /{resolution}|{width}|{height}/.test(
+                imageTemplate,
+            );
+            const imageDimensions = needsImageDimensions
+                ? await FileUtils.getImageDimensions(filePath)
+                : null;
             if (ConfigManager.isDebugMode() && imageDimensions) {
                 log.info(
                     `[图片尺寸] ${fileName} 分辨率: ${imageDimensions.width}x${imageDimensions.height}`,
@@ -156,17 +163,16 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider {
             this._fileCache.set(cacheKey, {
                 size: stats.size,
                 imageDimensions: imageDimensions || undefined,
-                mtime: stats.mtime.getTime(),
+                mtime: stats.mtime,
             });
 
+            const modifiedTime = new Date(stats.mtime);
             const variables = Formatters.createFileVariables(
                 fileName,
                 stats.size,
-                stats.mtime,
+                modifiedTime,
                 imageDimensions || undefined,
             );
-            const imageTemplate =
-                config.imageFileTemplate || config.fileTemplate; // 使用专门的图片文件模板
             return Formatters.renderTemplate(imageTemplate, variables);
         } else {
             // 普通文件处理
@@ -177,13 +183,14 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider {
             // 缓存普通文件信息
             this._fileCache.set(cacheKey, {
                 size: stats.size,
-                mtime: stats.mtime.getTime(),
+                mtime: stats.mtime,
             });
 
+            const modifiedTime = new Date(stats.mtime);
             const variables = Formatters.createFileVariables(
                 fileName,
                 stats.size,
-                stats.mtime,
+                modifiedTime,
             );
             return Formatters.renderTemplate(config.fileTemplate, variables);
         }
@@ -193,7 +200,7 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider {
         // 处理文件夹的装饰信息
         uri: vscode.Uri,
         fileName: string,
-        stats: fs.Stats,
+        stats: vscode.FileStat,
         config: any,
     ): Promise<string> {
         const cacheKey = uri.fsPath;
@@ -201,20 +208,32 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider {
             log.info(`[文件夹处理] 开始处理文件夹: ${fileName}`);
         } // 调试：记录开始处理文件夹
 
+        const folderTemplate = config.folderTemplate;
+        const needsDirectoryStats =
+            /{size}|{rawSize}|{fileCount}|{folderCount}/.test(folderTemplate);
+        if (!needsDirectoryStats) {
+            const variables = Formatters.createCalculatingVariables(
+                fileName,
+                new Date(stats.mtime),
+            );
+            return Formatters.renderTemplate(folderTemplate, variables);
+        }
+
         // 检查缓存，优先进行 mtime 预检查避免无意义的计算
         const cached = this._folderCache.get(cacheKey);
         if (cached) {
             // mtime 预检查：如果修改时间没变，直接使用缓存，避免无意义重计算
-            if (cached.mtime === stats.mtime.getTime()) {
+            if (cached.mtime === stats.mtime) {
                 if (ConfigManager.isDebugMode()) {
                     log.info(
                         `[文件夹缓存命中] 文件夹 ${fileName} 修改时间未变，直接使用缓存`,
                     );
                 } // 调试：记录 mtime 未变
+                const modifiedTime = new Date(stats.mtime);
                 const variables = cached.result.isTimeout
                     ? Formatters.createTimeoutVariables(
                           fileName,
-                          stats.mtime,
+                          modifiedTime,
                           config.maxCalculationTime,
                       )
                     : Formatters.createFolderVariables(
@@ -222,7 +241,7 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider {
                           cached.result.size,
                           cached.result.fileCount,
                           cached.result.folderCount,
-                          stats.mtime,
+                          modifiedTime,
                       );
                 const template = cached.result.isTimeout
                     ? config.folderTimeoutTemplate
@@ -242,9 +261,10 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider {
             if (ConfigManager.isDebugMode()) {
                 log.info(`[计算状态] 文件夹 ${fileName} 正在计算中...`);
             } // 调试：记录正在计算的状态
+            const modifiedTime = new Date(stats.mtime);
             const variables = Formatters.createCalculatingVariables(
                 fileName,
-                stats.mtime,
+                modifiedTime,
             );
             return Formatters.renderTemplate(
                 config.folderCalculatingTemplate,
@@ -267,7 +287,7 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider {
         // 启动文件夹计算任务
         uri: vscode.Uri,
         fileName: string,
-        stats: fs.Stats,
+        stats: vscode.FileStat,
         config: any,
     ): Promise<string> {
         const cacheKey = uri.fsPath;
@@ -299,7 +319,7 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider {
             });
         const variables = Formatters.createCalculatingVariables(
             fileName,
-            stats.mtime,
+            new Date(stats.mtime),
         ); // 返回当前计算中状态
         return Formatters.renderTemplate(
             config.folderCalculatingTemplate,
@@ -331,7 +351,7 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider {
             this._folderCache.set(cacheKey, {
                 result,
                 timestamp: Date.now(),
-                mtime: stats.mtime.getTime(),
+                mtime: stats.mtime,
             });
 
             this._calculatingDirs.delete(cacheKey); // 标记该文件夹计算已完成
@@ -353,7 +373,7 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider {
                         isTimeout: true,
                     },
                     timestamp: Date.now(),
-                    mtime: stats.mtime.getTime(),
+                    mtime: stats.mtime,
                 });
             } else {
                 // 其他类型的错误
@@ -400,7 +420,6 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider {
         this._abortControllers.clear();
         this._folderCache.clear(); // 清除所有文件夹缓存
         this._fileCache.clear(); // 清除所有文件缓存
-        this.stopFileSystemWatcher(); // 停止文件系统监视器
 
         if (ConfigManager.isDebugMode()) {
             // 调试：记录清理统计
@@ -412,11 +431,11 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider {
 
     private isCacheValid(
         cached: FolderCacheEntry,
-        currentStats: fs.Stats,
+        currentStats: vscode.FileStat,
     ): boolean {
         // 检查缓存是否有效
         // 只检查文件夹修改时间，没变化就永远有效，避免无意义的重复计算
-        if (cached.mtime !== currentStats.mtime.getTime()) {
+        if (cached.mtime !== currentStats.mtime) {
             return false;
         }
 
@@ -467,134 +486,5 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider {
 
         // 只刷新变化的文件或文件夹，最简洁的策略
         this._onDidChangeFileDecorations.fire(uri);
-    }
-
-    public startFileSystemWatcher(): void {
-        // 启动文件系统监视器，监听工作空间中的文件变化
-        if (this._fileSystemWatcher) {
-            return; // 已经启动，避免重复启动
-        }
-
-        if (
-            !vscode.workspace.workspaceFolders ||
-            vscode.workspace.workspaceFolders.length === 0
-        ) {
-            if (ConfigManager.isDebugMode()) {
-                log.info(`[文件监视器] 没有工作空间文件夹，跳过启动文件监视器`);
-            }
-            return;
-        }
-
-        if (ConfigManager.isDebugMode()) {
-            log.info(`[文件监视器] 正在启动文件系统监视器...`);
-        }
-
-        // 监听工作空间文件夹中的文件变化，排除不必要的目录
-        this._fileSystemWatcher = vscode.workspace.createFileSystemWatcher(
-            "**/*",
-            false, // 不忽略创建事件
-            false, // 不忽略修改事件
-            false, // 不忽略删除事件
-        );
-
-        // 监听文件和文件夹变化事件
-        this._fileSystemWatcher.onDidChange((uri) => {
-            if (this.shouldIgnoreFile(uri)) return; // 过滤不需要监视的文件/文件夹
-            if (ConfigManager.isDebugMode()) {
-                this.logFileSystemEvent("变化", uri);
-            }
-            this.handleFileChange(uri);
-        });
-
-        // 监听文件和文件夹创建事件
-        this._fileSystemWatcher.onDidCreate((uri) => {
-            if (this.shouldIgnoreFile(uri)) return; // 过滤不需要监视的文件/文件夹
-            if (ConfigManager.isDebugMode()) {
-                this.logFileSystemEvent("创建", uri);
-            }
-            this.handleFileChange(uri);
-        });
-
-        // 监听文件和文件夹删除事件
-        this._fileSystemWatcher.onDidDelete((uri) => {
-            if (this.shouldIgnoreFile(uri)) return; // 过滤不需要监视的文件/文件夹
-            if (ConfigManager.isDebugMode()) {
-                this.logFileSystemEvent("删除", uri);
-            }
-            this.handleFileDelete(uri);
-        });
-
-        if (ConfigManager.isDebugMode()) {
-            log.info(`[文件监视器] 文件系统监视器启动完成`);
-        }
-    }
-
-    public stopFileSystemWatcher(): void {
-        // 停止文件系统监视器
-        if (this._fileSystemWatcher) {
-            if (ConfigManager.isDebugMode()) {
-                log.info(`[文件监视器] 正在停止文件系统监视器...`);
-            }
-            this._fileSystemWatcher.dispose();
-            this._fileSystemWatcher = undefined;
-        }
-    }
-
-    private shouldIgnoreFile(uri: vscode.Uri): boolean {
-        // 检查是否应忽略此文件或目录
-        const filePath = uri.fsPath;
-        const ignoredPaths = [".git", "node_modules"]; // 需要在监视器中忽略的路径
-
-        for (const ignoredPath of ignoredPaths) {
-            if (
-                filePath.includes(path.sep + ignoredPath + path.sep) ||
-                filePath.endsWith(path.sep + ignoredPath)
-            ) {
-                if (ConfigManager.isDebugMode()) {
-                    log.info(
-                        `[文件监视器] 忽略变化: ${filePath} (匹配忽略规则: ${ignoredPath})`,
-                    );
-                }
-                return true;
-            }
-        }
-        return false;
-    }
-
-    private logFileSystemEvent(eventType: string, uri: vscode.Uri): void {
-        // 简洁的文件系统事件日志
-        log.info(`[文件监视器] 检测到${eventType}: ${uri.fsPath}`);
-    }
-
-    private handleFileChange(uri: vscode.Uri): void {
-        // 处理文件或文件夹变化事件
-        if (ConfigManager.isDebugMode()) {
-            log.info(`[刷新触发] 精准刷新: ${uri.fsPath}`);
-        }
-        this.refreshSpecific(uri); // 纯粹的谁变化刷新谁
-    }
-
-    private handleFileDelete(uri: vscode.Uri): void {
-        // 处理文件或文件夹删除事件
-        const filePath = uri.fsPath;
-
-        // 清除被删除项目的缓存和计算状态
-        this._fileCache.delete(filePath);
-        this._folderCache.delete(filePath);
-
-        if (this._calculatingDirs.has(filePath)) {
-            // 取消可能正在进行的计算
-            const controller = this._abortControllers.get(filePath);
-            if (controller) {
-                controller.abort();
-                this._abortControllers.delete(filePath);
-            }
-            this._calculatingDirs.delete(filePath);
-        }
-
-        if (ConfigManager.isDebugMode()) {
-            log.info(`[删除处理] → 清理缓存: ${filePath}`);
-        }
-        // 删除事件不需要刷新，依赖 VS Code 原生机制
     }
 }

@@ -1,6 +1,5 @@
-import * as fs from "fs";
-import * as path from "path";
-import { imageSizeFromFile } from "image-size/fromFile";
+import * as vscode from "vscode";
+import { imageSize } from "image-size";
 import { SUPPORTED_IMAGE_EXTENSIONS, ImageDimensions } from "./types";
 import { ConfigManager } from "./config";
 
@@ -8,10 +7,10 @@ export class FileUtils {
     // 文件操作工具类，封装文件系统操作和路径处理逻辑
     public static async getFileStats(
         filePath: string,
-    ): Promise<fs.Stats | null> {
+    ): Promise<vscode.FileStat | null> {
         // 获取文件统计信息，安全地获取文件的 stats 信息，处理可能的错误
         try {
-            return await fs.promises.stat(filePath);
+            return await vscode.workspace.fs.stat(this.toUri(filePath));
         } catch (error) {
             return null;
         }
@@ -19,10 +18,13 @@ export class FileUtils {
 
     public static async getDirectoryEntries(
         dirPath: string,
-    ): Promise<fs.Dirent[]> {
+    ): Promise<Array<{ name: string; type: vscode.FileType }>> {
         // 获取目录内容，安全地读取目录内容，包含文件类型信息
         try {
-            return await fs.promises.readdir(dirPath, { withFileTypes: true });
+            const entries = await vscode.workspace.fs.readDirectory(
+                this.toUri(dirPath),
+            );
+            return entries.map(([name, type]) => ({ name, type }));
         } catch (error) {
             return [];
         }
@@ -30,12 +32,17 @@ export class FileUtils {
 
     public static getFileName(filePath: string): string {
         // 获取文件名（不含路径）
-        return path.basename(filePath);
+        const uri = this.toUri(filePath);
+        const pathValue = uri.path;
+        const lastSlashIndex = pathValue.lastIndexOf("/");
+        return lastSlashIndex >= 0
+            ? pathValue.slice(lastSlashIndex + 1)
+            : pathValue;
     }
 
     public static joinPath(basePath: string, relativePath: string): string {
         // 连接路径
-        return path.join(basePath, relativePath);
+        return vscode.Uri.joinPath(this.toUri(basePath), relativePath).fsPath;
     }
 
     public static logFileError(error: any, filePath: string): void {
@@ -47,8 +54,12 @@ export class FileUtils {
 
     public static isSupportedImage(fileName: string): boolean {
         // 检查文件是否为支持的图片格式
-        const extension = path.extname(fileName).toLowerCase();
-        return SUPPORTED_IMAGE_EXTENSIONS.includes(extension as any);
+        const dotIndex = fileName.lastIndexOf(".");
+        const extension = dotIndex >= 0 ? fileName.slice(dotIndex) : "";
+        const normalizedExtension = extension.toLowerCase();
+        return SUPPORTED_IMAGE_EXTENSIONS.includes(
+            normalizedExtension as (typeof SUPPORTED_IMAGE_EXTENSIONS)[number],
+        );
     }
 
     public static async getImageDimensions(
@@ -56,7 +67,10 @@ export class FileUtils {
     ): Promise<ImageDimensions | null> {
         // 获取图片文件的分辨率信息
         try {
-            const dimensions = await imageSizeFromFile(filePath);
+            const data = await vscode.workspace.fs.readFile(
+                this.toUri(filePath),
+            );
+            const dimensions = imageSize(Buffer.from(data));
             if (dimensions.width && dimensions.height) {
                 return {
                     width: dimensions.width,
@@ -68,5 +82,25 @@ export class FileUtils {
             // 图片读取失败，静默处理
             return null;
         }
+    }
+
+    public static isDirectory(stat: vscode.FileStat): boolean {
+        return (stat.type & vscode.FileType.Directory) !== 0;
+    }
+
+    public static isFile(stat: vscode.FileStat): boolean {
+        return (stat.type & vscode.FileType.File) !== 0;
+    }
+
+    public static isDirectoryType(fileType: vscode.FileType): boolean {
+        return (fileType & vscode.FileType.Directory) !== 0;
+    }
+
+    public static isFileType(fileType: vscode.FileType): boolean {
+        return (fileType & vscode.FileType.File) !== 0;
+    }
+
+    private static toUri(filePath: string): vscode.Uri {
+        return vscode.Uri.file(filePath);
     }
 }

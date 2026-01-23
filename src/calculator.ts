@@ -41,7 +41,7 @@ export class DirectoryCalculator {
                 const itemPath = FileUtils.joinPath(dirPath, item.name); // 拼接当前条目完整的文件系统路径
                 try {
                     // 捕获单个条目处理过程中的异常（如权限不足）
-                    if (item.isDirectory()) {
+                    if (FileUtils.isDirectoryType(item.type)) {
                         // 判断当前条目是否为文件夹
                         // 是文件夹
                         folderCount++; // 文件夹计数加 1
@@ -53,7 +53,7 @@ export class DirectoryCalculator {
                         totalSize += subResult.size; // 将子文件夹的大小累加到总大小
                         fileCount += subResult.fileCount; // 将子文件夹的文件数累加到总文件数
                         folderCount += subResult.folderCount; // 将子文件夹的文件夹数累加到总文件夹数
-                    } else if (item.isFile()) {
+                    } else if (FileUtils.isFileType(item.type)) {
                         // 判断当前条目是否为文件
                         // 是文件
                         fileCount++; // 文件计数加 1
