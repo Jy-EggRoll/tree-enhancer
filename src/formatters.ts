@@ -143,49 +143,4 @@ export class Formatters {
 
         return variables;
     }
-
-    public static createFolderVariables(
-        // 创建文件夹的模板变量对象
-        folderName: string,
-        size: number,
-        fileCount: number,
-        folderCount: number,
-        modifiedTime: Date,
-    ): TemplateVariables {
-        return {
-            name: folderName,
-            size: this.formatFileSize(size),
-            rawSize: size,
-            fileCount,
-            folderCount,
-            modifiedTime: this.formatDate(modifiedTime),
-            rawModifiedTime: modifiedTime,
-        };
-    }
-
-    public static createCalculatingVariables(
-        // 创建文件夹计算中状态的模板变量对象
-        folderName: string,
-        modifiedTime: Date,
-    ): TemplateVariables {
-        return {
-            name: folderName,
-            modifiedTime: this.formatDate(modifiedTime),
-            rawModifiedTime: modifiedTime,
-        };
-    }
-
-    public static createTimeoutVariables(
-        // 创建文件夹超时状态的模板变量对象
-        folderName: string,
-        modifiedTime: Date,
-        maxCalculationTime: number,
-    ): TemplateVariables {
-        return {
-            name: folderName,
-            modifiedTime: this.formatDate(modifiedTime),
-            rawModifiedTime: modifiedTime,
-            maxCalculationTime,
-        };
-    }
 }

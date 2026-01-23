@@ -12,9 +12,6 @@ export interface ExtensionConfig {
     fileSizeBase: number; // 文件大小计算基底（1000 或 1024）
     fileTemplate: string; // 文件模板
     imageFileTemplate: string; // 图片文件模板
-    folderTemplate: string; // 文件夹模板
-    folderCalculatingTemplate: string; // 文件夹计算中模板
-    folderTimeoutTemplate: string; // 文件夹超时模板
     dateTimeFormat: string; // 日期时间格式
     startupDelay: number; // 启动延迟时间（秒）
     largeFileThreshold: number; // 大文件识别阈值（MB/MiB），0 表示关闭

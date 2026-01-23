@@ -9,29 +9,20 @@ export class ConfigManager {
         // 获取完整的扩展配置
         const config = vscode.workspace.getConfiguration(this.CONFIG_SECTION);
 
+        const rawFileTemplate = config.get<{ fileString?: string }>(
+            "fileTemplate",
+            { fileString: "Please restart VSCode" },
+        );
+        const rawImageFileTemplate = config.get<{
+            imageFileString?: string;
+        }>("imageFileTemplate", { imageFileString: "Please restart VSCode" });
+
         return {
             maxCalculationTime: config.get<number>("maxCalculationTime", 100),
             fileSizeBase: config.get<number>("fileSizeBase", 1000),
-            fileTemplate: config.get<string>(
-                "fileTemplate",
-                "Please restart VSCode to apply the localization tooltip.",
-            ),
-            imageFileTemplate: config.get<string>(
-                "imageFileTemplate",
-                "Please restart VSCode to apply the localization tooltip.",
-            ),
-            folderTemplate: config.get<string>(
-                "folderTemplate",
-                "Please restart VSCode to apply the localization tooltip.",
-            ),
-            folderCalculatingTemplate: config.get<string>(
-                "folderCalculatingTemplate",
-                "Please restart VSCode to apply the localization tooltip.",
-            ),
-            folderTimeoutTemplate: config.get<string>(
-                "folderTimeoutTemplate",
-                "Please restart VSCode to apply the localization tooltip.",
-            ),
+            fileTemplate: rawFileTemplate.fileString || "Please restart VSCode",
+            imageFileTemplate:
+                rawImageFileTemplate.imageFileString || "Please restart VSCode",
             dateTimeFormat: config.get<string>(
                 "dateTimeFormat",
                 "YYYY-MM-DD HH:mm:ss",
@@ -67,6 +58,6 @@ export class ConfigManager {
 
     public static getLargeFileThreshold(): number {
         // 获取大文件识别阈值（MB/MiB）
-        return this.get<number>("largeFileThreshold", 50);
+        return this.get<number>("largeFileThreshold", 20);
     }
 }

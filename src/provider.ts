@@ -23,10 +23,6 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider {
     async provideFileDecoration(
         uri: vscode.Uri,
     ): Promise<vscode.FileDecoration | undefined> {
-        // 提供文件装饰信息的核心方法，VSCode 自动调用以获取文件装饰
-
-        log.info(`[装饰请求] VSCode 请求文件装饰: ${uri.fsPath}`);
-
         try {
             const stats = await FileUtils.getFileStats(uri.fsPath); // 获取文件或文件夹的基本统计信息
             if (!stats) {
@@ -36,11 +32,6 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider {
             }
             const fileName = FileUtils.getFileName(uri.fsPath);
             const config = ConfigManager.getConfig();
-            const fileType = FileUtils.isDirectory(stats) ? "文件夹" : "文件"; // 确定文件类型
-
-            log.info(
-                `[装饰流程] 处理${fileType}: ${fileName}, mtime: ${new Date(stats.mtime).toISOString()}`,
-            );
 
             let tooltip: string;
             if (FileUtils.isDirectory(stats)) {

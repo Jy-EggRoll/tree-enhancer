@@ -29,29 +29,18 @@
                     "type": "number"
                 },
                 "tree-enhancer.fileTemplate": {
-                    "default": "%default.tree-enhancer.fileTemplate%",
+                    "default": {
+                        "fileString": "%default.tree-enhancer.fileTemplate%"
+                    },
                     "description": "%description.tree-enhancer.fileTemplate%",
-                    "type": "string"
-                },
-                "tree-enhancer.folderCalculatingTemplate": {
-                    "default": "%default.tree-enhancer.folderCalculatingTemplate%",
-                    "description": "%description.tree-enhancer.folderTemplate%",
-                    "type": "string"
-                },
-                "tree-enhancer.folderTemplate": {
-                    "default": "%default.tree-enhancer.folderTemplate%",
-                    "description": "%description.tree-enhancer.folderTemplate%",
-                    "type": "string"
-                },
-                "tree-enhancer.folderTimeoutTemplate": {
-                    "default": "%default.tree-enhancer.folderTimeoutTemplate%",
-                    "description": "%description.tree-enhancer.folderTimeoutTemplate%",
-                    "type": "string"
+                    "type": "object"
                 },
                 "tree-enhancer.imageFileTemplate": {
-                    "default": "%default.tree-enhancer.imageFileTemplate%",
+                    "default": {
+                        "imageFileString": "%default.tree-enhancer.imageFileTemplate%"
+                    },
                     "description": "%description.tree-enhancer.imageFileTemplate%",
-                    "type": "string"
+                    "type": "object"
                 },
                 "tree-enhancer.imageResolutionTemplate": {
                     "default": "%default.tree-enhancer.imageResolutionTemplate%",
