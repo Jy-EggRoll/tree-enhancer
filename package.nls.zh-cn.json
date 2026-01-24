@@ -1,12 +1,15 @@
 {
-    "default.tree-enhancer.fileTemplate": "详情：\n大小：{size}\n修改时间：{modifiedTime}",
-    "default.tree-enhancer.imageFileTemplate": "详情：\n大小：{size}\n{resolution}\n修改时间：{modifiedTime}",
-    "default.tree-enhancer.imageResolutionTemplate": "分辨率：{width}（宽） * {height}（高）",
-    "description.tree-enhancer.dateTimeFormat": "日期时间的显示格式。支持的占位符：\n- YYYY: 四位年份\n- MM: 两位月份（01-12）\n- DD: 两位日期（01-31）\n- HH: 两位小时（00-23）\n- mm: 两位分钟（00-59）\n- ss: 两位秒数（00-59）",
-    "description.tree-enhancer.fileSizeBase": "文件大小计算基底。选择 1000（十进制，使用 KB / MB / GB 等单位）或 1024（二进制，使用 KiB / MiB / GiB 等单位）。",
-    "description.tree-enhancer.fileTemplate": "文件悬浮提示的显示模板，建议在 settings.json 中设置。支持的占位符：\n- {name}: 文件名\n- {size}: 自动单位的文件大小\n- {rawSize}: 原始文件大小（以字节为单位）\n- {modifiedTime}: 格式化的修改时间",
-    "description.tree-enhancer.imageFileTemplate": "图片文件悬浮提示的显示模板，建议在 settings.json 中设置。支持的占位符：\n- {name}: 文件名\n- {size}: 自动单位的文件大小\n- {rawSize}: 原始文件大小（以字节为单位）\n- {modifiedTime}: 格式化的修改时间\n- {resolution}: 图片分辨率\n- {width}: 图片宽度\n- {height}: 图片高度",
-    "description.tree-enhancer.imageResolutionTemplate": "图片分辨率信息的显示模板。支持的占位符：\n- {width}: 图片宽度（像素）\n- {height}: 图片高度（像素）",
-    "description.tree-enhancer.largeFileThreshold": "大文件识别阈值，使用用户设定的单位（MB 或 MiB）。超过此大小的文件将显示 L 标识。设置为 0 表示关闭大文件识别功能。",
-    "description.tree-enhancer.startupDelay": "VSCode 启动后扩展开始工作的延迟时间（秒）。设置为 0 表示不延迟，启动时立即进行计算。"
+    "default.fileTemplate": "详情：\n大小：{size}\n修改时间：{modifiedTime}",
+    "default.imageFileTemplate": "详情：\n大小：{size}\n{resolution}\n修改时间：{modifiedTime}",
+    "default.imageResolutionTemplate": "分辨率：{width}（宽） * {height}（高）",
+    "description.calculateFolder": "计算文件夹信息",
+    "description.dateTimeFormat": "日期时间的显示格式。支持的占位符：\n- YYYY：四位年份\n- MM：两位月份（01-12）\n- DD：两位日期（01-31）\n- HH：两位小时（00-23）\n- mm：两位分钟（00-59）\n- ss：两位秒数（00-59）",
+    "description.fileSizeBase": "文件大小计算基底。选择 1000（十进制，使用 KB / MB / GB 等单位）或 1024（二进制，使用 KiB / MiB / GiB 等单位）。",
+    "description.fileTemplate": "文件悬浮提示的显示模板，建议在 settings.json 中设置。支持的占位符：\n- {name}：文件名\n- {size}：自动单位的文件大小\n- {rawSize}：原始文件大小（以字节为单位）\n- {modifiedTime}：格式化的修改时间",
+    "description.imageFileTemplate": "图片文件悬浮提示的显示模板，建议在 settings.json 中设置。支持的占位符：\n- {name}：文件名\n- {size}：自动单位的文件大小\n- {rawSize}：原始文件大小（以字节为单位）\n- {modifiedTime}：格式化的修改时间\n- {resolution}：图片分辨率\n- {width}：图片宽度\n- {height}：图片高度",
+    "description.imageResolutionTemplate": "图片分辨率信息的显示模板。支持的占位符：\n- {width}：图片宽度（像素）\n- {height}：图片高度（像素）",
+    "description.largeFileThreshold": "大文件识别阈值，使用用户设定的单位（MB 或 MiB）。超过此大小的文件将显示 L 标识。设置为 0 表示关闭大文件识别功能。",
+    "description.startupDelay": "VSCode 启动后扩展开始工作的延迟时间（秒）。设置为 0 表示不延迟，启动时立即进行计算。",
+    "description.folderCalculator.statusBarTemplate": "文件夹计算结果在状态栏的显示模板。支持的占位符：\n- {folderName}：文件夹名称\n- {totalSize}：自动单位的总大小\n- {fileCount}：文件数量\n- {folderCount}：文件夹数量\n- {modifiedTime}：最后修改时间",
+    "description.folderCalculator.dismissDelay": "文件夹计算结果在状态栏自动消失的延迟时间（秒），范围：0-3600 秒，设为零表示不自动消失。"
 }

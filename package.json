@@ -12,16 +12,22 @@
         "Other"
     ],
     "contributes": {
+        "commands": [
+            {
+                "command": "tree-enhancer.calculateFolder",
+                "title": "%description.calculateFolder%"
+            }
+        ],
         "configuration": {
             "properties": {
                 "tree-enhancer.dateTimeFormat": {
                     "default": "YYYY-MM-DD HH:mm:ss",
-                    "description": "%description.tree-enhancer.dateTimeFormat%",
+                    "description": "%description.dateTimeFormat%",
                     "type": "string"
                 },
                 "tree-enhancer.fileSizeBase": {
                     "default": 1000,
-                    "description": "%description.tree-enhancer.fileSizeBase%",
+                    "description": "%description.fileSizeBase%",
                     "enum": [
                         1000,
                         1024
@@ -30,39 +36,67 @@
                 },
                 "tree-enhancer.fileTemplate": {
                     "default": {
-                        "fileString": "%default.tree-enhancer.fileTemplate%"
+                        "fileString": "%default.fileTemplate%"
                     },
-                    "description": "%description.tree-enhancer.fileTemplate%",
+                    "description": "%description.fileTemplate%",
                     "type": "object"
                 },
                 "tree-enhancer.imageFileTemplate": {
                     "default": {
-                        "imageFileString": "%default.tree-enhancer.imageFileTemplate%"
+                        "imageFileString": "%default.imageFileTemplate%"
                     },
-                    "description": "%description.tree-enhancer.imageFileTemplate%",
+                    "description": "%description.imageFileTemplate%",
                     "type": "object"
                 },
                 "tree-enhancer.imageResolutionTemplate": {
-                    "default": "%default.tree-enhancer.imageResolutionTemplate%",
-                    "description": "%description.tree-enhancer.imageResolutionTemplate%",
+                    "default": "%default.imageResolutionTemplate%",
+                    "description": "%description.imageResolutionTemplate%",
                     "type": "string"
                 },
                 "tree-enhancer.largeFileThreshold": {
                     "default": 20,
-                    "description": "%description.tree-enhancer.largeFileThreshold%",
+                    "description": "%description.largeFileThreshold%",
                     "maximum": 1000,
                     "minimum": 0,
                     "type": "number"
                 },
                 "tree-enhancer.startupDelay": {
                     "default": 0,
-                    "description": "%description.tree-enhancer.startupDelay%",
+                    "description": "%description.startupDelay%",
                     "maximum": 10,
+                    "minimum": 0,
+                    "type": "number"
+                },
+                "tree-enhancer.folderCalculator.statusBarTemplate": {
+                    "default": "{folderName} | {totalSize} | {fileCount} files | {folderCount} folders",
+                    "description": "%description.folderCalculator.statusBarTemplate%",
+                    "type": "string"
+                },
+                "tree-enhancer.folderCalculator.dismissDelay": {
+                    "default": 60,
+                    "description": "%description.folderCalculator.dismissDelay%",
+                    "maximum": 3600,
                     "minimum": 0,
                     "type": "number"
                 }
             },
             "title": "Tree Enhancer"
+        },
+        "keybindings": [
+            {
+                "command": "tree-enhancer.calculateFolder",
+                "key": "alt+enter",
+                "when": "explorerViewletFocus && explorerResourceIsFolder"
+            }
+        ],
+        "menus": {
+            "explorer/context": [
+                {
+                    "command": "tree-enhancer.calculateFolder",
+                    "group": "navigation",
+                    "when": "explorerResourceIsFolder"
+                }
+            ]
         }
     },
     "dependencies": {

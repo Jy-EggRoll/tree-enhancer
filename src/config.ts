@@ -1,11 +1,15 @@
 import * as vscode from "vscode";
-import { ExtensionConfig } from "./types";
+import { ExtensionConfig, FolderCalculatorConfig } from "./types";
 
-// 配置管理器类，提供统一的配置访问接口和默认值管理
+/**
+ * 配置管理器类，提供统一的配置访问接口和默认值管理
+ */
 export class ConfigManager {
     private static readonly CONFIG_SECTION = "tree-enhancer"; // 配置命名空间
 
-    // 获取完整的扩展配置
+    /**
+     * 获取完整的扩展配置
+     */
     public static getConfig(): ExtensionConfig {
         const config = vscode.workspace.getConfiguration(this.CONFIG_SECTION);
 
@@ -59,5 +63,33 @@ export class ConfigManager {
     // 获取大文件识别阈值（MB/MiB）
     public static getLargeFileThreshold(): number {
         return this.get<number>("largeFileThreshold", 20);
+    }
+
+    // 获取文件夹计算器配置
+    public static getFolderCalculatorConfig(): FolderCalculatorConfig {
+        return {
+            statusBarTemplate: this.get<string>(
+                "folderCalculator.statusBarTemplate",
+                "{folderName} | {totalSize} | {fileCount} files | {folderCount} folders | {modifiedTime}",
+            ),
+            statusBarDismissDelay: this.get<number>(
+                "folderCalculator.dismissDelay",
+                60,
+            ),
+            fileSizeBase: this.getFileSizeBase(),
+        };
+    }
+
+    // 获取状态栏模板
+    public static getStatusBarTemplate(): string {
+        return this.get<string>(
+            "folderCalculator.statusBarTemplate",
+            "{folderName} | {totalSize} | {fileCount} files | {folderCount} folders | {modifiedTime}",
+        );
+    }
+
+    // 获取状态栏消失延迟（秒）
+    public static getStatusBarDismissDelay(): number {
+        return this.get<number>("folderCalculator.dismissDelay", 60);
     }
 }

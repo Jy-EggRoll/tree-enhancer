@@ -1,8 +1,8 @@
 import * as vscode from "vscode";
-import { ConfigManager } from "./config";
-import { FileUtils } from "./utils/file";
-import { Formatters } from "./utils/formatters";
-import { log } from "./utils/func";
+import { ConfigManager } from "../config";
+import { FileUtils } from "../utils/file";
+import { Formatters } from "../utils/formatters";
+import { log } from "../utils/func";
 
 // 文件装饰提供者类，负责为资源管理器中的文件和文件夹提供装饰信息
 export class FileDecorationProvider implements vscode.FileDecorationProvider {

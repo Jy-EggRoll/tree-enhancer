@@ -138,3 +138,14 @@ export class Formatters {
         return variables;
     }
 }
+
+/**
+ * 导出独立的格式化函数，供其他模块使用
+ */
+export function formatFileSize(bytes: number, base?: number): string {
+    return Formatters.formatFileSize(bytes, base);
+}
+
+export function formatDateTime(timestamp: number, format?: string): string {
+    return Formatters.formatDate(new Date(timestamp), format);
+}
