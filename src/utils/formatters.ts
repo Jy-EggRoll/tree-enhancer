@@ -1,5 +1,5 @@
-import { FileSizeUnits, TemplateVariables, ImageDimensions } from "./types";
-import { ConfigManager } from "./config";
+import { FileSizeUnits, TemplateVariables, ImageDimensions } from "../types";
+import { ConfigManager } from "../config";
 
 // 格式化工具类，封装各种数据格式化逻辑，支持国际化和模板替换
 export class Formatters {

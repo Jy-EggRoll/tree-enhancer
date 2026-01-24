@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import { imageSize } from "image-size";
-import { SUPPORTED_IMAGE_EXTENSIONS, ImageDimensions } from "./types";
-import { log } from "./funcUitls";
+import { SUPPORTED_IMAGE_EXTENSIONS, ImageDimensions } from "../types";
+import { log } from "./func";
 
 export class FileUtils {
     // 文件操作工具类，封装文件系统操作和路径处理逻辑
@@ -41,15 +41,13 @@ export class FileUtils {
             : pathValue; // 条件不成立（无 "/"）：直接返回原路径字符串（此时路径本身就是完整的文件名）
     }
 
-    // public static joinPath(basePath: string, relativePath: string): string {
-    //     // 连接路径
-    //     return vscode.Uri.joinPath(this.toUri(basePath), relativePath).fsPath;
-    // }
-
     public static logFileError(error: any, filePath: string): void {
         // 记录文件访问错误，智能地记录不同类型的文件访问错误
         const errorCode = error?.code;
-        log.warn("[文件访问错误]", filePath, errorCode || error);
+        log.error(
+            vscode.l10n.t("[File Access Error] {0}", filePath),
+            errorCode || error,
+        );
     }
 
     public static isSupportedImage(fileName: string): boolean {

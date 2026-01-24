@@ -1,12 +1,14 @@
 {
+    "[Activation Complete] Extension has been successfully activated": "[激活完成] 扩展已成功激活",
     "[Basic Decoration] {0} decoration generated": "[基础装饰] {0} 装饰已生成",
-    "[Large File] {0} has been marked with L": "[大文件] {0} 已被标记为 L",
-    "[Image File] {0} resolution: {1} * {2}": "[图片文件] {0} 分辨率：{1} * {2}",
+    "[Config Changed] Refreshing all file decorations": "[配置更改] 正在刷新所有文件装饰",
+    "[File Access Error] {0}": "[文件访问错误] {0}",
+    "[File Access] Unable to retrieve file information: {0}": "[文件访问] 无法获取文件信息: {0}",
+    "[File Saved] {0} has been saved, corresponding file decorations have been refreshed": "[文件保存] {0} 已保存，对应的文件装饰已刷新",
     "[Full Refresh] All file decorations have been re-rendered": "[完全刷新] 所有文件装饰已重新渲染",
+    "[Image File] {0} resolution: {1} * {2}": "[图片文件] {0} 分辨率：{1} * {2}",
+    "[Large File] {0} has been marked with L": "[大文件] {0} 已被标记为 L",
     "Activating Extension: Tree Enhancer": "激活扩展：Tree Enhancer",
     "Extension Version: {0}": "扩展版本：{0}",
-    "File Decoration Provider will start in {0} seconds": "文件装饰提供者将在 {0} 秒后启动",
-    "[Config Changed] Refreshing all file decorations": "[配置更改] 正在刷新所有文件装饰",
-    "[File Saved] {0} has been saved, corresponding file decorations have been refreshed": "[文件保存] {0} 已保存，对应的文件装饰已刷新",
-    "[Activation Complete] Extension has been successfully activated": "[激活完成] 扩展已成功激活"
+    "File Decoration Provider will start in {0} seconds": "文件装饰提供者将在 {0} 秒后启动"
 }

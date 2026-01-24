@@ -1,12 +1,14 @@
 {
-  "[Basic Decoration] {0} decoration generated": "[Basic Decoration] {0} decoration generated",
-  "[Large File] {0} has been marked with L": "[Large File] {0} has been marked with L",
-  "[Image File] {0} resolution: {1} * {2}": "[Image File] {0} resolution: {1} * {2}",
-  "[Full Refresh] All file decorations have been re-rendered": "[Full Refresh] All file decorations have been re-rendered",
-  "Activating Extension: Tree Enhancer": "Activating Extension: Tree Enhancer",
-  "Extension Version: {0}": "Extension Version: {0}",
-  "File Decoration Provider will start in {0} seconds": "File Decoration Provider will start in {0} seconds",
-  "[Config Changed] Refreshing all file decorations": "[Config Changed] Refreshing all file decorations",
-  "[File Saved] {0} has been saved, corresponding file decorations have been refreshed": "[File Saved] {0} has been saved, corresponding file decorations have been refreshed",
-  "[Activation Complete] Extension has been successfully activated": "[Activation Complete] Extension has been successfully activated"
+    "[Activation Complete] Extension has been successfully activated": "[Activation Complete] Extension has been successfully activated",
+    "[Basic Decoration] {0} decoration generated": "[Basic Decoration] {0} decoration generated",
+    "[Config Changed] Refreshing all file decorations": "[Config Changed] Refreshing all file decorations",
+    "[File Access Error] {0}": "[File Access Error] {0}",
+    "[File Access] Unable to retrieve file information: {0}": "[File Access] Unable to retrieve file information: {0}",
+    "[File Saved] {0} has been saved, corresponding file decorations have been refreshed": "[File Saved] {0} has been saved, corresponding file decorations have been refreshed",
+    "[Full Refresh] All file decorations have been re-rendered": "[Full Refresh] All file decorations have been re-rendered",
+    "[Image File] {0} resolution: {1} * {2}": "[Image File] {0} resolution: {1} * {2}",
+    "[Large File] {0} has been marked with L": "[Large File] {0} has been marked with L",
+    "Activating Extension: Tree Enhancer": "Activating Extension: Tree Enhancer",
+    "Extension Version: {0}": "Extension Version: {0}",
+    "File Decoration Provider will start in {0} seconds": "File Decoration Provider will start in {0} seconds"
 }

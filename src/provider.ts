@@ -1,8 +1,8 @@
 import * as vscode from "vscode";
 import { ConfigManager } from "./config";
-import { FileUtils } from "./fileUtils";
-import { Formatters } from "./formatters";
-import { log } from "./funcUitls";
+import { FileUtils } from "./utils/file";
+import { Formatters } from "./utils/formatters";
+import { log } from "./utils/func";
 
 // 文件装饰提供者类，负责为资源管理器中的文件和文件夹提供装饰信息
 export class FileDecorationProvider implements vscode.FileDecorationProvider {
@@ -19,7 +19,12 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider {
         try {
             const stats = await FileUtils.getFileStats(uri.fsPath); // 获取文件或文件夹的基本统计信息
             if (!stats) {
-                log.warn(`[文件访问] 无法获取文件信息: ${uri.fsPath}`);
+                log.warn(
+                    vscode.l10n.t(
+                        "[File Access] Unable to retrieve file information: {0}",
+                        uri.fsPath,
+                    ),
+                );
 
                 return undefined;
             }
@@ -40,7 +45,12 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider {
                 uri.fsPath,
             );
 
-            log.info(vscode.l10n.t("[Basic Decoration] {0} decoration generated", fileName));
+            log.info(
+                vscode.l10n.t(
+                    "[Basic Decoration] {0} decoration generated",
+                    fileName,
+                ),
+            );
 
             // 检查是否需要添加大文件标识
             const decoration: vscode.FileDecoration = { tooltip };
@@ -50,13 +60,17 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider {
             ) {
                 decoration.badge = "L"; // 使用 L 标识大文件
 
-                log.info(vscode.l10n.t("[Large File] {0} has been marked with L", fileName));
+                log.info(
+                    vscode.l10n.t(
+                        "[Large File] {0} has been marked with L",
+                        fileName,
+                    ),
+                );
             }
 
             return decoration;
         } catch (error) {
             FileUtils.logFileError(error, uri.fsPath);
-            log.error(`[提供装饰异常] 处理 ${uri.fsPath} 时发生错误：`, error);
             return undefined;
         }
     }
@@ -78,7 +92,12 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider {
                 : null;
             if (imageDimensions) {
                 log.info(
-                    vscode.l10n.t("[Image File] {0} resolution: {1} * {2}", fileName, imageDimensions.width, imageDimensions.height),
+                    vscode.l10n.t(
+                        "[Image File] {0} resolution: {1} * {2}",
+                        fileName,
+                        imageDimensions.width,
+                        imageDimensions.height,
+                    ),
                 );
             }
 
@@ -114,7 +133,11 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider {
     // 刷新所有文件装饰，触发 VSCode 重新获取所有文件的装饰信息
     public refreshAll(): void {
         this._onDidChangeFileDecorations.fire(undefined); // 触发所有文件装饰的刷新，undefined 参数表示刷新所有文件，而不是特定文件
-        log.info(vscode.l10n.t("[Full Refresh] All file decorations have been re-rendered"));
+        log.info(
+            vscode.l10n.t(
+                "[Full Refresh] All file decorations have been re-rendered",
+            ),
+        );
     }
 
     // 只刷新变化的文件
