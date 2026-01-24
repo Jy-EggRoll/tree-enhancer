@@ -4,15 +4,15 @@
 
 **破坏性更新**：请务必阅读此版本的更新说明 | **Breaking Change**: Please read the release notes for this version carefully
 
-- **彻底移除了文件夹大小的计算与显示功能，因为文件夹的递归计算性能是不可控的，容易导致严重的性能问题 | Completely removed the folder size calculation and display feature due to uncontrollable performance issues caused by recursive folder size calculation**
+- **🗑️ 彻底移除了文件夹大小的计算与显示功能，因为文件夹的递归计算性能是不可控的，容易导致严重的性能问题 | Completely removed the folder size calculation and display feature due to uncontrollable performance issues caused by recursive folder size calculation**
     - 该功能会在未来版本中以其他形式重新设计和实现 | This feature will be redesigned and re-implemented in future versions in other forms
-- 移除了相关无用的设置 | Removed related useless settings
+- 🗑️ 移除了相关无用的设置 | Removed related useless settings
 - ✨ 移除了调试模式，注册了“输出”通道，用户可以直观地调整日志级别，并看到扩展工作的全流程 | Removed debug mode, registered an "Output" channel where users can intuitively adjust log levels and see the full workflow of the extension
 - ✨ 引入 l10n 国际化支持，扩展的所有文本均支持多语言显示 | Introduced l10n internationalization support, all texts of the extension support multi-language display
 - 🐛 调整字符串模板修改的方式，修复了直接编辑导致转义字符被破坏的问题（<https://github.com/Jy-EggRoll/tree-enhancer/issues/1>） | Changed the way string templates are modified to fix the issue where direct editing caused escape characters to be corrupted (<https://github.com/Jy-EggRoll/tree-enhancer/issues/1>)
 - ✨ 极大幅度的性能优化，扩展启动更快，几乎不可能造成任何性能问题，做到了真正的按需加载 | Significant performance optimizations, faster extension startup, almost impossible to cause any performance issues, achieving true on-demand loading
 - ✨ 大幅优化代码规范度和结构，提高可维护性 | Greatly improved code standardization and structure for better maintainability
-- 移除上一版本的轮询机制，现在扩展只识别在 VSCode 中保存的文件变更（高性能） | Removed the polling mechanism from the previous version, now the extension only recognizes file changes saved within VSCode (very high performance)
+- 🗑️ 移除上一版本的轮询机制，现在扩展只识别在 VSCode 中保存的文件变更（高性能） | Removed the polling mechanism from the previous version, now the extension only recognizes file changes saved within VSCode (very high performance)
 
 ## 1.5.0
 
