@@ -70,7 +70,7 @@ export class ConfigManager {
         return {
             statusBarTemplate: this.get<string>(
                 "folderCalculator.statusBarTemplate",
-                "{folderName} | {totalSize} | {fileCount} files | {folderCount} folders | {modifiedTime}",
+                "Please restart VSCode",
             ),
             statusBarDismissDelay: this.get<number>(
                 "folderCalculator.dismissDelay",
@@ -84,7 +84,7 @@ export class ConfigManager {
     public static getStatusBarTemplate(): string {
         return this.get<string>(
             "folderCalculator.statusBarTemplate",
-            "{folderName} | {totalSize} | {fileCount} files | {folderCount} folders | {modifiedTime}",
+            "Please restart VSCode",
         );
     }
 

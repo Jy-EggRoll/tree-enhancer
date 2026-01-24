@@ -23,25 +23,29 @@ export class CalculateFolderCommand {
     /**
      * 执行文件夹计算命令
      */
-    public async execute(uri?: vscode.Uri, ...args: any[]): Promise<void> {
-        log.info(vscode.l10n.t("[Calculate Folder Command] Command triggered"));
-
-        // 解析目标 URI（直接传入或从 args 数组）
-        const targetUri = uri || (args?.[0]?.[0] as vscode.Uri);
+    public async execute(uri?: vscode.Uri): Promise<void> {
+        // 解析目标 URI
+        const targetUri = uri;
 
         if (!targetUri) {
-            // 快捷键调用，从剪贴板获取
-            const clipboardUri = await this.getUriFromClipboard();
+            // 快捷键调用，特殊获取方式
+            const clipboardUri = await this.getUriSpecial();
             if (!clipboardUri) {
-                vscode.window.showWarningMessage(
-                    vscode.l10n.t(
-                        "Please select a folder in the Explorer to calculate",
-                    ),
-                );
                 return;
             }
             await this.calculateFolder(clipboardUri);
+            log.info(
+                vscode.l10n.t(
+                    "[Calculate Folder Command] Calculated by Keyboard Shortcut",
+                ),
+            );
             return;
+        } else {
+            log.info(
+                vscode.l10n.t(
+                    "[Calculate Folder Command] Calculated by Context Menu",
+                ),
+            );
         }
 
         await this.calculateFolder(targetUri);
@@ -69,26 +73,18 @@ export class CalculateFolderCommand {
     }
 
     /**
-     * 从剪贴板获取 URI（快捷键调用）
+     * 特殊方式-剪贴板中转（不会污染剪贴板条目）
      */
-    private async getUriFromClipboard(): Promise<vscode.Uri | undefined> {
-        try {
-            const originalClipboard = await vscode.env.clipboard.readText();
-            await vscode.commands.executeCommand("copyFilePath");
-            const copiedPath = await vscode.env.clipboard.readText();
-            await vscode.env.clipboard.writeText(originalClipboard);
+    private async getUriSpecial(): Promise<vscode.Uri | undefined> {
+        const originalClipboard = await vscode.env.clipboard.readText();
+        await vscode.commands.executeCommand("copyFilePath");
+        const copiedPath = await vscode.env.clipboard.readText();
+        await vscode.env.clipboard.writeText(originalClipboard); // 恢复原始剪贴板内容
 
-            if (copiedPath && copiedPath !== originalClipboard) {
-                return vscode.Uri.file(copiedPath);
-            }
-        } catch (error) {
-            log.warn(
-                vscode.l10n.t(
-                    "[Calculate Folder Command] Failed to get URI from clipboard: {0}",
-                    error instanceof Error ? error.message : String(error),
-                ),
-            );
+        if (copiedPath && copiedPath !== originalClipboard) {
+            return vscode.Uri.file(copiedPath);
         }
+
         return undefined;
     }
 
@@ -97,10 +93,7 @@ export class CalculateFolderCommand {
      */
     private showCalculating(folderName: string): void {
         this.clearDismissTimer();
-        this.statusBarItem.text = `$(sync~spin) ${vscode.l10n.t("Calculating")}: ${folderName}`;
-        this.statusBarItem.tooltip = vscode.l10n.t(
-            "Calculating folder information...",
-        );
+        this.statusBarItem.text = "$(loading~spin) " + folderName;
         this.statusBarItem.show();
     }
 
@@ -111,11 +104,9 @@ export class CalculateFolderCommand {
         this.clearDismissTimer();
 
         const statusText = ResultFormatter.formatForStatusBar(result);
-        const tooltipText = ResultFormatter.formatForTooltip(result);
 
-        this.statusBarItem.text = `$(folder) ${statusText} $(close)`;
-        this.statusBarItem.tooltip =
-            tooltipText + "\n\n" + vscode.l10n.t("Click to dismiss");
+        this.statusBarItem.text = `$(folder) ${statusText}`;
+        this.statusBarItem.tooltip = vscode.l10n.t("Click to dismiss");
         this.statusBarItem.show();
 
         const delay = ConfigManager.getStatusBarDismissDelay();

@@ -1,15 +1,16 @@
 {
     "default.fileTemplate": "Details:\nSize: {size}\nModified: {modifiedTime}",
+    "default.folderCalculator.statusBarTemplate": "{folderName} | {totalSize} | {fileCount} files | {folderCount} folders",
     "default.imageFileTemplate": "Details:\nSize: {size}\n{resolution}\nModified: {modifiedTime}",
     "default.imageResolutionTemplate": "Resolution: {width} (W) * {height} (H)",
     "description.calculateFolder": "Calculate Folder Info",
     "description.dateTimeFormat": "Date and time display format. Supported placeholders:\n- YYYY: Four-digit year\n- MM: Two-digit month (01-12)\n- DD: Two-digit day (01-31)\n- HH: Two-digit hour (00-23)\n- mm: Two-digit minute (00-59)\n- ss: Two-digit second (00-59)",
     "description.fileSizeBase": "File size calculation base. Choose 1000 (decimal, using KB / MB / GB units) or 1024 (binary, using KiB / MiB / GiB units).",
     "description.fileTemplate": "Display template for file hover tooltips. It is recommended to set this in settings.json. Supported placeholders:\n- {name}: File name\n- {size}: File size with automatic units\n- {rawSize}: Raw file size (in bytes)\n- {modifiedTime}: Formatted modification time",
+    "description.folderCalculator.dismissDelay": "Delay (in seconds) before the folder calculation result in the status bar automatically disappears, range: 0-3600 seconds. Set to 0 to not auto-dismiss, can only be closed manually by clicking.",
+    "description.folderCalculator.statusBarTemplate": "Display template for folder calculation results in the status bar. Supported placeholders:\n- {folderName}: Folder name\n- {totalSize}: Total size with automatic units\n- {fileCount}: Number of files\n- {folderCount}: Number of folders\n- {modifiedTime}: Last modified time",
     "description.imageFileTemplate": "Display template for image file hover tooltips. It is recommended to set this in settings.json. Supported placeholders:\n- {name}: File name\n- {size}: File size with automatic units\n- {rawSize}: Raw file size (in bytes)\n- {modifiedTime}: Formatted modification time\n- {resolution}: Image resolution\n- {width}: Image width\n- {height}: Image height",
     "description.imageResolutionTemplate": "Display template for image resolution information. Supported placeholders:\n- {width}: Image width in pixels\n- {height}: Image height in pixels",
     "description.largeFileThreshold": "Large file recognition threshold in user-configured units (MB or MiB). Files exceeding this size will display a 'L' badge. Set to 0 to disable large file recognition.",
-    "description.startupDelay": "Delay (in seconds) before the extension starts working after VSCode startup. Set to 0 for no delay (calculates immediately on startup).",
-    "description.folderCalculator.statusBarTemplate": "Status bar display template for folder calculation results. Supported placeholders:\n- {folderName}: Folder name\n- {totalSize}: Total size with automatic units\n- {fileCount}: Number of files\n- {folderCount}: Number of folders\n- {modifiedTime}: Last modified time",
-    "description.folderCalculator.dismissDelay": "Delay (in seconds) before the folder calculation result disappears from the status bar automatically. Range: 1-60 seconds."
+    "description.startupDelay": "Delay (in seconds) before the extension starts working after VSCode startup. Set to 0 for no delay (calculates immediately on startup)."
 }

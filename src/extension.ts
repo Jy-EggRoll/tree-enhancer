@@ -4,7 +4,10 @@ import { FileDecorationProvider } from "./provider/provider"; // 导入自定义
 import { log } from "./utils/func"; // 导入自定义的功能工具模块，提供日志记录等辅助功能
 import { CalculateFolderCommand } from "./calculator"; // 导入文件夹计算命令处理器
 
-// 扩展激活入口函数，VSCode 启动扩展/首次使用扩展功能时触发，context 为扩展上下文对象
+/**
+ * 扩展激活入口函数，VSCode 启动扩展/首次使用扩展功能时触发，context 为扩展上下文对象
+ * @param context
+ */
 export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(log); // 在一开始就注册日志，保证其他模块可以使用日志功能
 
@@ -37,8 +40,7 @@ export function activate(context: vscode.ExtensionContext) {
     // 注册文件夹计算命令
     const calculateCommand = vscode.commands.registerCommand(
         "tree-enhancer.calculateFolder",
-        (uri?: vscode.Uri, ...args: any[]) =>
-            calculateFolderCommandHandler.execute(uri, ...args),
+        (uri?: vscode.Uri) => calculateFolderCommandHandler.execute(uri),
     );
 
     // 注册 dismiss 命令
@@ -67,6 +69,14 @@ export function activate(context: vscode.ExtensionContext) {
                     log.info(
                         vscode.l10n.t(
                             "[Config Changed] Refreshing all file decorations",
+                        ),
+                    );
+                    vscode.commands.executeCommand(
+                        "tree-enhancer.dismissStatusBar",
+                    );
+                    log.info(
+                        vscode.l10n.t(
+                            "[Config Changed] Dismissing status bar item",
                         ),
                     );
                 }

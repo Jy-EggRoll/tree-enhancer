@@ -3,8 +3,7 @@ import { log } from "../utils/func";
 import { FolderCalculationResult } from "../types";
 
 /**
- * 文件夹计算器类
- * 负责递归计算文件夹的大小、文件数量等统计信息
+ * 文件夹计算器类，负责递归计算文件夹的大小、文件数量等统计信息
  */
 export class FolderCalculator {
     /**
@@ -15,55 +14,38 @@ export class FolderCalculator {
     public static async calculate(
         folderUri: vscode.Uri,
     ): Promise<FolderCalculationResult> {
+        const startTime = Date.now();
+
+        // 获取文件夹名称
+        const folderName = folderUri.path.split("/").pop() || folderUri.path;
+
+        // 获取文件夹的修改时间
+        const folderStat = await vscode.workspace.fs.stat(folderUri);
+        const modifiedTime = folderStat.mtime;
+
+        // 递归计算文件夹内容
+        const { totalSize, fileCount, folderCount } =
+            await this.calculateRecursive(folderUri);
+
+        const duration = Date.now() - startTime;
         log.info(
             vscode.l10n.t(
-                "[Folder Calculator] Starting calculation for: {0}",
-                folderUri.fsPath,
+                "[Folder Calculator] Calculation {0} completed in {1}ms: {2} files, {3} folders, {4} bytes",
+                folderName,
+                duration,
+                fileCount,
+                folderCount,
+                totalSize,
             ),
         );
 
-        const startTime = Date.now();
-
-        try {
-            // 获取文件夹名称
-            const folderName =
-                folderUri.path.split("/").pop() || folderUri.path;
-
-            // 获取文件夹的修改时间
-            const folderStat = await vscode.workspace.fs.stat(folderUri);
-            const modifiedTime = folderStat.mtime;
-
-            // 递归计算文件夹内容
-            const { totalSize, fileCount, folderCount } =
-                await this.calculateRecursive(folderUri);
-
-            const duration = Date.now() - startTime;
-            log.info(
-                vscode.l10n.t(
-                    "[Folder Calculator] Calculation completed in {0}ms: {1} files, {2} folders, {3} bytes",
-                    duration,
-                    fileCount,
-                    folderCount,
-                    totalSize,
-                ),
-            );
-
-            return {
-                folderName,
-                totalSize,
-                fileCount,
-                folderCount,
-                modifiedTime,
-            };
-        } catch (error) {
-            log.error(
-                vscode.l10n.t(
-                    "[Folder Calculator] Error calculating folder: {0}",
-                    error instanceof Error ? error.message : String(error),
-                ),
-            );
-            throw error;
-        }
+        return {
+            folderName,
+            totalSize,
+            fileCount,
+            folderCount,
+            modifiedTime,
+        };
     }
 
     /**

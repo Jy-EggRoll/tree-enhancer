@@ -47,25 +47,16 @@ export const SUPPORTED_IMAGE_EXTENSIONS = [
 
 // 文件夹计算结果类型定义
 export interface FolderCalculationResult {
-    /** 文件夹名称 */
     folderName: string;
-    /** 文件夹总大小（字节） */
     totalSize: number;
-    /** 子文件总数 */
     fileCount: number;
-    /** 子文件夹总数 */
     folderCount: number;
-    /** 最后修改时间（毫秒时间戳） */
     modifiedTime: number;
-    /** 文件夹 URI */
 }
 
 // 文件夹计算配置
 export interface FolderCalculatorConfig {
-    /** 状态栏显示模板 */
     statusBarTemplate: string;
-    /** 状态栏消失延迟（秒） */
     statusBarDismissDelay: number;
-    /** 文件大小计算基数（1000 或 1024） */
     fileSizeBase: number;
 }

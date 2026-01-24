@@ -41,6 +41,18 @@
                     "description": "%description.fileTemplate%",
                     "type": "object"
                 },
+                "tree-enhancer.folderCalculator.dismissDelay": {
+                    "default": 60,
+                    "description": "%description.folderCalculator.dismissDelay%",
+                    "maximum": 3600,
+                    "minimum": 0,
+                    "type": "number"
+                },
+                "tree-enhancer.folderCalculator.statusBarTemplate": {
+                    "default": "%default.folderCalculator.statusBarTemplate%",
+                    "description": "%description.folderCalculator.statusBarTemplate%",
+                    "type": "string"
+                },
                 "tree-enhancer.imageFileTemplate": {
                     "default": {
                         "imageFileString": "%default.imageFileTemplate%"
@@ -64,18 +76,6 @@
                     "default": 0,
                     "description": "%description.startupDelay%",
                     "maximum": 10,
-                    "minimum": 0,
-                    "type": "number"
-                },
-                "tree-enhancer.folderCalculator.statusBarTemplate": {
-                    "default": "{folderName} | {totalSize} | {fileCount} files | {folderCount} folders",
-                    "description": "%description.folderCalculator.statusBarTemplate%",
-                    "type": "string"
-                },
-                "tree-enhancer.folderCalculator.dismissDelay": {
-                    "default": 60,
-                    "description": "%description.folderCalculator.dismissDelay%",
-                    "maximum": 3600,
                     "minimum": 0,
                     "type": "number"
                 }
@@ -141,6 +141,7 @@
         "check-types": "tsc --noEmit",
         "compile": "pnpm run check-types && node esbuild.js",
         "compile-tests": "tsc -p . --outDir out",
+        "gen-l10n": "npx @vscode/l10n-dev export -o ./l10n ./src",
         "package": "pnpm run check-types && node esbuild.js --production",
         "pretest": "pnpm run compile-tests && pnpm run compile",
         "test": "vscode-test",

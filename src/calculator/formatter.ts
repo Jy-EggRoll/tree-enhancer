@@ -3,8 +3,7 @@ import { ConfigManager } from "../config";
 import { formatFileSize, formatDateTime } from "../utils/formatters";
 
 /**
- * 文件夹计算结果格式化器
- * 负责将计算结果格式化为可读的字符串
+ * 文件夹计算结果格式化器，负责将计算结果格式化为可读的字符串
  */
 export class ResultFormatter {
     /**
@@ -29,24 +28,5 @@ export class ResultFormatter {
             .replace(/{fileCount}/g, result.fileCount.toString())
             .replace(/{folderCount}/g, result.folderCount.toString())
             .replace(/{modifiedTime}/g, formattedTime);
-    }
-
-    /**
-     * 格式化计算结果用于工具提示
-     * @param result 计算结果
-     * @returns 格式化后的字符串
-     */
-    public static formatForTooltip(result: FolderCalculationResult): string {
-        const base = ConfigManager.getFileSizeBase();
-        const formattedSize = formatFileSize(result.totalSize, base);
-        const formattedTime = formatDateTime(result.modifiedTime);
-
-        return [
-            `Folder: ${result.folderName}`,
-            `Total Size: ${formattedSize}`,
-            `Files: ${result.fileCount}`,
-            `Folders: ${result.folderCount}`,
-            `Modified: ${formattedTime}`,
-        ].join("\n");
     }
 }
