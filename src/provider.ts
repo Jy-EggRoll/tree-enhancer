@@ -2,7 +2,7 @@ import * as vscode from "vscode";
 import { ConfigManager } from "./config";
 import { FileUtils } from "./fileUtils";
 import { Formatters } from "./formatters";
-import { log } from "./extension";
+import { log } from "./funcUitls";
 
 // 文件装饰提供者类，负责为资源管理器中的文件和文件夹提供装饰信息
 export class FileDecorationProvider implements vscode.FileDecorationProvider {
@@ -40,7 +40,7 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider {
                 uri.fsPath,
             );
 
-            log.info(`[基础装饰] ${fileName} 装饰生成完毕`);
+            log.info(vscode.l10n.t("[Basic Decoration] {0} decoration generated", fileName));
 
             // 检查是否需要添加大文件标识
             const decoration: vscode.FileDecoration = { tooltip };
@@ -50,7 +50,7 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider {
             ) {
                 decoration.badge = "L"; // 使用 L 标识大文件
 
-                log.info(`[大文件] ${fileName} 已添加 L 标识`);
+                log.info(vscode.l10n.t("[Large File] {0} has been marked with L", fileName));
             }
 
             return decoration;
@@ -78,7 +78,7 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider {
                 : null;
             if (imageDimensions) {
                 log.info(
-                    `[图片文件] ${fileName} 分辨率: ${imageDimensions.width} * ${imageDimensions.height}`,
+                    vscode.l10n.t("[Image File] {0} resolution: {1} * {2}", fileName, imageDimensions.width, imageDimensions.height),
                 );
             }
 
@@ -114,7 +114,7 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider {
     // 刷新所有文件装饰，触发 VSCode 重新获取所有文件的装饰信息
     public refreshAll(): void {
         this._onDidChangeFileDecorations.fire(undefined); // 触发所有文件装饰的刷新，undefined 参数表示刷新所有文件，而不是特定文件
-        log.info(`[完全刷新] 已经重新渲染所有文件装饰`);
+        log.info(vscode.l10n.t("[Full Refresh] All file decorations have been re-rendered"));
     }
 
     // 只刷新变化的文件

@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import { imageSize } from "image-size";
 import { SUPPORTED_IMAGE_EXTENSIONS, ImageDimensions } from "./types";
-import { log } from "./extension";
+import { log } from "./funcUitls";
 
 export class FileUtils {
     // 文件操作工具类，封装文件系统操作和路径处理逻辑

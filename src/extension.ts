@@ -1,22 +1,27 @@
 import * as vscode from "vscode"; // 导入 VSCode 的核心 API 模块，提供扩展开发所需的所有核心能力
 import { ConfigManager } from "./config"; // 导入自定义的配置管理模块，负责扩展配置的读取、修改检测等核心配置逻辑
 import { FileDecorationProvider } from "./provider"; // 导入自定义的文件装饰提供者模块，用于实现资源管理器中文件/文件夹的装饰增强功能
-
-// 可以在“输出”面板中查看 Tree Enhancer 的完整日志，方便调试和问题排查
-export const log = vscode.window.createOutputChannel("Tree Enhancer", {
-    log: true,
-});
+import { log } from "./funcUitls"; // 导入自定义的功能工具模块，提供日志记录等辅助功能
 
 // 扩展激活入口函数，VSCode 启动扩展/首次使用扩展功能时触发，context 为扩展上下文对象
 export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(log); // 在一开始就注册日志，保证其他模块可以使用日志功能
 
-    log.info(`正在激活扩展：Tree Enhancer`);
-    log.info(`扩展版本：${context.extension.packageJSON.version}`);
+    log.info(vscode.l10n.t("Activating Extension: Tree Enhancer"));
+    log.info(
+        vscode.l10n.t(
+            "Extension Version: {0}",
+            context.extension.packageJSON.version,
+        ),
+    );
 
     const startupDelay = ConfigManager.getStartupDelay() * 1000; // 获取配置中设置的启动延迟秒数，并转换为毫秒（setTimeout 接收毫秒单位）
-    log.info(`将在 ${ConfigManager.getStartupDelay()} 秒后启动文件装饰提供者`);
-
+    log.info(
+        vscode.l10n.t(
+            "File Decoration Provider will start in {0} seconds",
+            ConfigManager.getStartupDelay(),
+        ),
+    );
     // 延迟启动文件装饰提供者
     const startupTimer = setTimeout(() => {
         const fileDecorationProvider = new FileDecorationProvider(); // 实例化文件装饰提供者对象
@@ -30,16 +35,22 @@ export function activate(context: vscode.ExtensionContext) {
             vscode.workspace.onDidChangeConfiguration((event) => {
                 if (ConfigManager.isConfigChanged(event)) {
                     fileDecorationProvider.refreshAll(); // 触发所有文件/文件夹的装饰刷新操作，立即应用新配置的装饰规则
-                    log.info(`[配置变更] 设置已修改，已经刷新所有文件装饰`);
+                    log.info(
+                        vscode.l10n.t(
+                            "[Config Changed] Refreshing all file decorations",
+                        ),
+                    );
                 }
             });
 
-        // 在文档保存时刷新对应文件装饰，而非刷新所有，这可以确保在 VSCode 中编辑过的文件保存后，装饰信息能及时更新（主要用于确保修改时间正确）
         const changeListener = vscode.workspace.onDidSaveTextDocument(
             (document) => {
                 fileDecorationProvider.refreshSpecific(document.uri);
                 log.info(
-                    `[文件保存] ${document.uri.fsPath} 已保存，已经刷新对应文件装饰`,
+                    vscode.l10n.t(
+                        "[File Saved] {0} has been saved, corresponding file decorations have been refreshed",
+                        document.uri.fsPath,
+                    ),
                 );
             },
         );
@@ -59,7 +70,7 @@ export function activate(context: vscode.ExtensionContext) {
         },
     });
 
-    log.info(`[激活完成] 扩展已成功激活`);
+    log.info(vscode.l10n.t("[Activation Complete] Extension has been successfully activated"));
 }
 
 export function deactivate() {}

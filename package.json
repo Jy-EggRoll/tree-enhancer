@@ -72,6 +72,7 @@
     "devDependencies": {
         "@types/node": "20.x",
         "@types/vscode": "^1.76.0",
+        "@vscode/l10n-dev": "^0.0.35",
         "@vscode/test-cli": "^0.0.11",
         "esbuild": "^0.25.9",
         "npm-run-all": "^4.1.5",
@@ -93,6 +94,7 @@
         "文件",
         "信息"
     ],
+    "l10n": "./l10n",
     "license": "MIT",
     "main": "./dist/extension.js",
     "name": "eggroll-tree-enhancer",
@@ -102,17 +104,17 @@
         "url": "https://github.com/Jy-EggRoll/tree-enhancer.git"
     },
     "scripts": {
-        "vscode:prepublish": "pnpm run package",
-        "compile": "pnpm run check-types && node esbuild.js",
-        "watch": "npm-run-all -p watch:*",
-        "watch:esbuild": "node esbuild.js --watch",
-        "watch:tsc": "tsc --noEmit --watch --project tsconfig.json",
-        "package": "pnpm run check-types && node esbuild.js --production",
-        "compile-tests": "tsc -p . --outDir out",
-        "watch-tests": "tsc -p . -w --outDir out",
-        "pretest": "pnpm run compile-tests && pnpm run compile",
         "check-types": "tsc --noEmit",
-        "test": "vscode-test"
+        "compile": "pnpm run check-types && node esbuild.js",
+        "compile-tests": "tsc -p . --outDir out",
+        "package": "pnpm run check-types && node esbuild.js --production",
+        "pretest": "pnpm run compile-tests && pnpm run compile",
+        "test": "vscode-test",
+        "vscode:prepublish": "pnpm run package",
+        "watch": "npm-run-all -p watch:*",
+        "watch-tests": "tsc -p . -w --outDir out",
+        "watch:esbuild": "node esbuild.js --watch",
+        "watch:tsc": "tsc --noEmit --watch --project tsconfig.json"
     },
     "version": "1.6.0"
 }

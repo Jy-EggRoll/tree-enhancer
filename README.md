@@ -1,8 +1,8 @@
 # 文件树增强（Tree Enhancer）
 
-**注意：此介绍处于不精确的状态，因为最近有几项大型更新正在进行中，部分功能和界面可能会有所变化。**
+**注意：此介绍处于不精确的状态，因为最近有几项大型更新正在进行中，部分功能和界面可能会有所变化，请务必阅读更新日志。**
 
-**Note: This introduction is not accurate, as several major updates are currently underway, and some features and interfaces may change.**
+**Note: This introduction is not accurate, as several major updates are currently underway, and some features and interfaces may change, please be sure to read the update log.**
 
 [GotoEnglishVersion](#englishversion)
 
