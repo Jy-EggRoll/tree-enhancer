@@ -114,5 +114,5 @@
         "check-types": "tsc --noEmit",
         "test": "vscode-test"
     },
-    "version": "1.6.0.dev.4"
+    "version": "1.6.0"
 }
