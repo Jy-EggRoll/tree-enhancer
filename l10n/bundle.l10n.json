@@ -5,6 +5,7 @@
   "[Calculate Folder Command] Calculated by Keyboard Shortcut": "[Calculate Folder Command] Calculated by Keyboard Shortcut",
   "[Calculate Folder Command] Calculation failed: {0}": "[Calculate Folder Command] Calculation failed: {0}",
   "[Calculate Folder Command] Result displayed, will dismiss in {0} seconds": "[Calculate Folder Command] Result displayed, will dismiss in {0} seconds",
+  "[Calculate Folder Command] Result displayed, will not auto-dismiss": "[Calculate Folder Command] Result displayed, will not auto-dismiss",
   "[Config Changed] Dismissing status bar item": "[Config Changed] Dismissing status bar item",
   "[Config Changed] Refreshing all file decorations": "[Config Changed] Refreshing all file decorations",
   "[File Access Error] {0}": "[File Access Error] {0}",

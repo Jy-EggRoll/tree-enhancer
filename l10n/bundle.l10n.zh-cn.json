@@ -5,6 +5,7 @@
     "[Calculate Folder Command] Calculated by Keyboard Shortcut": "[文件夹计算命令] 通过快捷键计算",
     "[Calculate Folder Command] Calculation failed: {0}": "[文件夹计算命令] 计算失败：{0}",
     "[Calculate Folder Command] Result displayed, will dismiss in {0} seconds": "[文件夹计算命令] 结果已显示，将在 {0} 秒后消失",
+    "[Calculate Folder Command] Result displayed, will not auto-dismiss": "[文件夹计算命令] 结果已显示，不会自动消失",
     "[Config Changed] Dismissing status bar item": "[配置更改] 正在关闭状态栏信息项",
     "[Config Changed] Refreshing all file decorations": "[配置更改] 正在刷新所有文件装饰",
     "[File Access Error] {0}": "[文件访问错误] {0}",

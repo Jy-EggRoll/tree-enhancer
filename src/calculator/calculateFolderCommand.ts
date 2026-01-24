@@ -110,16 +110,24 @@ export class CalculateFolderCommand {
         this.statusBarItem.show();
 
         const delay = ConfigManager.getStatusBarDismissDelay();
-        this.dismissTimer = setTimeout(() => {
-            this.hideStatusBar();
-        }, delay * 1000);
+        if (delay !== 0) {
+            this.dismissTimer = setTimeout(() => {
+                this.hideStatusBar();
+            }, delay * 1000);
 
-        log.info(
-            vscode.l10n.t(
-                "[Calculate Folder Command] Result displayed, will dismiss in {0} seconds",
-                delay,
-            ),
-        );
+            log.info(
+                vscode.l10n.t(
+                    "[Calculate Folder Command] Result displayed, will dismiss in {0} seconds",
+                    delay,
+                ),
+            );
+        } else {
+            log.info(
+                vscode.l10n.t(
+                    "[Calculate Folder Command] Result displayed, will not auto-dismiss",
+                ),
+            );
+        }
     }
 
     /**
