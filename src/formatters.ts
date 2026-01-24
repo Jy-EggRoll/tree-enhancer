@@ -1,16 +1,16 @@
 import { FileSizeUnits, TemplateVariables, ImageDimensions } from "./types";
 import { ConfigManager } from "./config";
 
+// 格式化工具类，封装各种数据格式化逻辑，支持国际化和模板替换
 export class Formatters {
-    // 格式化工具类，封装各种数据格式化逻辑，支持国际化和模板替换
     private static readonly SIZE_UNITS: FileSizeUnits = {
         // 文件大小单位定义
         decimal: ["B", "KB", "MB", "GB", "TB", "PB"],
         binary: ["B", "KiB", "MiB", "GiB", "TiB", "PiB"],
     };
 
+    // 格式化文件大小为人类可读的字符串，支持 1000 和 1024 两种计算基底
     public static formatFileSize(bytes: number, base?: number): string {
-        // 格式化文件大小为人类可读的字符串，支持 1000 和 1024 两种计算基底
         if (bytes === 0) return "0 B"; // 如果文件大小为 0，直接返回
         const calculationBase = base || ConfigManager.getFileSizeBase(); // 获取计算基底，优先使用参数，否则从配置读取
         const sizes =
@@ -75,12 +75,6 @@ export class Formatters {
                 variables.folderCount.toString(),
             );
         }
-        // if (variables.maxCalculationTime !== undefined) {
-        //     result = result.replace(
-        //         /{maxCalculationTime}/g,
-        //         variables.maxCalculationTime.toString(),
-        //     );
-        // }
 
         if (variables.resolution !== undefined) {
             // 替换图片分辨率相关变量，如果变量未定义则移除整个占位符

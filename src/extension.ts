@@ -2,18 +2,17 @@ import * as vscode from "vscode"; // 导入 VSCode 的核心 API 模块，提供
 import { ConfigManager } from "./config"; // 导入自定义的配置管理模块，负责扩展配置的读取、修改检测等核心配置逻辑
 import { FileDecorationProvider } from "./provider"; // 导入自定义的文件装饰提供者模块，用于实现资源管理器中文件/文件夹的装饰增强功能
 
-// 定义一个完善的消息输出入口，而不是把消息输出到控制台，这样用户可以在“输出”面板中查看扩展日志，方便调试和问题排查
+// 可以在“输出”面板中查看 Tree Enhancer 的完整日志，方便调试和问题排查
 export const log = vscode.window.createOutputChannel("Tree Enhancer", {
     log: true,
 });
 
 // 扩展激活入口函数，VSCode 启动扩展/首次使用扩展功能时触发，context 为扩展上下文对象
 export function activate(context: vscode.ExtensionContext) {
-    context.subscriptions.push(log);
+    context.subscriptions.push(log); // 在一开始就注册日志，保证其他模块可以使用日志功能
 
     log.info(`正在激活扩展：Tree Enhancer`);
-    // log.info(`扩展版本：${context.extension.packageJSON.version}`);
-    // log.info(`当前配置：`, ConfigManager.getConfig());
+    log.info(`扩展版本：${context.extension.packageJSON.version}`);
 
     const startupDelay = ConfigManager.getStartupDelay() * 1000; // 获取配置中设置的启动延迟秒数，并转换为毫秒（setTimeout 接收毫秒单位）
     log.info(`将在 ${ConfigManager.getStartupDelay()} 秒后启动文件装饰提供者`);

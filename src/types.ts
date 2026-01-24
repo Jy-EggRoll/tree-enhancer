@@ -1,11 +1,3 @@
-// export interface DirectoryInfo {
-//     // 文件夹信息计算结果
-//     size: number; // 总大小（字节）
-//     fileCount: number; // 文件数量
-//     folderCount: number; // 文件夹数量
-//     isTimeout?: boolean; // 是否为超时结果
-// }
-
 // 扩展配置接口
 export interface ExtensionConfig {
     // maxCalculationTime: number; // 最大计算时间（毫秒）
@@ -26,7 +18,6 @@ export interface TemplateVariables {
     folderCount?: number; // 文件夹数量
     modifiedTime: string; // 格式化后的修改时间
     rawModifiedTime: Date; // 原始修改时间
-    // maxCalculationTime?: number; // 最大计算时间（毫秒）
     resolution?: string; // 图片分辨率信息
     width?: number; // 图片宽度
     height?: number; // 图片高度

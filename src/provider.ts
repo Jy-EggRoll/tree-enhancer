@@ -55,10 +55,8 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider {
 
             return decoration;
         } catch (error) {
-            // 文件访问出错的处理
-
-            log.error(`[提供装饰异常] 处理 ${uri.fsPath} 时发生错误:`, error);
             FileUtils.logFileError(error, uri.fsPath);
+            log.error(`[提供装饰异常] 处理 ${uri.fsPath} 时发生错误：`, error);
             return undefined;
         }
     }
@@ -83,13 +81,6 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider {
                     `[图片文件] ${fileName} 分辨率: ${imageDimensions.width} * ${imageDimensions.height}`,
                 );
             }
-
-            // 缓存图片文件信息
-            // this._fileCache.set(cacheKey, {
-            //     size: stats.size,
-            //     imageDimensions: imageDimensions || undefined,
-            //     mtime: stats.mtime,
-            // });
 
             const modifiedTime = new Date(stats.mtime);
             const variables = Formatters.createFileVariables(
@@ -126,8 +117,8 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider {
         log.info(`[完全刷新] 已经重新渲染所有文件装饰`);
     }
 
+    // 只刷新变化的文件
     public refreshSpecific(uri: vscode.Uri): void {
-        // 只刷新变化的文件或文件夹，最简洁的策略
         this._onDidChangeFileDecorations.fire(uri);
     }
 }

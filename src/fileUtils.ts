@@ -30,25 +30,26 @@ export class FileUtils {
         }
     }
 
+    // 定义公共静态方法 getFileName，参数 filePath 为字符串类型（表示文件路径），方法返回字符串类型（提取出的不含路径的文件名）
     public static getFileName(filePath: string): string {
-        // 获取文件名（不含路径）
-        const uri = this.toUri(filePath);
-        const pathValue = uri.path;
-        const lastSlashIndex = pathValue.lastIndexOf("/");
-        return lastSlashIndex >= 0
-            ? pathValue.slice(lastSlashIndex + 1)
-            : pathValue;
+        // 获取文件名（不含路径） // 行内注释：明确该方法的核心业务目标是提取文件路径中仅文件名的部分
+        const uri = this.toUri(filePath); // 调用当前类的 toUri 方法，将传入的文件路径字符串转换为 Uri 类型对象，结果赋值给常量 uri
+        const pathValue = uri.path; // 从 Uri 对象中读取 path 属性（该属性存储了标准化的路径字符串），赋值给常量 pathValue
+        const lastSlashIndex = pathValue.lastIndexOf("/"); // 调用字符串的 lastIndexOf 方法，查找 pathValue 中最后一个 "/" 字符的索引位置，结果赋值给常量 lastSlashIndex
+        return lastSlashIndex >= 0 // 执行返回逻辑：先判断最后一个 "/" 的索引是否大于等于 0（即路径中是否包含目录分隔符）
+            ? pathValue.slice(lastSlashIndex + 1) // 条件成立（存在 "/"）：截取从最后一个 "/" 的下一个索引开始到字符串末尾的子串（即纯文件名部分）
+            : pathValue; // 条件不成立（无 "/"）：直接返回原路径字符串（此时路径本身就是完整的文件名）
     }
 
-    public static joinPath(basePath: string, relativePath: string): string {
-        // 连接路径
-        return vscode.Uri.joinPath(this.toUri(basePath), relativePath).fsPath;
-    }
+    // public static joinPath(basePath: string, relativePath: string): string {
+    //     // 连接路径
+    //     return vscode.Uri.joinPath(this.toUri(basePath), relativePath).fsPath;
+    // }
 
     public static logFileError(error: any, filePath: string): void {
         // 记录文件访问错误，智能地记录不同类型的文件访问错误
         const errorCode = error?.code;
-        log.warn("文件访问错误:", filePath, errorCode || error);
+        log.warn("[文件访问错误]", filePath, errorCode || error);
     }
 
     public static isSupportedImage(fileName: string): boolean {
