@@ -1,0 +1,24 @@
+# 默认排除列表
+.vscode/**
+.vscode-test/**
+src/**
+out/
+node_modules/
+.gitignore
+**/tsconfig.json
+**/eslint.config.mjs
+**/*.map
+**/*.ts
+esbuild.js
+
+# 排除演示图片
+readme-img/
+
+# 排除工作区文件
+**/*.code-workspace
+
+# 排除工作流等文件
+.github/
+
+# 排除 lock 文件
+pnpm-lock.yaml
