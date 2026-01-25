@@ -15,7 +15,7 @@ export class ConfigManager {
 
         const rawFileTemplate = config.get<{ fileString?: string }>(
             "fileTemplate",
-            { fileString: "Please restart VSCode" },
+            { fileString: "Please restart VSCode" }, // 重启 VSCode 的消息作为最终回退，正常情况下不可能出现
         );
 
         const rawImageFileTemplate = config.get<{
@@ -36,36 +36,48 @@ export class ConfigManager {
         };
     }
 
-    // 获取特定配置项
+    /**
+     * 获取特定配置项
+     */
     public static get<T>(key: string, defaultValue: T): T {
         return vscode.workspace
             .getConfiguration(this.CONFIG_SECTION)
             .get<T>(key, defaultValue);
     }
 
-    // 检查配置变更是否影响本扩展
+    /**
+     * 检查配置变更是否影响本扩展
+     */
     public static isConfigChanged(
         event: vscode.ConfigurationChangeEvent,
     ): boolean {
         return event.affectsConfiguration(this.CONFIG_SECTION);
     }
 
-    // 获取文件大小计算基底（1000 或 1024）
+    /**
+     * 获取文件大小计算基底（1000 或 1024）
+     */
     public static getFileSizeBase(): number {
         return this.get<number>("fileSizeBase", 1000);
     }
 
-    // 获取启动延迟时间（秒）
+    /**
+     * 获取启动延迟时间（秒）
+     */
     public static getStartupDelay(): number {
         return this.get<number>("startupDelay", 0);
     }
 
-    // 获取大文件识别阈值（MB/MiB）
+    /**
+     * 获取大文件识别阈值（MB 或 MiB）
+     */
     public static getLargeFileThreshold(): number {
         return this.get<number>("largeFileThreshold", 20);
     }
 
-    // 获取文件夹计算器配置
+    /**
+     * 获取文件夹计算器配置
+     */
     public static getFolderCalculatorConfig(): FolderCalculatorConfig {
         return {
             statusBarTemplate: this.get<string>(
@@ -80,7 +92,9 @@ export class ConfigManager {
         };
     }
 
-    // 获取状态栏模板
+    /**
+     * 获取状态栏模板
+     */
     public static getStatusBarTemplate(): string {
         return this.get<string>(
             "folderCalculator.statusBarTemplate",
@@ -88,7 +102,9 @@ export class ConfigManager {
         );
     }
 
-    // 获取状态栏消失延迟（秒）
+    /**
+     * 获取状态栏自动消失延迟时间（秒）
+     */
     public static getStatusBarDismissDelay(): number {
         return this.get<number>("folderCalculator.dismissDelay", 60);
     }
