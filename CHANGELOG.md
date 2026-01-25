@@ -1,5 +1,11 @@
 # 更新日志 | Change Log
 
+## 1.7.0
+
+- ✨ 加入了文件夹大小计算功能，需要在文件夹上的右键菜单中选择，或使用快捷键 `Alt + Enter` 触发，计算结果会显示在状态栏，默认显示 60 秒，可以通过点击来关闭，设置中可调节显示时长 | Added folder size calculation feature, which can be triggered from the right-click menu on folders or by using the shortcut `Alt + Enter`. The result is displayed in the status bar for 60 seconds by default and can be closed by clicking; the display duration can be adjusted in settings
+- 📝 README 重写，重新设计了文档结构和演示图片 | Rewrote the README, redesigning the document structure and demonstration images
+- ✨ 大幅度优化代码结构和规范，提高可维护性 | Significant code structure and standardization improvements for better maintainability
+
 ## 1.6.0
 
 **破坏性更新**：请务必阅读此版本的更新说明 | **Breaking Change**: Please read the release notes for this version carefully
