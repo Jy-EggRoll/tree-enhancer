@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import { log } from "../utils/func";
 import { FolderCalculator } from "./folderCalculator";
-import { Formatter } from "./formatter";
+import { Formatters } from "../utils/formatters";
 import { ConfigManager } from "../config";
 
 /**
@@ -29,11 +29,11 @@ export class CalculateFolderCommand {
 
         if (!targetUri) {
             // 快捷键调用，特殊获取方式
-            const clipboardUri = await this.getUriSpecial();
-            if (!clipboardUri) {
+            const speUri = await this.getUriSpecial();
+            if (!speUri) {
                 return;
             }
-            await this.calculateFolder(clipboardUri);
+            await this.calculateFolder(speUri);
             log.info(
                 vscode.l10n.t(
                     "[Calculate Folder Command] Calculated by Keyboard Shortcut",
@@ -73,7 +73,7 @@ export class CalculateFolderCommand {
     }
 
     /**
-     * 特殊方式-剪贴板中转（不会污染剪贴板条目）
+     * 特殊方式-剪贴板中转（经测试，并不会污染剪贴板条目）
      */
     private async getUriSpecial(): Promise<vscode.Uri | undefined> {
         const originalClipboard = await vscode.env.clipboard.readText();
@@ -93,7 +93,7 @@ export class CalculateFolderCommand {
      */
     private showCalculating(folderName: string): void {
         this.clearDismissTimer();
-        this.statusBarItem.text = "$(loading~spin) " + folderName;
+        this.statusBarItem.text = "$(loading~spin) " + folderName; // 一个旋转的加载图标，此时不允许点击
         this.statusBarItem.show();
     }
 
@@ -103,7 +103,7 @@ export class CalculateFolderCommand {
     private showResult(result: any): void {
         this.clearDismissTimer();
 
-        const statusText = Formatter.formatForStatusBar(result);
+        const statusText = Formatters.formatForStatusBar(result);
 
         this.statusBarItem.text = `$(folder) ${statusText}`;
         this.statusBarItem.tooltip = vscode.l10n.t("Click to dismiss");
