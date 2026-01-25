@@ -1,15 +1,27 @@
-import { FileSizeUnits, TemplateVariables, ImageDimensions } from "../types";
+import {
+    FileSizeUnits,
+    TemplateVariables,
+    ImageDimensions,
+    FolderCalculationResult,
+} from "../types";
 import { ConfigManager } from "../config";
 
-// 格式化工具类，封装各种数据格式化逻辑，支持国际化和模板替换
+/**
+ * 格式化工具类，封装各种数据格式化逻辑，支持国际化和模板替换
+ */
 export class Formatters {
+    // 文件大小单位定义
     private static readonly SIZE_UNITS: FileSizeUnits = {
-        // 文件大小单位定义
         decimal: ["B", "KB", "MB", "GB", "TB", "PB"],
         binary: ["B", "KiB", "MiB", "GiB", "TiB", "PiB"],
     };
 
-    // 格式化文件大小为人类可读的字符串，支持 1000 和 1024 两种计算基底
+    /**
+     * 格式化文件大小为人类可读的字符串，支持 1000 和 1024 两种计算基底
+     * @param bytes
+     * @param base
+     * @returns
+     */
     public static formatFileSize(bytes: number, base?: number): string {
         if (bytes === 0) return "0 B"; // 如果文件大小为 0，直接返回
         const calculationBase = base || ConfigManager.getFileSizeBase(); // 获取计算基底，优先使用参数，否则从配置读取
@@ -23,8 +35,13 @@ export class Formatters {
         return parseFloat(value.toFixed(2)) + " " + sizes[unitIndex]; // 格式化数值：保留 2 位小数，并拼接单位
     }
 
+    /**
+     * 格式化日期时间，支持自定义格式模板
+     * @param date
+     * @param format
+     * @returns
+     */
     public static formatDate(date: Date, format?: string): string {
-        // 格式化日期时间，支持自定义格式模板
         const dateFormat =
             format ||
             ConfigManager.get<string>("dateTimeFormat", "YYYY-MM-DD HH:mm");
@@ -44,11 +61,16 @@ export class Formatters {
             .replace(/ss/g, seconds);
     }
 
+    /**
+     * 渲染模板字符串，将模板中的占位符替换为实际值
+     * @param template
+     * @param variables
+     * @returns
+     */
     public static renderTemplate(
         template: string,
         variables: TemplateVariables,
     ): string {
-        // 渲染模板字符串，将模板中的占位符替换为实际值
         let result = template;
         result = result.replace(/{name}/g, variables.name || ""); // 替换基本变量
         result = result.replace(
@@ -96,11 +118,16 @@ export class Formatters {
         return result;
     }
 
+    /**
+     * 格式化图片分辨率信息
+     * @param dimensions
+     * @param template
+     * @returns
+     */
     public static formatImageResolution(
         dimensions: ImageDimensions,
         template?: string,
     ): string {
-        // 格式化图片分辨率信息
         const resolutionTemplate =
             template ||
             ConfigManager.get<string>(
@@ -113,8 +140,15 @@ export class Formatters {
             .replace(/{height}/g, dimensions.height.toString());
     }
 
+    /**
+     * 创建文件的模板变量对象
+     * @param fileName
+     * @param fileSize
+     * @param modifiedTime
+     * @param imageDimensions
+     * @returns
+     */
     public static createFileVariables(
-        // 创建文件的模板变量对象
         fileName: string,
         fileSize: number,
         modifiedTime: Date,
@@ -137,15 +171,28 @@ export class Formatters {
 
         return variables;
     }
-}
 
-/**
- * 导出独立的格式化函数，供其他模块使用
- */
-export function formatFileSize(bytes: number, base?: number): string {
-    return Formatters.formatFileSize(bytes, base);
-}
+    /**
+     * 格式化计算结果用于状态栏显示
+     * @param result 计算结果
+     * @returns 格式化后的字符串
+     */
+    public static formatForStatusBar(result: FolderCalculationResult): string {
+        const template = ConfigManager.getStatusBarTemplate();
+        const base = ConfigManager.getFileSizeBase();
 
-export function formatDateTime(timestamp: number, format?: string): string {
-    return Formatters.formatDate(new Date(timestamp), format);
+        // 格式化文件大小
+        const formattedSize = this.formatFileSize(result.totalSize, base);
+
+        // 格式化时间
+        const formattedTime = this.formatDate(new Date(result.modifiedTime));
+
+        // 替换模板变量
+        return template
+            .replace(/{folderName}/g, result.folderName)
+            .replace(/{totalSize}/g, formattedSize)
+            .replace(/{fileCount}/g, result.fileCount.toString())
+            .replace(/{folderCount}/g, result.folderCount.toString())
+            .replace(/{modifiedTime}/g, formattedTime);
+    }
 }

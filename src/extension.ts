@@ -1,8 +1,8 @@
-import * as vscode from "vscode"; // 导入 VSCode 的核心 API 模块，提供扩展开发所需的所有核心能力
-import { ConfigManager } from "./config"; // 导入自定义的配置管理模块，负责扩展配置的读取、修改检测等核心配置逻辑
-import { FileDecorationProvider } from "./provider/provider"; // 导入自定义的文件装饰提供者模块，用于实现资源管理器中文件/文件夹的装饰增强功能
-import { log } from "./utils/func"; // 导入自定义的功能工具模块，提供日志记录等辅助功能
-import { CalculateFolderCommand } from "./calculator"; // 导入文件夹计算命令处理器
+import * as vscode from "vscode";
+import { ConfigManager } from "./config";
+import { FileDecorationProvider } from "./provider";
+import { log } from "./utils/func";
+import { CalculateFolderCommand } from "./calculator";
 
 /**
  * 扩展激活入口函数，VSCode 启动扩展/首次使用扩展功能时触发，context 为扩展上下文对象

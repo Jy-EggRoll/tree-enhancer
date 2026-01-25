@@ -1,7 +1,7 @@
 import * as vscode from "vscode";
 import { log } from "../utils/func";
 import { FolderCalculator } from "./folderCalculator";
-import { ResultFormatter } from "./formatter";
+import { Formatter } from "./formatter";
 import { ConfigManager } from "../config";
 
 /**
@@ -103,7 +103,7 @@ export class CalculateFolderCommand {
     private showResult(result: any): void {
         this.clearDismissTimer();
 
-        const statusText = ResultFormatter.formatForStatusBar(result);
+        const statusText = Formatter.formatForStatusBar(result);
 
         this.statusBarItem.text = `$(folder) ${statusText}`;
         this.statusBarItem.tooltip = vscode.l10n.t("Click to dismiss");
