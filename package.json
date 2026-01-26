@@ -93,7 +93,7 @@
             "explorer/context": [
                 {
                     "command": "tree-enhancer.calculateFolder",
-                    "group": "navigation",
+                    "group": "2_workspace",
                     "when": "explorerResourceIsFolder"
                 }
             ]
