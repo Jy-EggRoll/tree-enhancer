@@ -93,7 +93,7 @@
             "explorer/context": [
                 {
                     "command": "tree-enhancer.calculateFolder",
-                    "group": "navigation",
+                    "group": "navigation@99",
                     "when": "explorerResourceIsFolder"
                 }
             ]
@@ -151,5 +151,5 @@
         "watch:esbuild": "node esbuild.js --watch",
         "watch:tsc": "tsc --noEmit --watch --project tsconfig.json"
     },
-    "version": "1.7.0"
+    "version": "1.7.1"
 }
