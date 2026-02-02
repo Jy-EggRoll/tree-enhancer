@@ -1,0 +1,5 @@
+name: "Bug"
+description: A bug report
+title: "[🐛 Bug] "
+labels: ["bug"]
+assignees: [Jy-EggRoll]
