@@ -1,5 +1,9 @@
 # 更新日志 | Change Log
 
+## 1.7.1
+
+✨ 防止破坏用户的肌肉记忆，现将右键菜单中的“计算文件夹大小”选项移至底部 | To avoid disrupting users' muscle memory, the "Calculate Folder Size" option in the right-click menu has been moved to the bottom <https://github.com/Jy-EggRoll/tree-enhancer/pull/2>
+
 ## 1.7.0
 
 - ✨ 加入了文件夹大小计算功能，需要在文件夹上的右键菜单中选择，或使用快捷键 `Alt + Enter` 触发，计算结果会显示在状态栏，默认显示 60 秒，可以通过点击来关闭，设置中可调节显示时长 | Added folder size calculation feature, which can be triggered from the right-click menu on folders or by using the shortcut `Alt + Enter`. The result is displayed in the status bar for 60 seconds by default and can be closed by clicking; the display duration can be adjusted in settings
@@ -11,7 +15,7 @@
 **破坏性更新**：请务必阅读此版本的更新说明 | **Breaking Change**: Please read the release notes for this version carefully
 
 - **🗑️ 彻底移除了文件夹大小的计算与显示功能，因为文件夹的递归计算性能是不可控的，容易导致严重的性能问题 | Completely removed the folder size calculation and display feature due to uncontrollable performance issues caused by recursive folder size calculation**
-    - 该功能会在未来版本中以其他形式重新设计和实现 | This feature will be redesigned and re-implemented in future versions in other forms
+  - 该功能会在未来版本中以其他形式重新设计和实现 | This feature will be redesigned and re-implemented in future versions in other forms
 - 🗑️ 移除了相关无用的设置 | Removed related useless settings
 - ✨ 移除了调试模式，注册了“输出”通道，用户可以直观地调整日志级别，并看到扩展工作的全流程 | Removed debug mode, registered an "Output" channel where users can intuitively adjust log levels and see the full workflow of the extension
 - ✨ 引入 l10n 国际化支持，扩展的所有文本均支持多语言显示 | Introduced l10n internationalization support, all texts of the extension support multi-language display
@@ -38,9 +42,6 @@
     - 引入智能刷新机制，定期刷新文件装饰，避免频繁全量刷新 | Introduced intelligent refresh mechanism to periodically refresh file decorations, avoiding frequent full refreshes
     - 优化缓存机制，减少重复计算 | Optimized caching mechanism to reduce redundant calculations
 2. 新增大文件标识功能，用类似 Git 扩展的样式标识大文件 | Added large file identification feature, marking large files with a style similar to Git extension
-
-![大文件标注](assets/images/大文件标注.png)
-
 3. 修复大量问题 | Fixed numerous issues
 4. 优化代码结构，提高可维护性 | Improved code structure for better maintainability
 5. 移除大量不必要的依赖 | Removed numerous unnecessary dependencies
