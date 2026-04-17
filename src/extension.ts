@@ -82,22 +82,57 @@ export function activate(context: vscode.ExtensionContext) {
                 }
             });
 
-        const changeListener = vscode.workspace.onDidSaveTextDocument(
-            (document) => {
-                fileDecorationProvider.refreshSpecific(document.uri);
+        // 监听工作区所有文件的变更（包括外部修改）
+        const folder = vscode.workspace.workspaceFolders?.[0];
+        let fileWatcher: vscode.FileSystemWatcher | undefined;
+        if (folder) {
+            fileWatcher = vscode.workspace.createFileSystemWatcher(
+                new vscode.RelativePattern(folder, "**/*"),
+            );
+
+            fileWatcher.onDidChange((uri) => {
+                fileDecorationProvider.refreshSpecific(uri);
                 log.info(
                     vscode.l10n.t(
-                        "[File Saved] {0} has been saved, corresponding file decorations have been refreshed",
-                        document.uri.fsPath,
+                        "[File Changed] {0} has been changed, corresponding file decorations have been refreshed",
+                        uri.fsPath,
                     ),
                 );
-            },
-        );
+            });
+
+            fileWatcher.onDidCreate((uri) => {
+                fileDecorationProvider.refreshSpecific(uri);
+                log.info(
+                    vscode.l10n.t(
+                        "[File Created] {0} has been created, corresponding file decorations have been refreshed",
+                        uri.fsPath,
+                    ),
+                );
+            });
+
+            fileWatcher.onDidDelete((uri) => {
+                log.info(
+                    vscode.l10n.t(
+                        "[File Deleted] {0} has been deleted",
+                        uri.fsPath,
+                    ),
+                );
+            });
+
+            log.info(
+                vscode.l10n.t(
+                    "[File Watcher] Started watching all files in workspace: {0}",
+                    folder.uri.fsPath,
+                ),
+            );
+        }
 
         // 将各个可释放资源添加到扩展上下文的订阅中，确保扩展卸载时能够正确清理
         context.subscriptions.push(configChangeDisposable);
-        context.subscriptions.push(changeListener);
         context.subscriptions.push(providerDisposable);
+        if (fileWatcher) {
+            context.subscriptions.push(fileWatcher);
+        }
     }, startupDelay);
 
     // 将启动定时器添加到订阅中，确保扩展卸载时能够正确清理
