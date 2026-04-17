@@ -1,5 +1,9 @@
 # 更新日志 | Change Log
 
+## 1.8.0.dev.1
+
+- ✨ feat: 更改文件变更监视器的逻辑，现在对于文件变化的监视更加激进，可以响应 VSCode 外部触发的文件更改，并立刻刷新对应文件的装饰 | Changed the logic of file change watcher, now it is more aggressive in responding to file changes triggered outside of VSCode and immediately refreshes the decorations of the corresponding files
+
 ## 1.7.1
 
 ✨ 防止破坏用户的肌肉记忆，现将右键菜单中的“计算文件夹大小”选项移至底部 | To avoid disrupting users' muscle memory, the "Calculate Folder Size" option in the right-click menu has been moved to the bottom <https://github.com/Jy-EggRoll/tree-enhancer/pull/2>
