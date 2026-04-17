@@ -1,0 +1,155 @@
+{
+    "activationEvents": [
+        "onStartupFinished"
+    ],
+    "author": {
+        "name": "EggRoll"
+    },
+    "bugs": {
+        "url": "https://github.com/Jy-EggRoll/tree-enhancer/issues"
+    },
+    "categories": [
+        "Other"
+    ],
+    "contributes": {
+        "commands": [
+            {
+                "command": "tree-enhancer.calculateFolder",
+                "title": "%description.calculateFolder%"
+            }
+        ],
+        "configuration": {
+            "properties": {
+                "tree-enhancer.dateTimeFormat": {
+                    "default": "YYYY-MM-DD HH:mm:ss",
+                    "description": "%description.dateTimeFormat%",
+                    "type": "string"
+                },
+                "tree-enhancer.fileSizeBase": {
+                    "default": 1000,
+                    "description": "%description.fileSizeBase%",
+                    "enum": [
+                        1000,
+                        1024
+                    ],
+                    "type": "number"
+                },
+                "tree-enhancer.fileTemplate": {
+                    "default": {
+                        "fileString": "%default.fileTemplate%"
+                    },
+                    "description": "%description.fileTemplate%",
+                    "type": "object"
+                },
+                "tree-enhancer.folderCalculator.dismissDelay": {
+                    "default": 60,
+                    "description": "%description.folderCalculator.dismissDelay%",
+                    "maximum": 3600,
+                    "minimum": 0,
+                    "type": "number"
+                },
+                "tree-enhancer.folderCalculator.statusBarTemplate": {
+                    "default": "%default.folderCalculator.statusBarTemplate%",
+                    "description": "%description.folderCalculator.statusBarTemplate%",
+                    "type": "string"
+                },
+                "tree-enhancer.imageFileTemplate": {
+                    "default": {
+                        "imageFileString": "%default.imageFileTemplate%"
+                    },
+                    "description": "%description.imageFileTemplate%",
+                    "type": "object"
+                },
+                "tree-enhancer.imageResolutionTemplate": {
+                    "default": "%default.imageResolutionTemplate%",
+                    "description": "%description.imageResolutionTemplate%",
+                    "type": "string"
+                },
+                "tree-enhancer.largeFileThreshold": {
+                    "default": 20,
+                    "description": "%description.largeFileThreshold%",
+                    "maximum": 1000,
+                    "minimum": 0,
+                    "type": "number"
+                },
+                "tree-enhancer.startupDelay": {
+                    "default": 0,
+                    "description": "%description.startupDelay%",
+                    "maximum": 10,
+                    "minimum": 0,
+                    "type": "number"
+                }
+            },
+            "title": "Tree Enhancer"
+        },
+        "keybindings": [
+            {
+                "command": "tree-enhancer.calculateFolder",
+                "key": "alt+enter",
+                "when": "explorerViewletFocus && explorerResourceIsFolder"
+            }
+        ],
+        "menus": {
+            "explorer/context": [
+                {
+                    "command": "tree-enhancer.calculateFolder",
+                    "group": "navigation@99",
+                    "when": "explorerResourceIsFolder"
+                }
+            ]
+        }
+    },
+    "dependencies": {
+        "image-size": "^2.0.2"
+    },
+    "description": "Show more information in the VSCode file explorer when hovering over files | 鼠标悬浮时在 VSCode 资源管理器中显示文件的详细信息",
+    "devDependencies": {
+        "@types/node": "20.x",
+        "@types/vscode": "^1.76.0",
+        "@vscode/l10n-dev": "^0.0.35",
+        "@vscode/test-cli": "^0.0.11",
+        "esbuild": "^0.25.9",
+        "npm-run-all": "^4.1.5",
+        "typescript": "^5.8.3"
+    },
+    "displayName": "Tree Enhancer",
+    "engines": {
+        "vscode": "^1.76.0"
+    },
+    "homepage": "https://github.com/Jy-EggRoll/tree-enhancer#readme",
+    "icon": "icon.png",
+    "keywords": [
+        "file",
+        "explorer",
+        "size",
+        "tooltip",
+        "show size",
+        "文件管理器",
+        "文件",
+        "信息"
+    ],
+    "l10n": "./l10n",
+    "license": "MIT",
+    "main": "./dist/extension.js",
+    "name": "eggroll-tree-enhancer",
+    "publisher": "Jy-EggRoll",
+    "repository": {
+        "type": "git",
+        "url": "https://github.com/Jy-EggRoll/tree-enhancer.git"
+    },
+    "scripts": {
+        "check-types": "tsc --noEmit",
+        "compile": "pnpm run check-types && node esbuild.js",
+        "compile-tests": "tsc -p . --outDir out",
+        "gen-l10n": "npx @vscode/l10n-dev export -o ./l10n ./src",
+        "package": "pnpm run check-types && node esbuild.js --production",
+        "pretest": "pnpm run compile-tests && pnpm run compile",
+        "test": "vscode-test",
+        "vscode:prepublish": "pnpm run package",
+        "watch": "npm-run-all -p watch:*",
+        "watch-tests": "tsc -p . -w --outDir out",
+        "watch:esbuild": "node esbuild.js --watch",
+        "watch:tsc": "tsc --noEmit --watch --project tsconfig.json"
+    },
+    "version": "1.7.1"
+}
