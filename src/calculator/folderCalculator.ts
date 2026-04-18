@@ -10,11 +10,10 @@ export class CalculationCancelledError extends Error {
     }
 }
 
-/**
- * 文件夹计算器类，负责递归计算文件夹的大小、文件数量等统计信息
- */
 export class FolderCalculator {
     private static _cancelled = false;
+    private static _maxConcurrency = 0;
+    private static _currentConcurrency = 0;
 
     public static get isCancelled(): boolean {
         return this._cancelled;
@@ -27,20 +26,14 @@ export class FolderCalculator {
     public static resetCancel(): void {
         this._cancelled = false;
     }
-    /**
-     * 计算文件夹信息
-     * @param folderUri 文件夹 URI
-     * @returns 计算结果
-     */
+
     public static async calculate(
         folderUri: vscode.Uri,
     ): Promise<FolderCalculationResult> {
         const startTime = Date.now();
-
-        // 获取文件夹名称
+        this._maxConcurrency = 0;
+        this._currentConcurrency = 0;
         const folderName = folderUri.path.split("/").pop() || folderUri.path;
-
-        // 获取文件夹的修改时间
         const folderStat = await vscode.workspace.fs.stat(folderUri);
         const modifiedTime = folderStat.mtime;
 
@@ -49,7 +42,6 @@ export class FolderCalculator {
         let folderCount = 0;
 
         try {
-            // 递归计算文件夹内容
             const result = await this.calculateRecursive(folderUri);
             totalSize = result.totalSize;
             fileCount = result.fileCount;
@@ -62,35 +54,27 @@ export class FolderCalculator {
         }
 
         const duration = Date.now() - startTime;
-        const cpuCount = os.cpus().length;
-        const concurrency = Math.max(1, Math.floor(cpuCount / 2));
         log.info(
             vscode.l10n.t(
-                "[Folder Calculator] Calculation {0} completed in {1}ms: {2} files, {3} folders, {4} bytes | CPU cores: {5}, Max concurrency: {6}",
+                "[Folder Calculator] Calculation {0} completed in {1}ms: {2} files, {3} folders, {4} bytes",
                 folderName,
                 duration,
                 fileCount,
                 folderCount,
                 totalSize,
-                cpuCount,
-                concurrency,
             ),
         );
 
-        return {
-            folderName,
-            totalSize,
-            fileCount,
-            folderCount,
-            modifiedTime,
-        };
+        log.info(
+            vscode.l10n.t(
+                "[Folder Calculator] Max concurrency: {0}",
+                this._maxConcurrency,
+            ),
+        );
+
+        return { folderName, totalSize, fileCount, folderCount, modifiedTime };
     }
 
-    /**
-     * 递归计算文件夹内容
-     * @param uri 文件夹 URI
-     * @returns 统计信息
-     */
     private static async calculateRecursive(uri: vscode.Uri): Promise<{
         totalSize: number;
         fileCount: number;
@@ -119,17 +103,35 @@ export class FolderCalculator {
         }
 
         const fileStats = await Promise.all(
-            files.map((f) => this.getFileSizeSafe(f)),
+            files.map(async (f) => {
+                this._currentConcurrency++;
+                if (this._currentConcurrency > this._maxConcurrency) {
+                    this._maxConcurrency = this._currentConcurrency;
+                }
+                try {
+                    return await this.getFileSizeSafe(f);
+                } finally {
+                    this._currentConcurrency--;
+                }
+            }),
         );
 
-        const folderPromises = folders.map(async (folder) => {
-            if (this._cancelled) {
-                throw new CalculationCancelledError();
-            }
-            return await this.calculateRecursiveSafe(folder);
-        });
-
-        const folderResults = await Promise.all(folderPromises);
+        const folderResults = await Promise.all(
+            folders.map(async (folder) => {
+                if (this._cancelled) {
+                    throw new CalculationCancelledError();
+                }
+                this._currentConcurrency++;
+                if (this._currentConcurrency > this._maxConcurrency) {
+                    this._maxConcurrency = this._currentConcurrency;
+                }
+                try {
+                    return await this.calculateRecursiveSafe(folder);
+                } finally {
+                    this._currentConcurrency--;
+                }
+            }),
+        );
 
         const totalSize = fileStats.reduce((a, b) => a + b, 0) +
             folderResults.reduce((acc, r) => acc + r.totalSize, 0);
@@ -141,9 +143,7 @@ export class FolderCalculator {
         return { totalSize, fileCount, folderCount };
     }
 
-    private static async getFileSizeSafe(
-        uri: vscode.Uri,
-    ): Promise<number> {
+    private static async getFileSizeSafe(uri: vscode.Uri): Promise<number> {
         try {
             const stat = await vscode.workspace.fs.stat(uri);
             return stat.size;
