@@ -1,5 +1,9 @@
 # 更新日志 | Change Log
 
+## 1.9.0
+
+⚡️ perf: 大幅优化并发性能，尤其是使用 Remote 插件计算远程文件夹大小时的性能，之前的版本计算可能很长一段时间都无法计算出结果，现在已经大幅优化 | Significantly optimized concurrent performance, especially when calculating remote folder sizes using the Remote plugin. In previous versions, it could take a long time to calculate results, but now it has been greatly optimized
+
 ## 1.8.0
 
 - ✨ feat: 更改文件变更监视器的逻辑，现在对于文件变化的监视更加激进，可以响应 VSCode 外部触发的文件更改，并立刻刷新对应文件的装饰 | Changed the logic of file change watcher, now it is more aggressive in responding to file changes triggered outside of VSCode and immediately refreshes the decorations of the corresponding files
