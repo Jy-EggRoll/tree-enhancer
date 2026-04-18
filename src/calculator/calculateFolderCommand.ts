@@ -21,12 +21,28 @@ export class CalculateFolderCommand {
         };
     }
 
-    public get isRunning(): boolean {
+public get isRunning(): boolean {
         return this.isCalculating;
     }
 
     /**
-     * 执行文件夹计算命令
+     * 取消当前计算
+     */
+    public cancel(): void {
+        if (this.isCalculating) {
+            FolderCalculator.cancel();
+            this.hideStatusBar();
+            this.isCalculating = false;
+            log.info(
+                vscode.l10n.t(
+                    "[Calculate Folder Command] Calculation cancelled by user",
+                ),
+            );
+        }
+    }
+
+    /**
+     * 重新开始计算（从选中项）
      */
     public async execute(uri?: vscode.Uri): Promise<void> {
         if (this.isCalculating) {
@@ -46,14 +62,18 @@ export class CalculateFolderCommand {
             this.hasResult = false;
             log.info(
                 vscode.l10n.t(
-                    "[Calculate Folder Command] Result dismissed by user",
+                    "[Calculate Folder Command] Result dismissed, starting new calculation",
                 ),
             );
-            return;
+        } else if (uri) {
+            log.info(
+                vscode.l10n.t(
+                    "[Calculate Folder Command] Calculated by Context Menu",
+                ),
+            );
         }
 
         this.isCalculating = true;
-        this.hasResult = false;
         FolderCalculator.resetCancel();
 
         const targetUri = uri;
@@ -71,15 +91,51 @@ export class CalculateFolderCommand {
                 ),
             );
             return;
-        } else {
+        }
+
+        await this.calculateFolder(targetUri);
+    }
+
+    /**
+     * 手动触发新计算（不从上下文菜单）
+     */
+    public async startNewCalculation(): Promise<void> {
+        if (this.isCalculating) {
+            FolderCalculator.cancel();
+            this.hideStatusBar();
+            this.isCalculating = false;
             log.info(
                 vscode.l10n.t(
-                    "[Calculate Folder Command] Calculated by Context Menu",
+                    "[Calculate Folder Command] Calculation cancelled by user",
+                ),
+            );
+            return;
+        }
+
+        if (this.hasResult) {
+            this.hideStatusBar();
+            this.hasResult = false;
+            log.info(
+                vscode.l10n.t(
+                    "[Calculate Folder Command] Result dismissed, starting new calculation",
                 ),
             );
         }
 
-        await this.calculateFolder(targetUri);
+        this.isCalculating = true;
+        FolderCalculator.resetCancel();
+
+        const speUri = await this.getUriSpecial();
+        if (!speUri) {
+            this.isCalculating = false;
+            return;
+        }
+        await this.calculateFolder(speUri);
+        log.info(
+            vscode.l10n.t(
+                "[Calculate Folder Command] Calculated by Keyboard Shortcut",
+            ),
+        );
     }
 
     /**

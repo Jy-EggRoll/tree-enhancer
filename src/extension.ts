@@ -46,7 +46,13 @@ export function activate(context: vscode.ExtensionContext) {
     // 注册 dismiss 命令
     const dismissCommand = vscode.commands.registerCommand(
         "tree-enhancer.dismissStatusBar",
-        () => calculateFolderCommandHandler.execute(),
+        () => {
+            if (calculateFolderCommandHandler.isRunning) {
+                calculateFolderCommandHandler.cancel();
+            } else {
+                calculateFolderCommandHandler.hideStatusBar();
+            }
+        },
     );
 
     context.subscriptions.push(calculateCommand);
