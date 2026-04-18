@@ -45,7 +45,7 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider {
                 uri.fsPath,
             );
 
-            log.info(
+            log.trace(
                 vscode.l10n.t(
                     "[Basic Decoration] {0} decoration generated",
                     fileName,
@@ -60,7 +60,7 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider {
             ) {
                 decoration.badge = "L"; // 使用 L 标识大文件
 
-                log.info(
+                log.trace(
                     vscode.l10n.t(
                         "[Large File] {0} has been marked with L",
                         fileName,
@@ -91,7 +91,7 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider {
                 ? await FileUtils.getImageDimensions(filePath)
                 : null;
             if (imageDimensions) {
-                log.info(
+                log.trace(
                     vscode.l10n.t(
                         "[Image File] {0} resolution: {1} * {2}",
                         fileName,

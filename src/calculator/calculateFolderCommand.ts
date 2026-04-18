@@ -1,36 +1,67 @@
 import * as vscode from "vscode";
 import { log } from "../utils/func";
-import { FolderCalculator } from "./folderCalculator";
+import { FolderCalculator, CalculationCancelledError } from "./folderCalculator";
 import { Formatters } from "../utils/formatters";
 import { ConfigManager } from "../config";
 
 /**
- * 文件夹计算命令处理器
+     * 文件夹计算命令处理器
  */
 export class CalculateFolderCommand {
     private statusBarItem: vscode.StatusBarItem;
     private dismissTimer?: NodeJS.Timeout;
+    private isCalculating = false;
+    private hasResult = false;
 
     constructor(statusBarItem: vscode.StatusBarItem) {
         this.statusBarItem = statusBarItem;
-        // 设置点击事件为关闭状态栏
         this.statusBarItem.command = {
             command: "tree-enhancer.dismissStatusBar",
             title: "Dismiss",
         };
     }
 
+    public get isRunning(): boolean {
+        return this.isCalculating;
+    }
+
     /**
      * 执行文件夹计算命令
      */
     public async execute(uri?: vscode.Uri): Promise<void> {
-        // 解析目标 URI
+        if (this.isCalculating) {
+            FolderCalculator.cancel();
+            this.hideStatusBar();
+            this.isCalculating = false;
+            log.info(
+                vscode.l10n.t(
+                    "[Calculate Folder Command] Calculation cancelled by user",
+                ),
+            );
+            return;
+        }
+
+        if (this.hasResult) {
+            this.hideStatusBar();
+            this.hasResult = false;
+            log.info(
+                vscode.l10n.t(
+                    "[Calculate Folder Command] Result dismissed by user",
+                ),
+            );
+            return;
+        }
+
+        this.isCalculating = true;
+        this.hasResult = false;
+        FolderCalculator.resetCancel();
+
         const targetUri = uri;
 
         if (!targetUri) {
-            // 快捷键调用，特殊获取方式
             const speUri = await this.getUriSpecial();
             if (!speUri) {
+                this.isCalculating = false;
                 return;
             }
             await this.calculateFolder(speUri);
@@ -60,8 +91,27 @@ export class CalculateFolderCommand {
 
         try {
             const result = await FolderCalculator.calculate(folderUri);
+
+            if (FolderCalculator.isCancelled) {
+                log.info(
+                    vscode.l10n.t(
+                        "[Calculate Folder Command] Calculation cancelled, result discarded",
+                    ),
+                );
+                return;
+            }
+
             this.showResult(result);
+            this.hasResult = true;
         } catch (error) {
+            if (error instanceof CalculationCancelledError) {
+                log.info(
+                    vscode.l10n.t(
+                        "[Calculate Folder Command] Calculation cancelled, result discarded",
+                    ),
+                );
+                return;
+            }
             log.error(
                 vscode.l10n.t(
                     "[Calculate Folder Command] Calculation failed: {0}",
@@ -69,6 +119,8 @@ export class CalculateFolderCommand {
                 ),
             );
             this.hideStatusBar();
+        } finally {
+            this.isCalculating = false;
         }
     }
 
