@@ -100,7 +100,8 @@
         }
     },
     "dependencies": {
-        "image-size": "^2.0.2"
+        "image-size": "^2.0.2",
+        "minimatch": "^9.0.0"
     },
     "description": "Show more information in the VSCode file explorer when hovering over files | 鼠标悬浮时在 VSCode 资源管理器中显示文件的详细信息",
     "devDependencies": {

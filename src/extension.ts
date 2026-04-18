@@ -3,6 +3,7 @@ import { ConfigManager } from "./config";
 import { FileDecorationProvider } from "./provider";
 import { log } from "./utils/func";
 import { CalculateFolderCommand } from "./calculator";
+import { FileWatcherManager } from "./utils/fileWatcher";
 
 /**
  * 扩展激活入口函数，VSCode 启动扩展/首次使用扩展功能时触发，context 为扩展上下文对象
@@ -67,9 +68,16 @@ export function activate(context: vscode.ExtensionContext) {
             fileDecorationProvider, // 传入实例化的文件装饰提供者对象作为注册参数
         );
 
-        // 注册 VSCode 配置变更事件监听器，监听所有配置项的修改操作，当用户修改扩展配置时，自动刷新所有文件装饰以应用新设置
+        // 创建智能文件监控管理器
+        // 这个管理器会自动尊重用户的 'files.exclude' 配置
+        // 确保我们的行为与 VSCode 资源管理器保持一致
+        const fileWatcherManager = new FileWatcherManager();
+
+        // 注册 VSCode 配置变更事件监听器，监听所有配置项的修改操作
+        // 特别关注 tree-enhancer 配置和 files.* 配置的变更
         const configChangeDisposable =
             vscode.workspace.onDidChangeConfiguration((event) => {
+                // 扩展自身配置变更
                 if (ConfigManager.isConfigChanged(event)) {
                     fileDecorationProvider.refreshAll(); // 触发所有文件/文件夹的装饰刷新操作，立即应用新配置的装饰规则
                     log.info(
@@ -86,49 +94,62 @@ export function activate(context: vscode.ExtensionContext) {
                         ),
                     );
                 }
+
+                // 用户修改了 files.exclude 配置，重新加载排除规则
+                if (event.affectsConfiguration("files.exclude")) {
+                    fileWatcherManager.reload();
+                    log.info(
+                        vscode.l10n.t(
+                            "[Config Changed] Exclude patterns reloaded",
+                        ),
+                    );
+                }
             });
 
         // 监听工作区所有文件的变更（包括外部修改）
         const folder = vscode.workspace.workspaceFolders?.[0];
         let fileWatcher: vscode.FileSystemWatcher | undefined;
         if (folder) {
-            fileWatcher = vscode.workspace.createFileSystemWatcher(
-                new vscode.RelativePattern(folder, "**/*"),
+            // 使用智能文件监控器创建监控器
+            // VSCode 会自动应用 'files.watcherExclude' 配置，忽略产生大量事件的目录
+            fileWatcher = fileWatcherManager.createWatcher(
+                folder,
+                // 文件变更回调
+                (uri) => {
+                    fileDecorationProvider.refreshSpecific(uri);
+                    log.info(
+                        vscode.l10n.t(
+                            "[File Changed] {0} has been changed, corresponding file decorations have been refreshed",
+                            uri.fsPath,
+                        ),
+                    );
+                },
+                // 文件创建回调
+                (uri) => {
+                    fileDecorationProvider.refreshSpecific(uri);
+                    log.info(
+                        vscode.l10n.t(
+                            "[File Created] {0} has been created, corresponding file decorations have been refreshed",
+                            uri.fsPath,
+                        ),
+                    );
+                },
+                // 文件删除回调 - 只记录日志，不刷新装饰
+                (uri) => {
+                    log.info(
+                        vscode.l10n.t(
+                            "[File Deleted] {0} has been deleted",
+                            uri.fsPath,
+                        ),
+                    );
+                },
             );
-
-            fileWatcher.onDidChange((uri) => {
-                fileDecorationProvider.refreshSpecific(uri);
-                log.info(
-                    vscode.l10n.t(
-                        "[File Changed] {0} has been changed, corresponding file decorations have been refreshed",
-                        uri.fsPath,
-                    ),
-                );
-            });
-
-            fileWatcher.onDidCreate((uri) => {
-                fileDecorationProvider.refreshSpecific(uri);
-                log.info(
-                    vscode.l10n.t(
-                        "[File Created] {0} has been created, corresponding file decorations have been refreshed",
-                        uri.fsPath,
-                    ),
-                );
-            });
-
-            fileWatcher.onDidDelete((uri) => {
-                log.info(
-                    vscode.l10n.t(
-                        "[File Deleted] {0} has been deleted",
-                        uri.fsPath,
-                    ),
-                );
-            });
 
             log.info(
                 vscode.l10n.t(
-                    "[File Watcher] Started watching all files in workspace: {0}",
+                    "[File Watcher] Started watching all files in workspace: {0} (excluding patterns: {1})",
                     folder.uri.fsPath,
+                    fileWatcherManager.getExcludePatternCount(),
                 ),
             );
         }
