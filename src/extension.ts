@@ -134,14 +134,8 @@ export function activate(context: vscode.ExtensionContext) {
                         ),
                     );
                 },
-                // 文件删除回调 - 只记录日志，不刷新装饰
+                // 文件删除回调 - 忽略，文件删除无需任何操作
                 (uri) => {
-                    log.info(
-                        vscode.l10n.t(
-                            "[File Deleted] {0} has been deleted",
-                            uri.fsPath,
-                        ),
-                    );
                 },
             );
 

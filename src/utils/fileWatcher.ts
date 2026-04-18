@@ -117,7 +117,7 @@ export class FileWatcherManager {
         });
 
         watcher.onDidDelete((uri) => {
-            onDelete(uri);
+            // 忽略，文件删除无需任何操作
         });
 
         log.info(
