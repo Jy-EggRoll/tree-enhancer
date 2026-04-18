@@ -1,5 +1,9 @@
 # 更新日志 | Change Log
 
+## 1.10.1
+
+🐛 fix: 移除了文件删除的日志噪音，整体日志分级更明确，性能更高 | Removed log noise for file deletions, refined log levels, and improved performance
+
 ## 1.10.0
 
 ✨ feat: 优化文件监控，现在只要是不在 VSCode 中显示的文件，都不会被纳入监控，从而提升性能和减少不必要的监控 | Optimized file monitoring, now any files that are not displayed in VSCode will not be monitored, improving performance and reducing unnecessary monitoring
