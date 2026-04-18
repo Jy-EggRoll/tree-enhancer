@@ -1,6 +1,6 @@
 # 更新日志 | Change Log
 
-## 1.8.0.dev.1
+## 1.8.0
 
 - ✨ feat: 更改文件变更监视器的逻辑，现在对于文件变化的监视更加激进，可以响应 VSCode 外部触发的文件更改，并立刻刷新对应文件的装饰 | Changed the logic of file change watcher, now it is more aggressive in responding to file changes triggered outside of VSCode and immediately refreshes the decorations of the corresponding files
 
