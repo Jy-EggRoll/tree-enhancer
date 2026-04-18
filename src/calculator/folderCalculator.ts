@@ -3,8 +3,6 @@ import * as os from "os";
 import { log } from "../utils/func";
 import { FolderCalculationResult } from "../types";
 
-const MAX_CONCURRENCY = Math.max(1, Math.floor(os.cpus().length / 2));
-
 export class CalculationCancelledError extends Error {
     constructor() {
         super("Calculation cancelled");
@@ -12,38 +10,10 @@ export class CalculationCancelledError extends Error {
     }
 }
 
-class Semaphore {
-    private queue: Array<() => void> = [];
-
-    constructor(private permits: number) {}
-
-    async acquire(): Promise<void> {
-        if (this.permits > 0) {
-            this.permits--;
-            return;
-        }
-        return new Promise((resolve) => {
-            this.queue.push(() => {
-                this.permits--;
-                resolve();
-            });
-        });
-    }
-
-    release(): void {
-        this.permits++;
-        const next = this.queue.shift();
-        if (next) {
-            next();
-        }
-    }
-}
-
 /**
  * 文件夹计算器类，负责递归计算文件夹的大小、文件数量等统计信息
  */
 export class FolderCalculator {
-    private static semaphore = new Semaphore(MAX_CONCURRENCY);
     private static _cancelled = false;
 
     public static get isCancelled(): boolean {
@@ -93,7 +63,7 @@ export class FolderCalculator {
 
         const duration = Date.now() - startTime;
         const cpuCount = os.cpus().length;
-        const concurrency = MAX_CONCURRENCY;
+        const concurrency = Math.max(1, Math.floor(cpuCount / 2));
         log.info(
             vscode.l10n.t(
                 "[Folder Calculator] Calculation {0} completed in {1}ms: {2} files, {3} folders, {4} bytes | CPU cores: {5}, Max concurrency: {6}",
@@ -148,27 +118,18 @@ export class FolderCalculator {
             }
         }
 
-        await this.semaphore.acquire();
-        let fileStats: number[];
-        try {
-            fileStats = await Promise.all(
-                files.map((f) => this.getFileSizeSafe(f)),
-            );
-        } finally {
-            this.semaphore.release();
-        }
+        const fileStats = await Promise.all(
+            files.map((f) => this.getFileSizeSafe(f)),
+        );
 
-        const folderResults: Array<{
-            totalSize: number;
-            fileCount: number;
-            folderCount: number;
-        }> = [];
-        for (const folder of folders) {
+        const folderPromises = folders.map(async (folder) => {
             if (this._cancelled) {
                 throw new CalculationCancelledError();
             }
-            folderResults.push(await this.calculateRecursiveSafe(folder));
-        }
+            return await this.calculateRecursiveSafe(folder);
+        });
+
+        const folderResults = await Promise.all(folderPromises);
 
         const totalSize = fileStats.reduce((a, b) => a + b, 0) +
             folderResults.reduce((acc, r) => acc + r.totalSize, 0);
