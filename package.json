@@ -138,13 +138,12 @@
         "url": "https://github.com/Jy-EggRoll/tree-enhancer.git"
     },
     "scripts": {
-        "check-types": "tsc --noEmit",
+        "check-types": "pnpm tsc --noEmit",
         "compile": "pnpm run check-types && node esbuild.js",
-        "compile-tests": "tsc -p . --outDir out",
+        "compile-tests": "pnpm tsc -p . --outDir out",
         "gen-l10n": "npx @vscode/l10n-dev export -o ./l10n ./src",
         "package": "pnpm run check-types && node esbuild.js --production",
         "pretest": "pnpm run compile-tests && pnpm run compile",
-        "test": "vscode-test",
         "vscode:prepublish": "pnpm run package",
         "watch": "npm-run-all -p watch:*",
         "watch-tests": "tsc -p . -w --outDir out",
