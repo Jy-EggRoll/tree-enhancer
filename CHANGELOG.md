@@ -1,5 +1,9 @@
 # 更新日志 | Change Log
 
+## 1.10.0
+
+✨ feat: 优化文件监控，现在只要是不在 VSCode 中显示的文件，都不会被纳入监控，从而提升性能和减少不必要的监控 | Optimized file monitoring, now any files that are not displayed in VSCode will not be monitored, improving performance and reducing unnecessary monitoring
+
 ## 1.9.0
 
 ⚡️ perf: 大幅优化并发性能，尤其是使用 Remote 插件计算远程文件夹大小时的性能，之前的版本计算可能很长一段时间都无法计算出结果，现在已经大幅优化 | Significantly optimized concurrent performance, especially when calculating remote folder sizes using the Remote plugin. In previous versions, it could take a long time to calculate results, but now it has been greatly optimized
