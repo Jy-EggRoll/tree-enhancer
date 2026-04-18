@@ -147,9 +147,8 @@ export function activate(context: vscode.ExtensionContext) {
 
             log.info(
                 vscode.l10n.t(
-                    "[File Watcher] Started watching all files in workspace: {0} (excluding patterns: {1})",
-                    folder.uri.fsPath,
-                    fileWatcherManager.getExcludePatternCount(),
+                    "[File Watcher] Started watching all files in workspace: {0}",
+                    folder.uri.fsPath
                 ),
             );
         }

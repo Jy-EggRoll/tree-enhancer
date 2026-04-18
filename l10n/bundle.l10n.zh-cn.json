@@ -8,7 +8,7 @@
     "[File Changed] {0} has been changed, corresponding file decorations have been refreshed": "[文件变更] {0} 已更改，相关文件装饰已刷新",
     "[File Created] {0} has been created, corresponding file decorations have been refreshed": "[文件创建] {0} 已创建，相关文件装饰已刷新",
     "[File Deleted] {0} has been deleted": "[文件删除] {0} 已删除",
-    "[File Watcher] Started watching all files in workspace: {0} (excluding patterns: {1})": "[文件监控] 开始监听工作区中的所有文件：{0}（排除模式：{1}）",
+    "[File Watcher] Started watching all files in workspace: {0}": "[文件监控] 开始监听工作区中的所有文件：{0}",
     "[Activation Complete] Extension has been successfully activated": "[激活完成] 扩展已成功激活",
     "[FileWatcher] Exclude patterns: {0}": "[文件监控] 排除模式：{0}",
     "[FileWatcher] Created for: {0}": "[文件监控] 已为 {0} 创建监控",

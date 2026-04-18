@@ -8,7 +8,7 @@
   "[File Changed] {0} has been changed, corresponding file decorations have been refreshed": "[File Changed] {0} has been changed, corresponding file decorations have been refreshed",
   "[File Created] {0} has been created, corresponding file decorations have been refreshed": "[File Created] {0} has been created, corresponding file decorations have been refreshed",
   "[File Deleted] {0} has been deleted": "[File Deleted] {0} has been deleted",
-  "[File Watcher] Started watching all files in workspace: {0} (excluding patterns: {1})": "[File Watcher] Started watching all files in workspace: {0} (excluding patterns: {1})",
+  "[File Watcher] Started watching all files in workspace: {0}": "[File Watcher] Started watching all files in workspace: {0}",
   "[Activation Complete] Extension has been successfully activated": "[Activation Complete] Extension has been successfully activated",
   "[FileWatcher] Exclude patterns: {0}": "[FileWatcher] Exclude patterns: {0}",
   "[FileWatcher] Created for: {0}": "[FileWatcher] Created for: {0}",
