@@ -11,7 +11,8 @@
 			"request": "launch",
 			"args": [
 				"--extensionDevelopmentPath=${workspaceFolder}",
-				"--profile=扩展测试"
+				// "--profile=扩展测试"
+				"--disable-extensions"
 			],
 			"outFiles": [
 				"${workspaceFolder}/dist/**/*.js"
