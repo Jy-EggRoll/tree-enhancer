@@ -2,8 +2,10 @@ import * as vscode from "vscode";
 import { ConfigManager } from "./config";
 import { FileDecorationProvider } from "./provider";
 import { initLogger, getLogger } from "./utils/func";
-import { CalculateFolderCommand } from "./calculator";
+import { CalculateFolderCommand } from "./calculator/calculateFolderCommand";
 import { FileWatcherManager } from "./utils/fileWatcher";
+import { StatusBarManager } from "./statusBarManager";
+import { SelectionMonitor } from "./selectionMonitor";
 import sourceMapSupport from "source-map-support";
 
 const log = getLogger();
@@ -24,22 +26,19 @@ export function activate(context: vscode.ExtensionContext) {
         ),
     );
 
-    const startupDelay = ConfigManager.getStartupDelay() * 1000; // 获取配置中设置的启动延迟秒数，并转换为毫秒（setTimeout 接收毫秒单位）
-    log.info(
-        vscode.l10n.t(
-            "File Decoration Provider will start in {0} seconds",
-            ConfigManager.getStartupDelay(),
-        ),
-    );
+    const startupDelay = ConfigManager.getStartupDelay() * 1000;
 
-    const statusBarItem = vscode.window.createStatusBarItem(
-        vscode.StatusBarAlignment.Left,
-    );
-    context.subscriptions.push(statusBarItem);
+    // 创建统一的状态栏管理器
+    const statusBarManager = new StatusBarManager();
+    context.subscriptions.push(statusBarManager);
+
+    // 创建选中监控器（自动监听文件选中并显示信息）
+    const selectionMonitor = new SelectionMonitor(statusBarManager);
+    context.subscriptions.push(selectionMonitor);
 
     // 创建文件夹计算命令处理器
     const calculateFolderCommandHandler = new CalculateFolderCommand(
-        statusBarItem,
+        statusBarManager,
     );
 
     // 注册文件夹计算命令
@@ -64,26 +63,25 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(dismissCommand);
     context.subscriptions.push(calculateFolderCommandHandler);
 
+    log.info(
+        vscode.l10n.t(
+            "[Activation Complete] Extension has been successfully activated",
+        ),
+    );
+
     // 延迟启动文件装饰提供者
     const startupTimer = setTimeout(() => {
-        const fileDecorationProvider = new FileDecorationProvider(); // 实例化文件装饰提供者对象
+        const fileDecorationProvider = new FileDecorationProvider();
         const providerDisposable = vscode.window.registerFileDecorationProvider(
-            // 向 VSCode 注册文件装饰提供者，使扩展能接管资源管理器的文件装饰逻辑
-            fileDecorationProvider, // 传入实例化的文件装饰提供者对象作为注册参数
+            fileDecorationProvider,
         );
 
-        // 创建智能文件监控管理器
-        // 这个管理器会自动尊重用户的 'files.exclude' 配置
-        // 确保我们的行为与 VSCode 资源管理器保持一致
         const fileWatcherManager = new FileWatcherManager();
 
-        // 注册 VSCode 配置变更事件监听器，监听所有配置项的修改操作
-        // 特别关注 tree-enhancer 配置和 files.* 配置的变更
         const configChangeDisposable =
             vscode.workspace.onDidChangeConfiguration((event) => {
-                // 扩展自身配置变更
                 if (ConfigManager.isConfigChanged(event)) {
-                    fileDecorationProvider.refreshAll(); // 触发所有文件/文件夹的装饰刷新操作，立即应用新配置的装饰规则
+                    fileDecorationProvider.refreshAll();
                     log.info(
                         vscode.l10n.t(
                             "[Config Changed] Refreshing all file decorations",
@@ -99,7 +97,6 @@ export function activate(context: vscode.ExtensionContext) {
                     );
                 }
 
-                // 用户修改了 files.exclude 配置，重新加载排除规则
                 if (event.affectsConfiguration("files.exclude")) {
                     fileWatcherManager.reload();
                     log.info(
@@ -110,15 +107,11 @@ export function activate(context: vscode.ExtensionContext) {
                 }
             });
 
-        // 监听工作区所有文件的变更（包括外部修改）
         const folder = vscode.workspace.workspaceFolders?.[0];
         let fileWatcher: vscode.FileSystemWatcher | undefined;
         if (folder) {
-            // 使用智能文件监控器创建监控器
-            // VSCode 会自动应用 'files.watcherExclude' 配置，忽略产生大量事件的目录
             fileWatcher = fileWatcherManager.createWatcher(
                 folder,
-                // 文件变更回调
                 (uri) => {
                     fileDecorationProvider.refreshSpecific(uri);
                     log.info(
@@ -127,8 +120,9 @@ export function activate(context: vscode.ExtensionContext) {
                             uri.fsPath,
                         ),
                     );
+                    // 如果变更的文件是当前选中的文件，刷新状态栏信息并重置超时
+                    selectionMonitor.refreshCurrentFile();
                 },
-                // 文件创建回调
                 (uri) => {
                     fileDecorationProvider.refreshSpecific(uri);
                     log.info(
@@ -137,8 +131,9 @@ export function activate(context: vscode.ExtensionContext) {
                             uri.fsPath,
                         ),
                     );
+                    // 如果创建的文件是当前选中的文件，刷新状态栏信息并重置超时
+                    selectionMonitor.refreshCurrentFile();
                 },
-                // 文件删除回调 - 忽略，文件删除无需任何操作
                 (uri) => {
                 },
             );
@@ -151,7 +146,6 @@ export function activate(context: vscode.ExtensionContext) {
             );
         }
 
-        // 将各个可释放资源添加到扩展上下文的订阅中，确保扩展卸载时能够正确清理
         context.subscriptions.push(configChangeDisposable);
         context.subscriptions.push(providerDisposable);
         if (fileWatcher) {
@@ -159,20 +153,11 @@ export function activate(context: vscode.ExtensionContext) {
         }
     }, startupDelay);
 
-    // 将启动定时器添加到订阅中，确保扩展卸载时能够正确清理
     context.subscriptions.push({
-        // 向上下文订阅中添加自定义销毁对象，用于清理启动定时器
         dispose: () => {
-            // 定义销毁方法，该方法会在扩展卸载时被调用
-            clearTimeout(startupTimer); // 清除启动定时器，避免扩展卸载后定时器仍触发执行
+            clearTimeout(startupTimer);
         },
     });
-
-    log.info(
-        vscode.l10n.t(
-            "[Activation Complete] Extension has been successfully activated",
-        ),
-    );
 }
 
 export function deactivate() {}
