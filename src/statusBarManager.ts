@@ -16,7 +16,7 @@ export class StatusBarManager implements vscode.Disposable {
     constructor() {
         this.statusBarItem = vscode.window.createStatusBarItem(
             vscode.StatusBarAlignment.Left,
-            -100 // 确保排在最后一个
+            -2000 // 确保排在最后一个，和我的另一个插件兼容
         );
         this.statusBarItem.command = {
             command: "tree-enhancer.dismissStatusBar",
