@@ -108,4 +108,11 @@ export class ConfigManager {
     public static getStatusBarDismissDelay(): number {
         return this.get<number>("folderCalculator.dismissDelay", 10);
     }
+
+    /**
+     * 获取文件信息自动显示是否启用
+     */
+    public static getFileInfoEnabled(): boolean {
+        return this.get<boolean>("fileInfo.enabled", true);
+    }
 }
