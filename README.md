@@ -53,10 +53,9 @@
 
 发布到 VSCode Marketplace 需要配置以下 Token：
 
-| Token | 用途 | 获取方式 |
-|-------|------|----------|
-| `VSCE_PAT` | VSCode Marketplace 发布凭证 | 登录 [Azure DevOps](https://dev.azure.com) → 右上角 Personal Access Tokens → 创建时选择 **Marketplace (Publish)** 作用域，保存后添加到 GitHub 仓库的 Secrets（Settings → Secrets and variables → Actions → New repository secret，命名为 `VSCE_PAT`） |
-| `GITHUB_TOKEN` | 创建 GitHub Release | GitHub Actions 自动提供，无需手动配置 |
+| Token          | 用途                        | 获取方式                                                                                                                                                                                                                                              |
+| -------------- | --------------------------- | ----------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `VSCE_PAT`     | VSCode Marketplace 发布凭证 | 登录 [Azure DevOps](https://dev.azure.com) → 右上角 Personal Access Tokens → 创建时选择 **Marketplace (Publish)** 作用域，保存后添加到 GitHub 仓库的 Secrets（Settings → Secrets and variables → Actions → New repository secret，命名为 `VSCE_PAT`） |
 
 > **注意**：`VSCE_PAT` 是发布到 Marketplace 的必需凭证，没有它发布步骤会失败。
 
@@ -113,10 +112,9 @@ This extension uses GitHub Actions for continuous integration and delivery:
 
 Publishing to the VSCode Marketplace requires the following Tokens:
 
-| Token | Purpose | How to Obtain |
-|-------|---------|---------------|
-| `VSCE_PAT` | VSCode Marketplace publish credential | Log in to [Azure DevOps](https://dev.azure.com) → Personal Access Tokens → Create with **Marketplace (Publish)** scope, save it, then add to GitHub repository Secrets (Settings → Secrets and variables → Actions → New repository secret, name it `VSCE_PAT`) |
-| `GITHUB_TOKEN` | Create GitHub Release | Automatically provided by GitHub Actions, no manual configuration needed |
+| Token          | Purpose                               | How to Obtain                                                                                                                                                                                                                                                   |
+| -------------- | ------------------------------------- | --------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
+| `VSCE_PAT`     | VSCode Marketplace publish credential | Log in to [Azure DevOps](https://dev.azure.com) → Personal Access Tokens → Create with **Marketplace (Publish)** scope, save it, then add to GitHub repository Secrets (Settings → Secrets and variables → Actions → New repository secret, name it `VSCE_PAT`) |
 
 > **Note**: `VSCE_PAT` is required for publishing to the Marketplace. Without it, the publish step will fail.
 
