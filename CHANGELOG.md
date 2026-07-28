@@ -1,5 +1,14 @@
 # 更新日志 | Change Log
 
+## 1.11.0
+
+✨ feat: 新增文件选中监控与状态栏统一管理 | Added file selection monitoring and unified status bar management
+
+- 打开或切换文件时，状态栏自动显示文件名、大小和修改时间（默认显示 10 秒，可通过点击关闭，设置中可调节显示时长）
+- 文件内容变更时，信息自动刷新并重置计时
+- 文件夹计算结果与文件信息共用同一状态栏位置，切换即时顶替
+- 🔨 chore: 移植国际化排序脚本，所有 l10n 文件自动按字典序排序
+
 ## 1.10.1
 
 🐛 fix: 移除了文件删除的日志噪音，整体日志分级更明确，性能更高 | Removed log noise for file deletions, refined log levels, and improved performance
