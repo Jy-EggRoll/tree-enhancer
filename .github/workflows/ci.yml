@@ -1,0 +1,35 @@
+name: CI
+
+on:
+    workflow_dispatch:
+    push:
+        branches: [main]
+    pull_request:
+        branches: [main]
+
+env:
+    FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
+jobs:
+    lint:
+        strategy:
+            matrix:
+                os: [macos-latest, ubuntu-latest, windows-latest]
+        runs-on: ${{ matrix.os }}
+        steps:
+            - uses: actions/checkout@v4
+
+            - uses: ./.github/actions/setup
+
+            - name: Lint
+              run: pnpm run lint
+
+    type-check:
+        runs-on: ubuntu-latest
+        steps:
+            - uses: actions/checkout@v4
+
+            - uses: ./.github/actions/setup
+
+            - name: Type check
+              run: pnpm run check-types
