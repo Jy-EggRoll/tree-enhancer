@@ -1,0 +1,5 @@
+# pnpm workspace 配置
+# 使用 allowBuilds 来批准 esbuild 的 postinstall 脚本
+# 避免每次 pnpm install 时重复询问
+allowBuilds:
+  esbuild: true
