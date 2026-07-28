@@ -86,7 +86,7 @@ export class ConfigManager {
             ),
             statusBarDismissDelay: this.get<number>(
                 "folderCalculator.dismissDelay",
-                60,
+                10,
             ),
             fileSizeBase: this.getFileSizeBase(),
         };
@@ -106,6 +106,6 @@ export class ConfigManager {
      * 获取状态栏自动消失延迟时间（秒）
      */
     public static getStatusBarDismissDelay(): number {
-        return this.get<number>("folderCalculator.dismissDelay", 60);
+        return this.get<number>("folderCalculator.dismissDelay", 10);
     }
 }

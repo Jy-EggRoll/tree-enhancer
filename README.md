@@ -16,7 +16,7 @@
 
     ![媒体文件元信息](https://raw.githubusercontent.com/Jy-EggRoll/tree-enhancer/refs/heads/main/readme-img/媒体文件元信息.png)
 
-- 文件夹大小计算：可以计算文件夹的总大小，支持通过右键菜单或快捷键触发计算，并在状态栏显示结果（结果默认显示 60 秒，可以通过点击来关闭，设置中可调节）。
+- 文件夹大小计算：可以计算文件夹的总大小，支持通过右键菜单或快捷键触发计算，并在状态栏显示结果（结果默认显示 10 秒，可以通过点击来关闭，设置中可调节）。
   ![文件夹大小计算](https://raw.githubusercontent.com/Jy-EggRoll/tree-enhancer/refs/heads/main/readme-img/文件夹大小计算.png)
   ![计算结果](https://raw.githubusercontent.com/Jy-EggRoll/tree-enhancer/refs/heads/main/readme-img/计算结果.png)
   ![关闭方式](https://raw.githubusercontent.com/Jy-EggRoll/tree-enhancer/refs/heads/main/readme-img/关闭方式.png)
@@ -56,7 +56,7 @@
 
     ![Media File Metadata](https://raw.githubusercontent.com/Jy-EggRoll/tree-enhancer/refs/heads/main/readme-img/媒体文件元信息.png)
 
-- Folder Size Calculation: The total size of a folder can be calculated. The calculation can be triggered via the right-click menu or shortcut keys, and the result is displayed in the status bar (the result is shown for 60 seconds by default, which can be closed by clicking and adjustable in settings).
+- Folder Size Calculation: The total size of a folder can be calculated. The calculation can be triggered via the right-click menu or shortcut keys, and the result is displayed in the status bar (the result is shown for 10 seconds by default, which can be closed by clicking and adjustable in settings).
   ![Folder Size Calculation](https://raw.githubusercontent.com/Jy-EggRoll/tree-enhancer/refs/heads/main/readme-img/文件夹大小计算.png)
   ![Calculation Result](https://raw.githubusercontent.com/Jy-EggRoll/tree-enhancer/refs/heads/main/readme-img/计算结果.png)
   ![Closure Method](https://raw.githubusercontent.com/Jy-EggRoll/tree-enhancer/refs/heads/main/readme-img/关闭方式.png)

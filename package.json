@@ -42,7 +42,7 @@
                     "type": "object"
                 },
                 "tree-enhancer.folderCalculator.dismissDelay": {
-                    "default": 60,
+                    "default": 10,
                     "description": "%description.folderCalculator.dismissDelay%",
                     "maximum": 3600,
                     "minimum": 0,
@@ -144,7 +144,7 @@
         "check-types": "pnpm tsc --noEmit",
         "compile": "pnpm run check-types && node esbuild.js",
         "compile-tests": "pnpm tsc -p . --outDir out",
-        "gen-l10n": "npx @vscode/l10n-dev export -o ./l10n ./src",
+        "gen-l10n": "npx @vscode/l10n-dev export -o ./l10n ./src && node scripts/sort-l10n.mjs",
         "package": "pnpm run check-types && node esbuild.js --production",
         "pretest": "pnpm run compile-tests && pnpm run compile",
         "vscode:prepublish": "pnpm run package",
