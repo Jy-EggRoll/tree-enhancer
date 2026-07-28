@@ -34,7 +34,7 @@ export class CalculateFolderCommand {
             FolderCalculator.cancel();
             this.statusBarManager.hide();
             this.isCalculating = false;
-            log.info(
+            log.debug(
                 vscode.l10n.t(
                     "[Calculate Folder Command] Calculation cancelled by user",
                 ),
@@ -50,7 +50,7 @@ export class CalculateFolderCommand {
             FolderCalculator.cancel();
             this.statusBarManager.hide();
             this.isCalculating = false;
-            log.info(
+            log.debug(
                 vscode.l10n.t(
                     "[Calculate Folder Command] Calculation cancelled by user",
                 ),
@@ -58,13 +58,13 @@ export class CalculateFolderCommand {
         } else if (this.hasResult) {
             this.statusBarManager.hide();
             this.hasResult = false;
-            log.info(
+            log.debug(
                 vscode.l10n.t(
                     "[Calculate Folder Command] Result dismissed, starting new calculation",
                 ),
             );
         } else if (uri) {
-            log.info(
+            log.debug(
                 vscode.l10n.t(
                     "[Calculate Folder Command] Calculated by Context Menu",
                 ),
@@ -83,7 +83,7 @@ export class CalculateFolderCommand {
                 return;
             }
             await this.calculateFolder(speUri);
-            log.info(
+            log.debug(
                 vscode.l10n.t(
                     "[Calculate Folder Command] Calculated by Keyboard Shortcut",
                 ),
@@ -105,7 +105,7 @@ export class CalculateFolderCommand {
             const result = await FolderCalculator.calculate(folderUri);
 
             if (FolderCalculator.isCancelled) {
-                log.info(
+                log.debug(
                     vscode.l10n.t(
                         "[Calculate Folder Command] Calculation cancelled, result discarded",
                     ),
@@ -117,7 +117,7 @@ export class CalculateFolderCommand {
             this.hasResult = true;
         } catch (error) {
             if (error instanceof CalculationCancelledError) {
-                log.info(
+                log.debug(
                     vscode.l10n.t(
                         "[Calculate Folder Command] Calculation cancelled, result discarded",
                     ),
@@ -159,7 +159,7 @@ export class CalculateFolderCommand {
         const statusText = Formatters.formatForStatusBar(result);
         this.statusBarManager.showFolderResult(statusText);
 
-        log.info(
+        log.debug(
             vscode.l10n.t(
                 "[Calculate Folder Command] Result displayed",
             ),

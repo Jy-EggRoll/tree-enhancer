@@ -18,8 +18,8 @@ export function activate(context: vscode.ExtensionContext) {
     sourceMapSupport.install();
     initLogger("Tree Enhancer");
 
-    log.info(vscode.l10n.t("Activating Extension: Tree Enhancer"));
-    log.info(
+    log.debug(vscode.l10n.t("Activating Extension: Tree Enhancer"));
+    log.debug(
         vscode.l10n.t(
             "Extension Version: {0}",
             context.extension.packageJSON.version,
@@ -66,7 +66,7 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(dismissCommand);
     context.subscriptions.push(calculateFolderCommandHandler);
 
-    log.info(
+    log.debug(
         vscode.l10n.t(
             "[Activation Complete] Extension has been successfully activated",
         ),
@@ -85,7 +85,7 @@ export function activate(context: vscode.ExtensionContext) {
             vscode.workspace.onDidChangeConfiguration((event) => {
                 if (ConfigManager.isConfigChanged(event)) {
                     fileDecorationProvider.refreshAll();
-                    log.info(
+                    log.debug(
                         vscode.l10n.t(
                             "[Config Changed] Refreshing all file decorations",
                         ),
@@ -93,7 +93,7 @@ export function activate(context: vscode.ExtensionContext) {
                     vscode.commands.executeCommand(
                         "tree-enhancer.dismissStatusBar",
                     );
-                    log.info(
+                    log.debug(
                         vscode.l10n.t(
                             "[Config Changed] Dismissing status bar item",
                         ),
@@ -102,7 +102,7 @@ export function activate(context: vscode.ExtensionContext) {
 
                 if (event.affectsConfiguration("files.exclude")) {
                     fileWatcherManager.reload();
-                    log.info(
+                    log.debug(
                         vscode.l10n.t(
                             "[Config Changed] Exclude patterns reloaded",
                         ),
@@ -117,7 +117,7 @@ export function activate(context: vscode.ExtensionContext) {
                 folder,
                 (uri) => {
                     fileDecorationProvider.refreshSpecific(uri);
-                    log.info(
+                    log.debug(
                         vscode.l10n.t(
                             "[File Changed] {0} has been changed, corresponding file decorations have been refreshed",
                             uri.fsPath,
@@ -128,7 +128,7 @@ export function activate(context: vscode.ExtensionContext) {
                 },
                 (uri) => {
                     fileDecorationProvider.refreshSpecific(uri);
-                    log.info(
+                    log.debug(
                         vscode.l10n.t(
                             "[File Created] {0} has been created, corresponding file decorations have been refreshed",
                             uri.fsPath,
@@ -141,7 +141,7 @@ export function activate(context: vscode.ExtensionContext) {
                 },
             );
 
-            log.info(
+            log.debug(
                 vscode.l10n.t(
                     "[File Watcher] Started watching all files in workspace: {0}",
                     folder.uri.fsPath

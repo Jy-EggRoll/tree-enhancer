@@ -35,7 +35,7 @@ export class FileWatcherManager {
             );
         }
 
-        log.info(
+        log.debug(
             vscode.l10n.t(
                 "[FileWatcher] Exclude patterns: {0}",
                 this.excludePatterns.join(", "),
@@ -122,7 +122,7 @@ export class FileWatcherManager {
             // 忽略，文件删除无需任何操作
         });
 
-        log.info(
+        log.debug(
             vscode.l10n.t("[FileWatcher] Created for: {0}", folder.uri.fsPath),
         );
 

@@ -56,7 +56,7 @@ export class FolderCalculator {
         }
 
         const duration = Date.now() - startTime;
-        log.info(
+        log.debug(
             vscode.l10n.t(
                 "[Folder Calculator] Calculation {0} completed in {1}ms: {2} files, {3} folders, {4} bytes",
                 folderName,
@@ -67,7 +67,7 @@ export class FolderCalculator {
             ),
         );
 
-        log.info(
+        log.debug(
             vscode.l10n.t(
                 "[Folder Calculator] Max concurrency: {0}",
                 this._maxConcurrency,

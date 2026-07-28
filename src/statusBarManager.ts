@@ -77,7 +77,7 @@ export class StatusBarManager implements vscode.Disposable {
     private scheduleDismiss(): void {
         const delay = ConfigManager.getStatusBarDismissDelay();
         if (delay === 0) {
-            log.info(
+            log.debug(
                 vscode.l10n.t(
                     "[StatusBar Manager] Auto-dismiss disabled, will not auto-dismiss",
                 ),
@@ -86,7 +86,7 @@ export class StatusBarManager implements vscode.Disposable {
         }
         this.dismissTimer = setTimeout(() => {
             this.hide();
-            log.info(
+            log.debug(
                 vscode.l10n.t(
                     "[StatusBar Manager] Auto-dismissed after {0} seconds",
                     delay,

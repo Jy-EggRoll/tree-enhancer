@@ -68,7 +68,7 @@ export class SelectionMonitor implements vscode.Disposable {
             const fileSize = Formatters.formatFileSize(stat.size);
             const modifiedTime = Formatters.formatDate(new Date(stat.mtime));
 
-            log.info(
+            log.debug(
                 vscode.l10n.t(
                     "[Selection Monitor] File selected: {0}, size: {1}, modified: {2}",
                     fileName,

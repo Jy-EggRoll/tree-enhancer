@@ -135,7 +135,7 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider {
     // 刷新所有文件装饰，触发 VSCode 重新获取所有文件的装饰信息
     public refreshAll(): void {
         this._onDidChangeFileDecorations.fire(undefined); // 触发所有文件装饰的刷新，undefined 参数表示刷新所有文件，而不是特定文件
-        log.info(
+        log.debug(
             vscode.l10n.t(
                 "[Full Refresh] All file decorations have been re-rendered",
             ),
