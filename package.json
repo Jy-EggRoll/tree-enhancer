@@ -25,6 +25,11 @@
                     "description": "%description.dateTimeFormat%",
                     "type": "string"
                 },
+                "tree-enhancer.fileInfo.enabled": {
+                    "default": true,
+                    "description": "%description.fileInfo.enabled%",
+                    "type": "boolean"
+                },
                 "tree-enhancer.fileSizeBase": {
                     "default": 1000,
                     "description": "%description.fileSizeBase%",
@@ -52,11 +57,6 @@
                     "default": "%default.folderCalculator.statusBarTemplate%",
                     "description": "%description.folderCalculator.statusBarTemplate%",
                     "type": "string"
-                },
-                "tree-enhancer.fileInfo.enabled": {
-                    "default": true,
-                    "description": "%description.fileInfo.enabled%",
-                    "type": "boolean"
                 },
                 "tree-enhancer.imageFileTemplate": {
                     "default": {
