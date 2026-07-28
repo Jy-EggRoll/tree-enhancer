@@ -7,7 +7,6 @@ node_modules/
 .gitignore
 **/tsconfig.json
 **/eslint.config.mjs
-**/*.map
 **/*.ts
 esbuild.js
 
