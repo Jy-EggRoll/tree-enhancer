@@ -4,27 +4,26 @@ import { getLogger } from "../utils/func";
 const log = getLogger();
 import { FolderCalculator, CalculationCancelledError } from "./folderCalculator";
 import { Formatters } from "../utils/formatters";
-import { ConfigManager } from "../config";
+import { StatusBarManager } from "../statusBarManager";
 
 /**
      * 文件夹计算命令处理器
  */
 export class CalculateFolderCommand {
-    private statusBarItem: vscode.StatusBarItem;
-    private dismissTimer?: NodeJS.Timeout;
+    private statusBarManager: StatusBarManager;
     private isCalculating = false;
     private hasResult = false;
 
-    constructor(statusBarItem: vscode.StatusBarItem) {
-        this.statusBarItem = statusBarItem;
-        this.statusBarItem.command = {
-            command: "tree-enhancer.dismissStatusBar",
-            title: "Dismiss",
-        };
+    constructor(statusBarManager: StatusBarManager) {
+        this.statusBarManager = statusBarManager;
     }
 
     public get isRunning(): boolean {
         return this.isCalculating;
+    }
+
+    public get hasResultDisplayed(): boolean {
+        return this.hasResult;
     }
 
     /**
@@ -33,7 +32,7 @@ export class CalculateFolderCommand {
     public cancel(): void {
         if (this.isCalculating) {
             FolderCalculator.cancel();
-            this.hideStatusBar();
+            this.statusBarManager.hide();
             this.isCalculating = false;
             log.info(
                 vscode.l10n.t(
@@ -49,7 +48,7 @@ export class CalculateFolderCommand {
     public async execute(uri?: vscode.Uri): Promise<void> {
         if (this.isCalculating) {
             FolderCalculator.cancel();
-            this.hideStatusBar();
+            this.statusBarManager.hide();
             this.isCalculating = false;
             log.info(
                 vscode.l10n.t(
@@ -57,7 +56,7 @@ export class CalculateFolderCommand {
                 ),
             );
         } else if (this.hasResult) {
-            this.hideStatusBar();
+            this.statusBarManager.hide();
             this.hasResult = false;
             log.info(
                 vscode.l10n.t(
@@ -100,7 +99,7 @@ export class CalculateFolderCommand {
      */
     private async calculateFolder(folderUri: vscode.Uri): Promise<void> {
         const folderName = folderUri.path.split("/").pop() || folderUri.path;
-        this.showCalculating(folderName);
+        this.statusBarManager.showCalculating(folderName);
 
         try {
             const result = await FolderCalculator.calculate(folderUri);
@@ -131,7 +130,7 @@ export class CalculateFolderCommand {
                     error instanceof Error ? error.message : String(error),
                 ),
             );
-            this.hideStatusBar();
+            this.statusBarManager.hide();
         } finally {
             this.isCalculating = false;
         }
@@ -154,69 +153,31 @@ export class CalculateFolderCommand {
     }
 
     /**
-     * 显示计算中状态
-     */
-    private showCalculating(folderName: string): void {
-        this.clearDismissTimer();
-        this.statusBarItem.text = "$(loading~spin) " + folderName; // 一个旋转的加载图标，此时不允许点击
-        this.statusBarItem.show();
-    }
-
-    /**
      * 显示计算结果
      */
     private showResult(result: any): void {
-        this.clearDismissTimer();
-
         const statusText = Formatters.formatForStatusBar(result);
+        this.statusBarManager.showFolderResult(statusText);
 
-        this.statusBarItem.text = `$(folder) ${statusText}`;
-        this.statusBarItem.tooltip = vscode.l10n.t("Click to dismiss");
-        this.statusBarItem.show();
-
-        const delay = ConfigManager.getStatusBarDismissDelay();
-        if (delay !== 0) {
-            this.dismissTimer = setTimeout(() => {
-                this.hideStatusBar();
-            }, delay * 1000);
-
-            log.info(
-                vscode.l10n.t(
-                    "[Calculate Folder Command] Result displayed, will dismiss in {0} seconds",
-                    delay,
-                ),
-            );
-        } else {
-            log.info(
-                vscode.l10n.t(
-                    "[Calculate Folder Command] Result displayed, will not auto-dismiss",
-                ),
-            );
-        }
+        log.info(
+            vscode.l10n.t(
+                "[Calculate Folder Command] Result displayed",
+            ),
+        );
     }
 
     /**
-     * 隐藏状态栏
+     * 隐藏状态栏（外部调用，例如 dismiss 命令）
      */
     public hideStatusBar(): void {
-        this.clearDismissTimer();
-        this.statusBarItem.hide();
-    }
-
-    /**
-     * 清除消失定时器
-     */
-    private clearDismissTimer(): void {
-        if (this.dismissTimer) {
-            clearTimeout(this.dismissTimer);
-            this.dismissTimer = undefined;
-        }
+        this.statusBarManager.hide();
+        this.hasResult = false;
     }
 
     /**
      * 清理资源
      */
     public dispose(): void {
-        this.clearDismissTimer();
+        // StatusBarManager 由 extension.ts 统一管理
     }
 }
