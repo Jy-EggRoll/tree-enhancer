@@ -4,12 +4,12 @@
 
 ✨ feat: 新增文件选中监控与状态栏统一管理 | Added file selection monitoring and unified status bar management
 
-- 打开或切换文件时，状态栏自动显示文件名、大小和修改时间（默认显示 10 秒，可通过点击关闭，设置中可调节显示时长）
-- 文件内容变更时，信息自动刷新并重置计时
-- 文件夹计算结果与文件信息共用同一状态栏位置，切换即时顶替
-- 关闭所有编辑器时，文件信息随之自动隐藏
-- 新增 `tree-enhancer.fileInfo.enabled` 配置项，用户可独立开启/关闭文件信息自动显示功能
-- 🔨 chore: 移植国际化排序脚本，所有 l10n 文件自动按字典序排序
+- 打开或切换文件时，状态栏自动显示文件名、大小和修改时间（默认显示 10 秒，可通过点击关闭，设置中可调节显示时长） | Status bar automatically shows file name, size, and modification time when opening or switching files (10s default, clickable to dismiss, duration adjustable in settings)
+- 文件内容变更时，信息自动刷新并重置计时 | Info refreshes automatically and timer resets when file content changes
+- 文件夹计算结果与文件信息共用同一状态栏位置，切换即时顶替 | Folder calculation results and file info share the same status bar position, switching replaces instantly
+- 关闭所有编辑器时，文件信息随之自动隐藏 | File info hides automatically when all editors are closed
+- 新增 `tree-enhancer.fileInfo.enabled` 配置项，用户可独立开启/关闭文件信息自动显示功能 | Added `tree-enhancer.fileInfo.enabled` setting for users to independently enable/disable automatic file info display
+- 🔨 chore: 移植国际化排序脚本，所有 l10n 文件自动按字典序排序 | Ported i18n sorting script, all l10n files are now automatically sorted in dictionary order
 
 ## 1.10.1
 
