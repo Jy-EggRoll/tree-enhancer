@@ -4,6 +4,7 @@ import { FileDecorationProvider } from "./provider";
 import { initLogger, getLogger } from "./utils/func";
 import { CalculateFolderCommand } from "./calculator";
 import { FileWatcherManager } from "./utils/fileWatcher";
+import sourceMapSupport from "source-map-support";
 
 const log = getLogger();
 
@@ -12,6 +13,7 @@ const log = getLogger();
  * @param context
  */
 export function activate(context: vscode.ExtensionContext) {
+    sourceMapSupport.install();
     initLogger("Tree Enhancer");
 
     log.info(vscode.l10n.t("Activating Extension: Tree Enhancer"));

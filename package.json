@@ -101,11 +101,13 @@
     },
     "dependencies": {
         "image-size": "^2.0.2",
-        "minimatch": "^9.0.0"
+        "minimatch": "^9.0.0",
+        "source-map-support": "^0.5.21"
     },
     "description": "Show more information in the VSCode file explorer when hovering over files | 鼠标悬浮时在 VSCode 资源管理器中显示文件的详细信息",
     "devDependencies": {
         "@types/node": "20.x",
+        "@types/source-map-support": "^0.5.10",
         "@types/vscode": "^1.76.0",
         "@vscode/l10n-dev": "^0.0.35",
         "@vscode/test-cli": "^0.0.11",
