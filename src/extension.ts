@@ -74,12 +74,11 @@ export function activate(context: vscode.ExtensionContext) {
 
     // 延迟启动文件装饰提供者
     const startupTimer = setTimeout(() => {
-        const fileDecorationProvider = new FileDecorationProvider();
+        const fileWatcherManager = new FileWatcherManager();
+        const fileDecorationProvider = new FileDecorationProvider(fileWatcherManager);
         const providerDisposable = vscode.window.registerFileDecorationProvider(
             fileDecorationProvider,
         );
-
-        const fileWatcherManager = new FileWatcherManager();
 
         const configChangeDisposable =
             vscode.workspace.onDidChangeConfiguration((event) => {

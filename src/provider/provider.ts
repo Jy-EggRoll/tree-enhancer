@@ -3,6 +3,7 @@ import { ConfigManager } from "../config";
 import { FileUtils } from "../utils/file";
 import { Formatters } from "../utils/formatters";
 import { getLogger } from "../utils/func";
+import { FileWatcherManager } from "../utils/fileWatcher";
 
 const log = getLogger();
 
@@ -13,12 +14,21 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider {
     >(); // 文件装饰变化事件发射器，当文件装饰需要更新时，触发此事件通知 VSCode 重新获取装饰信息
     readonly onDidChangeFileDecorations =
         this._onDidChangeFileDecorations.event;
-    // private _fileCache = new Map<string, FileCacheEntry>(); // 文件信息缓存，避免重复读取文件大小和图片尺寸
+    private fileWatcherManager: FileWatcherManager;
+
+    constructor(fileWatcherManager: FileWatcherManager) {
+        this.fileWatcherManager = fileWatcherManager;
+    }
 
     async provideFileDecoration(
         uri: vscode.Uri,
     ): Promise<vscode.FileDecoration | undefined> {
         try {
+            // 跳过被 files.exclude 排除的文件
+            if (!this.fileWatcherManager.shouldHandle(uri)) {
+                return undefined;
+            }
+
             const stats = await FileUtils.getFileStats(uri.fsPath); // 获取文件或文件夹的基本统计信息
             if (!stats) {
                 log.warn(
