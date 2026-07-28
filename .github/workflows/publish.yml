@@ -74,7 +74,7 @@ jobs:
                   CUR="${{ steps.get_version.outputs.version }}"
                   PREV="${{ steps.previous_tag.outputs.previous_tag }}"
 
-                  echo "# Tree Enhancer v$CUR" > release_notes.md
+                  echo "# Tree Enhancer $CUR" > release_notes.md
 
                   if [ -f CHANGELOG.md ]; then
                     echo "## What's Changed" >> release_notes.md
@@ -95,7 +95,7 @@ jobs:
             - uses: softprops/action-gh-release@v2
               with:
                   tag_name: ${{ steps.get_version.outputs.version }}
-                  name: 'Tree Enhancer v${{ steps.get_version.outputs.version }}'
+                  name: 'Tree Enhancer ${{ steps.get_version.outputs.version }}'
                   body_path: release_notes.md
                   files: tree-enhancer-*.vsix
                   draft: false

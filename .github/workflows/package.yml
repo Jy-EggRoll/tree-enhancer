@@ -52,7 +52,7 @@ jobs:
               uses: softprops/action-gh-release@v2
               with:
                   tag_name: ${{ steps.get_version.outputs.version }}
-                  name: 'Tree Enhancer v${{ steps.get_version.outputs.version }} (Dev Build)'
+                  name: 'Tree Enhancer ${{ steps.get_version.outputs.version }} (Dev Build)'
                   body: |
                       # Development Build -- For Testing Only
 
