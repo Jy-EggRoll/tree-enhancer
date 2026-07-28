@@ -1,147 +1,110 @@
-# 该工作流只能通过正式版本的标签自动触发
-
 name: Publish Extension
 
 on:
     push:
         tags:
-            - "[0-9]+.[0-9]+.[0-9]+" # 匹配 x.y.z 格式的正式版本标签
+            - '[0-9]+.[0-9]+.[0-9]+'
 
 permissions:
     contents: write
+
+env:
+    FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+
+concurrency:
+    group: publish-extension-${{ github.ref }}
+    cancel-in-progress: false
 
 jobs:
     publish:
         runs-on: ubuntu-latest
 
         steps:
-            - name: Checkout code
-              uses: actions/checkout@v4
+            - uses: actions/checkout@v4
               with:
                   fetch-depth: 0
 
             - uses: ./.github/actions/setup
-
-            - name: Install vsce
-              run: pnpm add -g @vscode/vsce
 
             - name: Get tag version
               id: get_version
               run: |
                   VERSION=${GITHUB_REF#refs/tags/}
                   echo "version=$VERSION" >> $GITHUB_OUTPUT
-                  echo "Publishing version: $VERSION"
 
-            - name: Verify package.json version matches tag
+            - name: Verify version match
               run: |
-                  PACKAGE_VERSION=$(node -p "require('./package.json').version")
-                  TAG_VERSION="${{ steps.get_version.outputs.version }}"
-                  echo "Package.json version: $PACKAGE_VERSION"
-                  echo "Git tag version: $TAG_VERSION"
-                  if [ "$PACKAGE_VERSION" != "$TAG_VERSION" ]; then
-                    echo "Error: Package.json version ($PACKAGE_VERSION) does not match git tag ($TAG_VERSION)"
+                  PKG_VER=$(node -p "require('./package.json').version")
+                  TAG_VER="${{ steps.get_version.outputs.version }}"
+                  echo "package.json: $PKG_VER | tag: $TAG_VER"
+                  if [ "$PKG_VER" != "$TAG_VER" ]; then
+                    echo "::error::package.json version ($PKG_VER) must match git tag ($TAG_VER)"
+                    exit 1
+                  fi
+
+            - name: Verify marketplace token
+              env:
+                  VSCE_PAT: ${{ secrets.VSCE_PAT }}
+              run: |
+                  if [ -z "$VSCE_PAT" ]; then
+                    echo "::error::Missing GitHub Actions secret VSCE_PAT. Create an Azure DevOps Marketplace PAT and save it as VSCE_PAT."
                     exit 1
                   fi
 
             - name: Package extension
-              run: |
-                  # 打包生成 .vsix 文件，禁用依赖项检查
-                  pnpm vsce package --no-dependencies
+              run: pnpm exec vsce package --no-dependencies --out tree-enhancer-${{ steps.get_version.outputs.version }}.vsix
+              env:
+                  VSCE_PAT: ${{ secrets.VSCE_PAT }}
 
             - name: Publish to VSCode Marketplace
-              run: |
-                  # 发布到市场
-                  pnpm vsce publish --no-dependencies --pat ${{ secrets.VSCE_TOKEN }}
+              run: pnpm exec vsce publish --no-dependencies --pat ${{ secrets.VSCE_PAT }}
               env:
-                  VSCE_TOKEN: ${{ secrets.VSCE_TOKEN }}
+                  VSCE_PAT: ${{ secrets.VSCE_PAT }}
 
-            - name: Find previous version tag
+            - name: Find previous tag
               id: previous_tag
               run: |
-                  # 获取当前标签
-                  CURRENT_TAG="${{ steps.get_version.outputs.version }}"
+                  CUR="${{ steps.get_version.outputs.version }}"
+                  PREV=$(git tag -l --sort=-version:refname | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | grep -v "^$CUR$" | head -n1)
+                  echo "previous_tag=$PREV" >> $GITHUB_OUTPUT
 
-                  # 获取所有正式版本标签，按版本号排序，找到当前标签之前的最新标签
-                  PREVIOUS_TAG=$(git tag -l --sort=-version:refname | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | grep -v "^$CURRENT_TAG$" | head -n1)
-
-                  if [ -n "$PREVIOUS_TAG" ]; then
-                    echo "Found previous tag: $PREVIOUS_TAG"
-                    echo "previous_tag=$PREVIOUS_TAG" >> $GITHUB_OUTPUT
-                  else
-                    echo "No previous tag found"
-                    echo "previous_tag=" >> $GITHUB_OUTPUT
-                  fi
-
-            - name: Generate release notes from CHANGELOG
+            - name: Generate release notes
               id: release_notes
               run: |
-                  CURRENT_TAG="${{ steps.get_version.outputs.version }}"
-                  PREVIOUS_TAG="${{ steps.previous_tag.outputs.previous_tag }}"
+                  CUR="${{ steps.get_version.outputs.version }}"
+                  PREV="${{ steps.previous_tag.outputs.previous_tag }}"
 
-                  # 创建发布说明文件
-                  echo "# VSCode Tree Enhancer v$CURRENT_TAG" > release_notes.md
+                  echo "# Tree Enhancer v$CUR" > release_notes.md
 
-                  # 检查是否有 CHANGELOG.md 文件并提取相关版本信息
-                  if [ -f "CHANGELOG.md" ]; then
-                    echo "## 更新内容" >> release_notes.md
-                    
-                    # 尝试从 CHANGELOG 中提取当前版本的更新内容
-                    awk -v version="$CURRENT_TAG" '
-                      /^## / { 
-                        if (found) exit
-                        if ($0 ~ version) found=1
-                        next
-                      }
-                      found && /^## / { exit }
-                      found { print }
-                    ' CHANGELOG.md >> release_notes.md
-                  fi
-
-                  echo "## 提交记录" >> release_notes.md
-                  echo "" >> release_notes.md
-
-                  # 生成提交记录（排除开发版本相关的提交）
-                  if [ -z "$PREVIOUS_TAG" ]; then
-                    echo "生成从初始提交到 $CURRENT_TAG 的提交记录"
-                    git log --pretty=format:"- %s (%h)" --no-merges --grep="\.dev" --invert-grep >> release_notes.md
-                  else
-                    echo "生成从 $PREVIOUS_TAG 到 $CURRENT_TAG 的提交记录"
-                    git log "$PREVIOUS_TAG..$CURRENT_TAG" --pretty=format:"- %s (%h)" --no-merges --grep="\.dev" --invert-grep >> release_notes.md
-                  fi
-
-                  # 如果没有提交记录，添加默认信息
-                  if [ ! -s release_notes.md ] || [ $(wc -l < release_notes.md) -le 4 ]; then
-                    echo "- 版本发布" >> release_notes.md
+                  if [ -f CHANGELOG.md ]; then
+                    echo "## What's Changed" >> release_notes.md
+                    awk -v v="$CUR" '/^##/{if(f)exit; if($0~v)f=1;next} f&&/^##/{exit} f{print}' CHANGELOG.md >> release_notes.md
                   fi
 
                   echo "" >> release_notes.md
+                  if [ -n "$PREV" ]; then
+                    echo "[Compare with $PREV](https://github.com/${{ github.repository }}/compare/$PREV...$CUR)" >> release_notes.md
+                  fi
+
                   echo "" >> release_notes.md
                   echo "---" >> release_notes.md
-                  echo "" >> release_notes.md
-                  echo "📦 **安装方式：**" >> release_notes.md
-                  echo "" >> release_notes.md
-                  echo "- 通过 VSCode 扩展市场搜索 \"Tree Enhancer\" 安装" >> release_notes.md
-                  echo "- 或下载 .vsix 文件手动安装" >> release_notes.md
+                  echo "**Installation:**" >> release_notes.md
+                  echo "- Install from the VS Code Marketplace by searching for \"Tree Enhancer\"" >> release_notes.md
+                  echo "- Or download the .vsix file below to install manually" >> release_notes.md
 
-                  echo "生成的发布说明:"
-                  cat release_notes.md
-
-            - name: Create GitHub Release
-              uses: softprops/action-gh-release@v2
+            - uses: softprops/action-gh-release@v2
               with:
                   tag_name: ${{ steps.get_version.outputs.version }}
-                  name: "Tree Enhancer v${{ steps.get_version.outputs.version }}"
+                  name: 'Tree Enhancer v${{ steps.get_version.outputs.version }}'
                   body_path: release_notes.md
-                  files: |
-                      *.vsix
+                  files: tree-enhancer-*.vsix
                   draft: false
                   prerelease: false
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-            - name: Upload VSIX artifact
-              uses: actions/upload-artifact@v4
+            - uses: actions/upload-artifact@v4
               with:
-                  name: vsix-package-${{ steps.get_version.outputs.version }}
-                  path: "*.vsix"
+                  name: vsix-${{ steps.get_version.outputs.version }}
+                  path: 'tree-enhancer-*.vsix'
                   retention-days: 90

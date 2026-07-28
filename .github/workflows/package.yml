@@ -2,89 +2,79 @@ name: Package Extension
 
 on:
     push:
+        branches:
+            - '**'
         tags:
-            - "[0-9]+.[0-9]+.[0-9]+.dev.[0-9]+" # 匹配 x.y.z.dev.n 格式的开发版本标签
-    workflow_dispatch: # 支持手动运行
+            - '[0-9]*.[0-9]*.[0-9]*.dev.*'
+    workflow_dispatch:
 
 permissions:
     contents: write
+
+env:
+    FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
 
 jobs:
     package:
         runs-on: ubuntu-latest
 
         steps:
-            - name: Checkout code
-              uses: actions/checkout@v4
+            - uses: actions/checkout@v4
               with:
                   fetch-depth: 0
 
             - uses: ./.github/actions/setup
 
-            - name: Install vsce
-              run: pnpm add -g @vscode/vsce
-
             - name: Get version info
               id: get_version
               run: |
-                  if [ "${{ github.event_name }}" = "workflow_dispatch" ]; then
-                    # 手动运行时，从 package.json 获取版本
-                    VERSION=$(node -p "require('./package.json').version")
-                    echo "Manual run - using package.json version: $VERSION"
-                  else
-                    # Tag 触发时，从 tag 获取版本
+                  if [ "${{ github.ref_type }}" = "tag" ]; then
                     VERSION=${GITHUB_REF#refs/tags/}
-                    echo "Tag triggered - using tag version: $VERSION"
+                  else
+                    PKG_VERSION=$(node -p "require('./package.json').version")
+                    SAFE_BRANCH="${GITHUB_REF_NAME//\//-}"
+                    VERSION="${PKG_VERSION}.dev.${SAFE_BRANCH}$(date +%Y%m%d)"
                   fi
                   echo "version=$VERSION" >> $GITHUB_OUTPUT
 
-            - name: Show version info
-              run: |
-                  PACKAGE_VERSION=$(node -p "require('./package.json').version")
-                  TAG_VERSION="${{ steps.get_version.outputs.version }}"
-                  echo "Package.json version: $PACKAGE_VERSION"
-                  echo "Current version: $TAG_VERSION"
-                  echo "ℹ️ Development versions don't require exact version matching"
-
             - name: Package extension
               run: |
-                  # 打包生成 .vsix 文件（仅打包，不发布）
-                  pnpm vsce package --no-dependencies
+                  pnpm vsce package --no-dependencies --out tree-enhancer-${{ steps.get_version.outputs.version }}.vsix
 
-            - name: Create development release (for tag runs only)
-              if: github.event_name != 'workflow_dispatch'
+            - name: Find previous stable tag
+              id: previous_stable_tag
+              run: |
+                  PREV=$(git tag -l --sort=-version:refname | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | head -n1)
+                  echo "previous_stable_tag=$PREV" >> $GITHUB_OUTPUT
+
+            - name: Create development release
+              if: github.ref_type == 'tag'
               uses: softprops/action-gh-release@v2
               with:
                   tag_name: ${{ steps.get_version.outputs.version }}
-                  name: "Tree Enhancer v${{ steps.get_version.outputs.version }} (开发版)"
+                  name: 'Tree Enhancer v${{ steps.get_version.outputs.version }} (Dev Build)'
                   body: |
-                      # 🚧 开发版本 - 仅供测试
+                      # Development Build -- For Testing Only
 
-                      这是一个开发版本，用于内部测试。请不要在生产环境中使用。
+                      This is a development build for internal testing. Do not use in production.
 
-                      ## 版本信息
-                      - 版本号: ${{ steps.get_version.outputs.version }}
-                      - 构建时间: ${{ github.run_id }}
-                      - 提交: ${{ github.sha }}
+                      - **Version**: ${{ steps.get_version.outputs.version }}
+                      - **Build**: ${{ github.run_id }}
+                      - **Commit**: ${{ github.sha }}
 
-                      ## 注意事项
-                      ⚠️ 此版本不会发布到 VSCode 市场
-                      ⚠️ 仅通过 GitHub Release 提供下载
-                      ⚠️ 可能包含未经充分测试的功能
+                      This build will NOT be published to the VS Code Marketplace. Download via GitHub Release only.
 
-                      ---
+                      **What's Changed:** [Compare with ${{ steps.previous_stable_tag.outputs.previous_stable_tag }}](https://github.com/${{ github.repository }}/compare/${{ steps.previous_stable_tag.outputs.previous_stable_tag }}...${{ steps.get_version.outputs.version }})
 
-                      📦 **安装方式：** 下载 .vsix 文件并在 VSCode 中手动安装
-                  files: |
-                      *.vsix
+                      **Installation:** Download the .vsix file and install manually in VS Code.
+                  files: tree-enhancer-*.vsix
                   draft: false
                   prerelease: true
               env:
                   GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-            - name: Upload VSIX artifact
-              uses: actions/upload-artifact@v4
+            - uses: actions/upload-artifact@v4
               with:
-                  name: vsix-package-${{ steps.get_version.outputs.version }}
-                  path: "*.vsix"
-                  retention-days: 30
+                  name: vsix-${{ steps.get_version.outputs.version }}
+                  path: 'tree-enhancer-*.vsix'
+                  retention-days: 90
