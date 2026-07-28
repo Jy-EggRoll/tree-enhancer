@@ -1,16 +1,18 @@
 import * as vscode from "vscode";
 import { ConfigManager } from "./config";
 import { FileDecorationProvider } from "./provider";
-import { log } from "./utils/func";
+import { initLogger, getLogger } from "./utils/func";
 import { CalculateFolderCommand } from "./calculator";
 import { FileWatcherManager } from "./utils/fileWatcher";
+
+const log = getLogger();
 
 /**
  * 扩展激活入口函数，VSCode 启动扩展/首次使用扩展功能时触发，context 为扩展上下文对象
  * @param context
  */
 export function activate(context: vscode.ExtensionContext) {
-    context.subscriptions.push(log); // 在一开始就注册日志，保证其他模块可以使用日志功能
+    initLogger("Tree Enhancer");
 
     log.info(vscode.l10n.t("Activating Extension: Tree Enhancer"));
     log.info(

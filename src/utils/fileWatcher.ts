@@ -1,6 +1,8 @@
 import * as vscode from "vscode";
 import { minimatch } from "minimatch";
-import { log } from "./func";
+import { getLogger } from "./func";
+
+const log = getLogger();
 
 /**
  * 文件监控管理器 (FileWatcherManager)

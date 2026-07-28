@@ -1,6 +1,8 @@
 import * as vscode from "vscode";
 import * as os from "os";
-import { log } from "../utils/func";
+import { getLogger } from "../utils/func";
+
+const log = getLogger();
 import { FolderCalculationResult } from "../types";
 
 export class CalculationCancelledError extends Error {

@@ -1,5 +1,7 @@
 import * as vscode from "vscode";
-import { log } from "../utils/func";
+import { getLogger } from "../utils/func";
+
+const log = getLogger();
 import { FolderCalculator, CalculationCancelledError } from "./folderCalculator";
 import { Formatters } from "../utils/formatters";
 import { ConfigManager } from "../config";
