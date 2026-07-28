@@ -1,0 +1,29 @@
+{
+  "$schema": "https://docs.renovatebot.com/renovate-schema.json",
+  "extends": [
+    "config:base",
+    "default:automergeMinor",
+    "default:disableRateLimiting",
+    "default:rebaseStalePrs",
+    "default:pinVersions",
+    "group:allNonMajor"
+  ],
+  "packageRules": [
+    {
+      "groupName": "Lint packages",
+      "matchPackagePatterns": [
+        "eslint",
+        "prettier",
+        "commitlint",
+        "stylelint",
+        "husky",
+        "lint-staged",
+        "@typescript-eslint"
+      ]
+    },
+    {
+      "groupName": "TypeScript",
+      "matchPackagePatterns": ["typescript", "@types"]
+    }
+  ]
+}
