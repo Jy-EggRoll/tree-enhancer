@@ -21,7 +21,7 @@
   ![计算结果](https://raw.githubusercontent.com/Jy-EggRoll/tree-enhancer/refs/heads/main/readme-img/计算结果.png)
   ![关闭方式](https://raw.githubusercontent.com/Jy-EggRoll/tree-enhancer/refs/heads/main/readme-img/关闭方式.png)
 
-- 文件信息即时显示：打开或切换文件时，状态栏自动显示文件名、大小和修改时间（默认显示 10 秒，可通过点击关闭，设置中可调节显示时长）。文件内容变更时，信息自动刷新并重置计时。
+- 文件信息即时显示：打开或切换文件时，状态栏自动显示文件名、大小和修改时间（默认显示 10 秒，可通过点击关闭，设置中可调节显示时长）。文件内容变更时，信息自动刷新并重置计时。关闭所有编辑器时，信息随之自动隐藏。可在设置中通过 `tree-enhancer.fileInfo.enabled` 独立开启或关闭此功能。
 
 - 大文件标注：对于大文件，会用类似 Git 扩展的样式进行标识（追加一个 L 标志，可以和 Git 标志共存），方便用户识别，和 Git 的集成性非常好。假如您的工作区是 Git 仓库，这将有效提示用户，避免误提交大文件。纵使您不使用 Git 仓库，该标识也有助于您识别大文件。默认显示 L 的阈值是 20 MB/MiB，可以在设置中调整。
 
@@ -63,7 +63,7 @@
   ![Calculation Result](https://raw.githubusercontent.com/Jy-EggRoll/tree-enhancer/refs/heads/main/readme-img/计算结果.png)
   ![Closure Method](https://raw.githubusercontent.com/Jy-EggRoll/tree-enhancer/refs/heads/main/readme-img/关闭方式.png)
 
-- Instant File Info: When opening or switching files, the status bar instantly displays the file name, size, and modification time (shown for 10 seconds by default, can be closed by clicking, duration adjustable in settings). The info refreshes automatically when the file content changes and the timer resets.
+- Instant File Info: When opening or switching files, the status bar instantly displays the file name, size, and modification time (shown for 10 seconds by default, can be closed by clicking, duration adjustable in settings). The info refreshes automatically when the file content changes and the timer resets. When all editors are closed, the info hides automatically. Can be independently enabled/disabled via `tree-enhancer.fileInfo.enabled` in settings.
 
 - Large File Marking: Large files are identified in a style similar to Git extensions (an "L" flag is appended, which can coexist with Git flags), making it easy for users to recognize them with excellent Git integration. If your workspace is a Git repository, this will effectively remind you to avoid accidentally committing large files. Even if you do not use a Git repository, this flag still helps you identify large files. The default threshold for displaying the "L" flag is 20 MB/MiB, which can be adjusted in settings.
 
