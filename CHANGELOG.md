@@ -2,17 +2,16 @@
 
 ## 1.11.0
 
-✨ feat: 新增文件选中监控与状态栏统一管理 | Added file selection monitoring and unified status bar management
-
-- 打开或切换文件时，状态栏自动显示文件名、大小和修改时间（默认显示 10 秒，可通过点击关闭，设置中可调节显示时长） | Status bar automatically shows file name, size, and modification time when opening or switching files (10s default, clickable to dismiss, duration adjustable in settings)
-- 文件内容变更时，信息自动刷新并重置计时 | Info refreshes automatically and timer resets when file content changes
-- 文件夹计算结果与文件信息共用同一状态栏位置，切换即时顶替 | Folder calculation results and file info share the same status bar position, switching replaces instantly
-- 关闭所有编辑器时，文件信息随之自动隐藏 | File info hides automatically when all editors are closed
-- 新增 `tree-enhancer.fileInfo.enabled` 配置项，用户可独立开启/关闭文件信息自动显示功能 | Added `tree-enhancer.fileInfo.enabled` setting for users to independently enable/disable automatic file info display
-- 状态栏信息固定在左侧最后一个位置，避免左右漂移 | Status bar info is now pinned to the last position on the left, preventing left-right drift
+- ✨ feat: 新增文件选中监控与状态栏统一管理 | Added file selection monitoring and unified status bar management
+- ✨ feat: 打开或切换文件时，状态栏自动显示文件名、大小和修改时间（默认显示 10 秒，可通过点击关闭，设置中可调节显示时长） | Status bar automatically shows file name, size, and modification time when opening or switching files (10s default, clickable to dismiss, duration adjustable in settings)
+- ✨ feat: 文件内容变更时，信息自动刷新并重置计时 | Info refreshes automatically and timer resets when file content changes
+- ✨ feat: 文件夹计算结果与文件信息共用同一状态栏位置，切换即时顶替 | Folder calculation results and file info share the same status bar position, switching replaces instantly
+- ✨ feat: 关闭所有编辑器时，文件信息随之自动隐藏 | File info hides automatically when all editors are closed
+- ✨ feat: 新增 `tree-enhancer.fileInfo.enabled` 配置项，用户可独立开启/关闭文件信息自动显示功能 | Added `tree-enhancer.fileInfo.enabled` setting for users to independently enable/disable automatic file info display
+- ✨ feat: 状态栏信息固定在左侧最后一个位置，避免左右漂移 | Status bar info is now pinned to the last position on the left, preventing left-right drift
 - 🔨 chore: 移植国际化排序脚本，所有 l10n 文件自动按字典序排序 | Ported i18n sorting script, all l10n files are now automatically sorted in dictionary order
 - 🔨 chore: 将常规操作日志从 info 降级为 debug 级别，减少日志噪音 | Downgraded routine operation logs from info to debug level to reduce log noise
-- 🐛 fix: 恢复独立 sourcemap 文件，取消 .vscodeignore 对 *.map 的排除，修复 VSCode 日志回退到 JS 的问题 | Restored standalone sourcemap files and removed *.map exclusion from .vscodeignore, fixing VSCode log fallback to JS
+- 🐛 fix: 恢复独立 sourcemap 文件，取消 .vscodeignore 对 `*.map` 的排除，修复 VSCode 日志回退到 JS 的问题 | Restored standalone sourcemap files and removed `*.map` exclusion from .vscodeignore, fixing VSCode log fallback to JS
 - 🐛 fix: 在文件装饰提供者中过滤被 files.exclude 排除的文件（如 .git 结尾的备份文件），消除无意义的警告日志 | Filtered out files excluded by files.exclude (e.g., .git-suffixed backup files) in FileDecorationProvider, eliminating meaningless warning logs
 
 ## 1.10.1
@@ -29,7 +28,7 @@
 
 ## 1.8.0
 
-✨ feat: 更改文件变更监视器的逻辑，现在对于文件变化的监视更加激进，可以响应 VSCode 外部触发的文件更改 | Changed the logic of file change watcher, now it is more aggressive in responding to file changes triggered outside of VSCode and immediately refreshes the decorations of the corresponding files
+- ✨ feat: 更改文件变更监视器的逻辑，现在对于文件变化的监视更加激进，可以响应 VSCode 外部触发的文件更改，并立刻刷新对应文件的装饰 | Changed the logic of file change watcher, now it is more aggressive in responding to file changes triggered outside of VSCode and immediately refreshes the decorations of the corresponding files
 
 ## 1.7.1
 
@@ -37,9 +36,9 @@
 
 ## 1.7.0
 
-✨ feat: 加入了文件夹大小计算功能，需要在文件夹上的右键菜单中选择，或使用快捷键 `Alt + Enter` 触发，计算结果会显示在状态栏，默认显示 60 秒，可以通过点击来关闭，设置中可调节显示时长 | Added folder size calculation feature, which can be triggered from the right-click menu on folders or by using the shortcut `Alt + Enter`. The result is displayed in the status bar for 60 seconds by default and can be closed by clicking; the display duration can be adjusted in settings
-📝 docs: README 重写，重新设计了文档结构和演示图片 | Rewrote the README, redesigning the document structure and demonstration images
-✨ feat: 大幅度优化代码结构和规范，提高可维护性 | Significant code structure and standardization improvements for better maintainability
+- ✨ 加入了文件夹大小计算功能，需要在文件夹上的右键菜单中选择，或使用快捷键 `Alt + Enter` 触发，计算结果会显示在状态栏，默认显示 60 秒，可以通过点击来关闭，设置中可调节显示时长 | Added folder size calculation feature, which can be triggered from the right-click menu on folders or by using the shortcut `Alt + Enter`. The result is displayed in the status bar for 60 seconds by default and can be closed by clicking; the display duration can be adjusted in settings
+- 📝 README 重写，重新设计了文档结构和演示图片 | Rewrote the README, redesigning the document structure and demonstration images
+- ✨ 大幅度优化代码结构和规范，提高可维护性 | Significant code structure and standardization improvements for better maintainability
 
 ## 1.6.0
 
@@ -57,43 +56,46 @@
 
 ## 1.5.0
 
-✨ feat: 引入全新的文件监视器，去除原来的轮询机制 | Introduced a brand-new file watcher, removing the previous polling mechanism
-🐛 fix: 解决了大部分的文件信息缓存不同步问题 | Resolved most issues related to file information cache desynchronization
-⚠️ note: 文件夹信息尚未解决 | Folder information issues are yet to be resolved
+引入全新的文件监视器，去除原来的轮询机制 | Introduced a brand-new file watcher, removing the previous polling mechanism
+
+目前解决了大部分的文件信息缓存不同步问题 | Currently resolved most issues related to file information cache desynchronization
+
+文件夹信息尚未解决 | Folder information issues are yet to be resolved
 
 ## 1.4.1
 
-⚡️ perf: 增加启动延迟，提升插件性能 | Added startup delay to improve plugin performance
+增加启动延迟，提升插件性能 | Added startup delay to improve plugin performance
 
 ## 1.4.0
 
-⚡️ perf: 大幅优化扩展的性能 | Significant performance optimizations
-- 引入智能刷新机制，定期刷新文件装饰，避免频繁全量刷新 | Introduced intelligent refresh mechanism to periodically refresh file decorations, avoiding frequent full refreshes
-- 优化缓存机制，减少重复计算 | Optimized caching mechanism to reduce redundant calculations
-✨ feat: 新增大文件标识功能，用类似 Git 扩展的样式标识大文件 | Added large file identification feature, marking large files with a style similar to Git extension
-🐛 fix: 修复大量问题 | Fixed numerous issues
-🔨 chore: 优化代码结构，提高可维护性 | Improved code structure for better maintainability
-🔨 chore: 移除大量不必要的依赖 | Removed numerous unnecessary dependencies
-✨ feat: 增设配置项 startupDelay，允许用户延迟扩展的激活时间 | Added configuration option startupDelay to allow users to delay extension activation time
-✨ feat: 增设配置项 refreshInterval，允许用户自定义定期刷新的时间间隔 | Added configuration option refreshInterval to allow users to customize the interval for periodic refreshes
-✨ feat: 增设配置项 largeFileThresholdMB，允许用户自定义大文件的大小阈值 | Added configuration option largeFileThresholdMB to allow users to customize the size threshold for large files
-🐛 fix: 修复了之前的版本提示信息不更新的问题 | Fixed the issue of outdated version prompt messages in previous versions
+1. 大幅优化扩展的性能 | Significant performance optimizations
+    - 引入智能刷新机制，定期刷新文件装饰，避免频繁全量刷新 | Introduced intelligent refresh mechanism to periodically refresh file decorations, avoiding frequent full refreshes
+    - 优化缓存机制，减少重复计算 | Optimized caching mechanism to reduce redundant calculations
+2. 新增大文件标识功能，用类似 Git 扩展的样式标识大文件 | Added large file identification feature, marking large files with a style similar to Git extension
+3. 修复大量问题 | Fixed numerous issues
+4. 优化代码结构，提高可维护性 | Improved code structure for better maintainability
+5. 移除大量不必要的依赖 | Removed numerous unnecessary dependencies
+6. 增设配置项 startupDelay，允许用户延迟扩展的激活时间 | Added configuration option startupDelay to allow users to delay extension activation time
+7. 增设配置项 refreshInterval，允许用户自定义定期刷新的时间间隔 | Added configuration option refreshInterval to allow users to customize the interval for periodic refreshes
+8. 增设配置项 largeFileThresholdMB，允许用户自定义大文件的大小阈值 | Added configuration option largeFileThresholdMB to allow users to customize the size threshold for large files
+9. 修复了之前的版本提示信息不更新的问题 | Fixed the issue of outdated version prompt messages in previous versions
 
 ## 1.3.3
 
-🔨 chore: 精简扩展大小，为下一版重大功能更新做准备 | Reduced extension size in preparation for the next major feature update
+精简扩展大小，为下一版重大功能更新做准备 | Reduced extension size in preparation for the next major feature update
 
 ## 1.3.2
 
-🔨 chore: 迁移到 pnpm，测试自动发布，优化仓库结构 | Migrate to pnpm, test automatic publishing, optimize repository structure
+迁移到 pnpm，测试自动发布，优化仓库结构 | Migrate to pnpm, test automatic publishing, optimize repository structure
 
 ## 1.3.1
 
-🐛 fix: 更换打包工具，紧急修复上一版本的错误 | Replace the packaging tool and urgently fix the errors in the previous version
+更换打包工具，紧急修复上一版本的错误 | Replace the packaging tool and urgently fix the errors in the previous version
 
 ## 1.3.0
 
-✨ feat: 新增图片分辨率显示功能 | Added image resolution display feature
+新增图片分辨率显示功能 | Added image resolution display feature
+
 - 支持显示图片文件的宽度和高度信息 | Support displaying width and height information for image files
 - 支持常见图片格式：jpg, jpeg, png, gif, webp, svg | Support common image formats: jpg, jpeg, png, gif, webp, svg
 - 可自定义分辨率显示模板 | Customizable resolution display template
@@ -101,32 +103,32 @@
 
 ## 1.2.0
 
-✨ feat: 更加友好的本地化支持选项 | Friendly nls settings
+更加友好的本地化支持选项 | Friendly nls settings
 
 ## 1.1.2
 
-🔨 chore: 修改了显示字符串默认模板 | Modified the default template for display strings
-📝 docs: 完善 README 的展示效果 | Improved the display effects in the README
-🔨 chore: 排除了 node_modules，显著地降低了扩展的大小 | Excluded node_modules, significantly reducing the size of the extension
+1. 修改了显示字符串默认模板 | Modified the default template for display strings
+2. 完善 README 的展示效果 | Improved the display effects in the README
+3. 排除了 node_modules，显著地降低了扩展的大小 | Excluded node_modules, significantly reducing the size of the extension
 
 ## 1.1.1
 
-🔨 chore: 降低了对 VSCode 的版本要求 | Lowered the version requirement for VSCode
-✨ feat: 增加了本地化功能 | Added localization support
+1. 降低了对 VSCode 的版本要求 | Lowered the version requirement for VSCode
+2. 增加了本地化功能 | Added localization support
 
 ## 1.1.0
 
-🔨 chore: 彻底重构了代码结构，切分为模块 | Completely refactored code structure into modules
-✨ feat: 新增字符串模板自定义功能，以支持几乎任何语言 | Added string template customization to support almost any language
+1. 彻底重构了代码结构，切分为模块 | Completely refactored code structure into modules
+2. 新增字符串模板自定义功能，以支持几乎任何语言 | Added string template customization to support almost any language
 
 ## 1.0.2
 
-📝 docs: 完善了部分文档信息 | Improved some documentation details
+- 完善了部分文档信息 | Improved some documentation details
 
 ## 1.0.1
 
-✨ feat: 添加了插件图标 | Added extension icon
+- 添加了插件图标 | Added extension icon
 
 ## 1.0.0
 
-✨ feat: 功能基本完成，发布版 | Initial release with basic functionality
+- 功能基本完成，发布版 | Initial release with basic functionality
