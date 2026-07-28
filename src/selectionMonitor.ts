@@ -13,10 +13,14 @@ export class SelectionMonitor implements vscode.Disposable {
     private statusBarManager: StatusBarManager;
     private disposables: vscode.Disposable[] = [];
     private currentUri: vscode.Uri | undefined;
+    private enabled: boolean;
 
-    constructor(statusBarManager: StatusBarManager) {
+    constructor(statusBarManager: StatusBarManager, enabled: boolean) {
         this.statusBarManager = statusBarManager;
-        this.startListening();
+        this.enabled = enabled;
+        if (this.enabled) {
+            this.startListening();
+        }
     }
 
     /**
@@ -35,9 +39,10 @@ export class SelectionMonitor implements vscode.Disposable {
         const disposable = vscode.window.onDidChangeActiveTextEditor((editor) => {
             if (editor && editor.document.uri.scheme === "file") {
                 this.handleFileSelected(editor.document.uri);
-            } else {
-                // 没有激活的编辑器或非文件 URI，不做处理
-                // 资源管理器选中文件夹的场景由命令触发
+            } else if (!editor) {
+                // 所有编辑器已关闭，隐藏文件信息
+                this.currentUri = undefined;
+                this.statusBarManager.hide();
             }
         });
 

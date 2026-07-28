@@ -33,7 +33,10 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(statusBarManager);
 
     // 创建选中监控器（自动监听文件选中并显示信息）
-    const selectionMonitor = new SelectionMonitor(statusBarManager);
+    const selectionMonitor = new SelectionMonitor(
+        statusBarManager,
+        ConfigManager.getFileInfoEnabled(),
+    );
     context.subscriptions.push(selectionMonitor);
 
     // 创建文件夹计算命令处理器
