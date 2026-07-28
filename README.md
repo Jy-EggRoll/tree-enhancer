@@ -42,6 +42,13 @@
 2. 复制 `l10n` 目录下的 `bundle.l10n.json` 文件，创建您所在区域的语言文件（如 `bundle.l10n.de.json` 或 `bundle.l10n.zh-cn.json`），翻译文件中的键值对中的所有值
 3. 通过 Issue 或 Pull Request 提交
 
+## CI/CD 工作流
+
+本扩展使用 GitHub Actions 进行持续集成与交付：
+
+- **CI 构建**：推送到 `main` 分支（非 tag）时自动构建并上传 vsix 到 Actions Artifacts，方便测试
+- **正式发布**：推送 tag（如 `v1.11.0`）时自动构建、创建 GitHub Release 并上传 vsix 到 Release Assets
+
 ## 为什么要开发此扩展
 
 查看文件的信息、属性、文件夹信息是日常生活中的高频操作，但 VSCode 默认的资源管理器树并不支持这些功能。虽然可以通过定位到资源管理器，再右键菜单查看文件属性，但这需要多次点击，且不够直观。VSCode 默认的悬浮提示只展示无关紧要的信息，这没有充分利用到这一操作，是一种浪费。对于本扩展旨在通过悬浮提示的方式，快速、直观地展示文件和文件夹的关键信息，提升用户的工作效率。
@@ -83,6 +90,13 @@ To add a new language:
 1. Copy the `package.nls.json` file and create a language file for your region (e.g., `package.nls.de.json` or `package.nls.zh-cn.json`), then translate all values in the key-value pairs of the file.
 2. Copy the `bundle.l10n.json` file in the `l10n` directory and create a language file for your region (e.g., `bundle.l10n.de.json` or `bundle.l10n.zh-cn.json`), then translate all values in the key-value pairs of the file.
 3. Submit via Issue or Pull Request.
+
+## CI/CD Workflow
+
+This extension uses GitHub Actions for continuous integration and delivery:
+
+- **CI Build**: Pushes to the `main` branch (non-tag) automatically build and upload the vsix to Actions Artifacts for testing
+- **Release**: Pushing a tag (e.g. `v1.11.0`) automatically builds, creates a GitHub Release, and uploads the vsix to Release Assets
 
 ## Why This Extension Was Developed
 

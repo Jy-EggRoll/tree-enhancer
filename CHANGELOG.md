@@ -9,7 +9,11 @@
 - 文件夹计算结果与文件信息共用同一状态栏位置，切换即时顶替 | Folder calculation results and file info share the same status bar position, switching replaces instantly
 - 关闭所有编辑器时，文件信息随之自动隐藏 | File info hides automatically when all editors are closed
 - 新增 `tree-enhancer.fileInfo.enabled` 配置项，用户可独立开启/关闭文件信息自动显示功能 | Added `tree-enhancer.fileInfo.enabled` setting for users to independently enable/disable automatic file info display
+- 状态栏信息固定在右侧最末尾，避免左右漂移 | Status bar info is now pinned to the far right, preventing left-right drift
 - 🔨 chore: 移植国际化排序脚本，所有 l10n 文件自动按字典序排序 | Ported i18n sorting script, all l10n files are now automatically sorted in dictionary order
+- 🔨 chore: 将常规操作日志从 info 降级为 debug 级别，减少日志噪音 | Downgraded routine operation logs from info to debug level to reduce log noise
+- 🐛 fix: 恢复独立 sourcemap 文件，取消 .vscodeignore 对 *.map 的排除，修复 VSCode 日志回退到 JS 的问题 | Restored standalone sourcemap files and removed *.map exclusion from .vscodeignore, fixing VSCode log fallback to JS
+- 🐛 fix: 在文件装饰提供者中过滤被 files.exclude 排除的文件（如 .git 结尾的备份文件），消除无意义的警告日志 | Filtered out files excluded by files.exclude (e.g., .git-suffixed backup files) in FileDecorationProvider, eliminating meaningless warning logs
 
 ## 1.10.1
 
