@@ -25,7 +25,7 @@ importers:
         specifier: ^0.5.10
         version: 0.5.10
       '@types/vscode':
-        specifier: ^1.76.0
+        specifier: ^1.93.0
         version: 1.105.0
       '@vscode/l10n-dev':
         specifier: ^0.0.35
@@ -35,7 +35,7 @@ importers:
         version: 0.0.11
       '@vscode/vsce':
         specifier: ^3.3.2
-        version: 3.9.2
+        version: 3.9.2(supports-color@8.1.1)
       esbuild:
         specifier: ^0.25.9
         version: 0.25.12
@@ -2535,7 +2535,7 @@ snapshots:
       '@vscode/vsce-sign-win32-arm64': 2.0.6
       '@vscode/vsce-sign-win32-x64': 2.0.6
 
-  '@vscode/vsce@3.9.2':
+  '@vscode/vsce@3.9.2(supports-color@8.1.1)':
     dependencies:
       '@azure/identity': 4.13.1
       '@secretlint/node': 10.2.2
@@ -2558,7 +2558,7 @@ snapshots:
       minimatch: 10.2.5
       parse-semver: 1.1.1
       read: 1.0.7
-      secretlint: 10.2.2
+      secretlint: 10.2.2(supports-color@8.1.1)
       semver: 7.7.3
       tmp: 0.2.7
       typed-rest-client: 1.8.11
@@ -3996,7 +3996,7 @@ snapshots:
 
   sax@1.4.4: {}
 
-  secretlint@10.2.2:
+  secretlint@10.2.2(supports-color@8.1.1):
     dependencies:
       '@secretlint/config-creator': 10.2.2
       '@secretlint/formatter': 10.2.2
