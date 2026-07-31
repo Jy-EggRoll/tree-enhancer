@@ -28,7 +28,11 @@ export class TerminalFileTreeItem extends vscode.TreeItem {
             ? vscode.ThemeIcon.Folder
             : vscode.ThemeIcon.File;
 
-        // 文件节点可点击打开
+        // 设置 resourceUri 以复用用户的文件图标主题
+        // 当 ThemeIcon + resourceUri 同时存在时，VSCode 根据文件扩展名匹配图标（如 .ts 显示 TS 图标）
+        this.resourceUri = uri;
+
+        // 文件节点可点击打开（TreeView 自动根据 workbench.list.openMode 决定单击/双击触发）
         if (!isDirectory) {
             this.command = {
                 command: "vscode.open",
@@ -58,14 +62,94 @@ export class TerminalFileTreeProvider
     readonly onDidChangeTreeData = this._onDidChangeTreeData.event;
 
     private _cwd?: vscode.Uri;
+    private _fileWatcher?: vscode.FileSystemWatcher;
+    private _watcherDebounceTimer?: NodeJS.Timeout;
 
     /**
-     * 设置当前工作目录并刷新整棵树
+     * 公开当前工作目录，供外部组件（如文件操作）在无选中项时回退使用
+     */
+    public get cwd(): vscode.Uri | undefined {
+        return this._cwd;
+    }
+
+    /**
+     * 设置当前工作目录并刷新整棵树。
+     * 同时创建文件系统监控器，当目录内文件增删改时自动刷新。
      * @param uri 新的 CWD URI，或 undefined 表示清空树
      */
     public setCwd(uri: vscode.Uri | undefined): void {
         this._cwd = uri;
-        this._onDidChangeTreeData.fire(); // undefined 参数触发全量刷新
+        this._onDidChangeTreeData.fire();
+
+        // 销毁旧的文件监控器
+        this.disposeFileWatcher();
+
+        // 为新目录创建文件监控器
+        if (uri) {
+            this.createFileWatcher(uri);
+        }
+    }
+
+    /**
+     * 创建文件系统监控器，监听指定目录下的文件增删改事件
+     */
+    private createFileWatcher(cwd: vscode.Uri): void {
+        try {
+            const pattern = new vscode.RelativePattern(cwd, "**/*");
+            this._fileWatcher = vscode.workspace.createFileSystemWatcher(pattern);
+
+            // 文件内容变更（防抖 200ms，避免批量操作导致频繁刷新）
+            this._fileWatcher.onDidChange(() => {
+                this.scheduleWatcherRefresh();
+            });
+
+            // 文件/目录创建
+            this._fileWatcher.onDidCreate(() => {
+                this.scheduleWatcherRefresh();
+            });
+
+            // 文件/目录删除
+            this._fileWatcher.onDidDelete(() => {
+                this.scheduleWatcherRefresh();
+            });
+
+            log.debug(
+                vscode.l10n.t(
+                    "[Terminal Explorer] File watcher started for: {0}",
+                    cwd.fsPath,
+                ),
+            );
+        } catch {
+            // 某些文件系统可能不支持 watcher，静默忽略
+            log.debug(
+                vscode.l10n.t(
+                    "[Terminal Explorer] File watcher not supported for: {0}",
+                    cwd.fsPath,
+                ),
+            );
+        }
+    }
+
+    /**
+     * 销毁文件系统监控器
+     */
+    private disposeFileWatcher(): void {
+        if (this._fileWatcher) {
+            this._fileWatcher.dispose();
+            this._fileWatcher = undefined;
+        }
+    }
+
+    /**
+     * 延迟触发 watcher 刷新，合并短时间内的大量文件事件
+     */
+    private scheduleWatcherRefresh(): void {
+        if (this._watcherDebounceTimer) {
+            clearTimeout(this._watcherDebounceTimer);
+        }
+        this._watcherDebounceTimer = setTimeout(() => {
+            this._onDidChangeTreeData.fire();
+        }, 200);
     }
 
     public getTreeItem(element: TerminalFileTreeItem): vscode.TreeItem {
@@ -110,25 +194,31 @@ export class TerminalFileTreeProvider
     }
 
     /**
-     * 获取父节点，用于树视图的 "Reveal" 功能
+     * 获取父节点。当前实现始终返回 null，因为终端文件树的构建方向是自上而下的：
+     * CWD 是虚拟根节点，所有路径向下派生。树视图的 reveal 功能可以正常工作
+     * （通过逐个展开 getChildren 链路定位元素）。
+     * 未来如果需要支持"从子节点向上查找"，可在此实现。
      */
     public getParent(
-        element: TerminalFileTreeItem,
+        _element: TerminalFileTreeItem,
     ): vscode.ProviderResult<TerminalFileTreeItem> {
-        const parentUri = vscode.Uri.joinPath(element.uri, "..");
-        // 如果到达 CWD 根则返回 null（无父节点）
-        if (
-            this._cwd &&
-            parentUri.fsPath === element.uri.fsPath
-        ) {
-            return null;
-        }
-        // 简化处理：不支持在树中定位到具体父节点的 TreeItem
-        // VS Code 的 reveal 会使用 getParent 链来找到元素位置
         return null;
     }
 
+    /**
+     * 刷新节点。传入 TreeItem 只刷新该节点（及其子节点），
+     * 不传参数则全量刷新整棵树。
+     * 供文件操作（新建/重命名/删除）完成后调用。
+     */
+    public refresh(element?: TerminalFileTreeItem): void {
+        this._onDidChangeTreeData.fire(element);
+    }
+
     public dispose(): void {
+        if (this._watcherDebounceTimer) {
+            clearTimeout(this._watcherDebounceTimer);
+        }
+        this.disposeFileWatcher();
         this._onDidChangeTreeData.dispose();
     }
 }

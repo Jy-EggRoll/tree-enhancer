@@ -7,7 +7,8 @@ import { FileWatcherManager } from "./utils/fileWatcher";
 import { StatusBarManager } from "./statusBarManager";
 import { SelectionMonitor } from "./selectionMonitor";
 import { TerminalTracker } from "./terminalExplorer/terminalTracker";
-import { TerminalFileTreeProvider } from "./terminalExplorer/treeDataProvider";
+import { TerminalFileTreeProvider, TerminalFileTreeItem } from "./terminalExplorer/treeDataProvider";
+import { FileOperationHandlers } from "./terminalExplorer/fileOperations";
 import sourceMapSupport from "source-map-support";
 
 const log = getLogger();
@@ -83,8 +84,68 @@ export function activate(context: vscode.ExtensionContext) {
             {
                 treeDataProvider: terminalTreeProvider,
                 showCollapseAll: true,
+                canSelectMany: true,
             },
         );
+
+        // 创建文件操作命令处理器
+        const fileOps = new FileOperationHandlers(terminalTreeProvider);
+
+        // 辅助函数：获取操作目标项列表
+        // 优先使用 TreeView 已选中的项（支持多选）；
+        // 若无选中项则回退到右键菜单传递的单个项（单点右键）
+        const getSelection = (treeItem?: TerminalFileTreeItem): TerminalFileTreeItem[] => {
+            const selection = [...treeView.selection] as TerminalFileTreeItem[];
+            if (selection.length > 0) {
+                return selection;
+            }
+            return treeItem ? [treeItem] : [];
+        };
+
+        // 注册文件操作命令（右键菜单触发，支持多选）
+        const newFileCommand = vscode.commands.registerCommand(
+            "tree-enhancer.newFile",
+            (treeItem?: TerminalFileTreeItem) => {
+                fileOps.newFile(getSelection(treeItem));
+            },
+        );
+        const newFolderCommand = vscode.commands.registerCommand(
+            "tree-enhancer.newFolder",
+            (treeItem?: TerminalFileTreeItem) => {
+                fileOps.newFolder(getSelection(treeItem));
+            },
+        );
+        const renameCommand = vscode.commands.registerCommand(
+            "tree-enhancer.rename",
+            (treeItem?: TerminalFileTreeItem) => {
+                fileOps.rename(getSelection(treeItem));
+            },
+        );
+        const deleteCommand = vscode.commands.registerCommand(
+            "tree-enhancer.deleteFile",
+            (treeItem?: TerminalFileTreeItem) => {
+                fileOps.delete(getSelection(treeItem));
+            },
+        );
+        const deletePermanentlyCommand = vscode.commands.registerCommand(
+            "tree-enhancer.deletePermanently",
+            (treeItem?: TerminalFileTreeItem) => {
+                fileOps.deletePermanently(getSelection(treeItem));
+            },
+        );
+        const revealInExplorerCommand = vscode.commands.registerCommand(
+            "tree-enhancer.revealInExplorer",
+            (treeItem?: TerminalFileTreeItem) => {
+                fileOps.revealInExplorer(getSelection(treeItem));
+            },
+        );
+
+        context.subscriptions.push(newFileCommand);
+        context.subscriptions.push(newFolderCommand);
+        context.subscriptions.push(renameCommand);
+        context.subscriptions.push(deleteCommand);
+        context.subscriptions.push(deletePermanentlyCommand);
+        context.subscriptions.push(revealInExplorerCommand);
 
         context.subscriptions.push(terminalTracker);
         context.subscriptions.push(terminalTreeProvider);
