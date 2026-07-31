@@ -55,6 +55,16 @@
                 "command": "tree-enhancer.revealInExplorer",
                 "title": "%description.terminalExplorer.revealInExplorer%",
                 "icon": "$(eye)"
+            },
+            {
+                "command": "tree-enhancer.upload",
+                "title": "%description.terminalExplorer.upload%",
+                "icon": "$(cloud-upload)"
+            },
+            {
+                "command": "tree-enhancer.download",
+                "title": "%description.terminalExplorer.download%",
+                "icon": "$(cloud-download)"
             }
         ],
         "configuration": {
@@ -186,6 +196,16 @@
                     "command": "tree-enhancer.revealInExplorer",
                     "when": "view == tree-enhancer.terminalExplorer",
                     "group": "navigation@99"
+                },
+                {
+                    "command": "tree-enhancer.upload",
+                    "when": "view == tree-enhancer.terminalExplorer && viewItem == folder",
+                    "group": "5b_importexport@1"
+                },
+                {
+                    "command": "tree-enhancer.download",
+                    "when": "view == tree-enhancer.terminalExplorer && viewItem == file",
+                    "group": "5b_importexport@2"
                 }
             ],
             "view/title": [

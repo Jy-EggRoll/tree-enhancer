@@ -21,5 +21,7 @@
     "description.terminalExplorer.rename": "重命名",
     "description.terminalExplorer.delete": "移至回收站",
     "description.terminalExplorer.deletePermanently": "彻底删除",
-    "description.terminalExplorer.revealInExplorer": "在默认树中定位"
+    "description.terminalExplorer.revealInExplorer": "在资源管理器中定位",
+    "description.terminalExplorer.upload": "上传...",
+    "description.terminalExplorer.download": "下载..."
 }

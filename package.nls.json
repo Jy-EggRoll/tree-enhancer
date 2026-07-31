@@ -21,5 +21,7 @@
     "description.terminalExplorer.rename": "Rename",
     "description.terminalExplorer.delete": "Move to Trash",
     "description.terminalExplorer.deletePermanently": "Delete Permanently",
-    "description.terminalExplorer.revealInExplorer": "Reveal in Default File Explorer"
+    "description.terminalExplorer.revealInExplorer": "Reveal in File Explorer",
+    "description.terminalExplorer.upload": "Upload...",
+    "description.terminalExplorer.download": "Download..."
 }
