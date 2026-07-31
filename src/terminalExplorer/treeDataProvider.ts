@@ -63,7 +63,6 @@ export class TerminalFileTreeProvider
 
     private _cwd?: vscode.Uri;
     private _fileWatcher?: vscode.FileSystemWatcher;
-    private _watcherDebounceTimer?: NodeJS.Timeout;
 
     /**
      * 公开当前工作目录，供外部组件（如文件操作）在无选中项时回退使用
@@ -95,22 +94,20 @@ export class TerminalFileTreeProvider
      */
     private createFileWatcher(cwd: vscode.Uri): void {
         try {
-            const pattern = new vscode.RelativePattern(cwd, "**/*");
+            const pattern = new vscode.RelativePattern(cwd, "*");
             this._fileWatcher = vscode.workspace.createFileSystemWatcher(pattern);
 
-            // 文件内容变更（防抖 200ms，避免批量操作导致频繁刷新）
+            // 非递归监控仅监听 CWD 直接子节点，与懒加载树视图可见范围匹配
             this._fileWatcher.onDidChange(() => {
-                this.scheduleWatcherRefresh();
+                this._onDidChangeTreeData.fire();
             });
 
-            // 文件/目录创建
             this._fileWatcher.onDidCreate(() => {
-                this.scheduleWatcherRefresh();
+                this._onDidChangeTreeData.fire();
             });
 
-            // 文件/目录删除
             this._fileWatcher.onDidDelete(() => {
-                this.scheduleWatcherRefresh();
+                this._onDidChangeTreeData.fire();
             });
 
             log.debug(
@@ -138,18 +135,6 @@ export class TerminalFileTreeProvider
             this._fileWatcher.dispose();
             this._fileWatcher = undefined;
         }
-    }
-
-    /**
-     * 延迟触发 watcher 刷新，合并短时间内的大量文件事件
-     */
-    private scheduleWatcherRefresh(): void {
-        if (this._watcherDebounceTimer) {
-            clearTimeout(this._watcherDebounceTimer);
-        }
-        this._watcherDebounceTimer = setTimeout(() => {
-            this._onDidChangeTreeData.fire();
-        }, 200);
     }
 
     public getTreeItem(element: TerminalFileTreeItem): vscode.TreeItem {
@@ -215,9 +200,6 @@ export class TerminalFileTreeProvider
     }
 
     public dispose(): void {
-        if (this._watcherDebounceTimer) {
-            clearTimeout(this._watcherDebounceTimer);
-        }
         this.disposeFileWatcher();
         this._onDidChangeTreeData.dispose();
     }
