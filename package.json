@@ -153,6 +153,16 @@
                     "group": "inline@2"
                 },
                 {
+                    "command": "tree-enhancer.newFile",
+                    "when": "view == tree-enhancer.terminalExplorer",
+                    "group": "1_modification@1"
+                },
+                {
+                    "command": "tree-enhancer.newFolder",
+                    "when": "view == tree-enhancer.terminalExplorer",
+                    "group": "1_modification@2"
+                },
+                {
                     "command": "tree-enhancer.rename",
                     "when": "view == tree-enhancer.terminalExplorer && viewItem == file",
                     "group": "inline@1"
