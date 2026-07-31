@@ -1,5 +1,4 @@
 import * as vscode from "vscode";
-import * as os from "os";
 import { getLogger } from "../utils/func";
 
 const log = getLogger();
