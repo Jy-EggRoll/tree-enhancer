@@ -1,6 +1,5 @@
 {
     "'{0}' has unsaved changes. Renaming will abandon them. Continue?": "'{0}' has unsaved changes. Renaming will abandon them. Continue?",
-    "'{0}' is outside the current workspace and cannot be revealed.": "'{0}' is outside the current workspace and cannot be revealed.",
     "Activating Extension: Tree Enhancer": "Activating Extension: Tree Enhancer",
     "Are you sure you want to delete file '{0}'?": "Are you sure you want to delete file '{0}'?",
     "Are you sure you want to delete folder '{0}' and all its contents?": "Are you sure you want to delete folder '{0}' and all its contents?",
@@ -16,7 +15,6 @@
     "Failed to create folder: {0}": "Failed to create folder: {0}",
     "Failed to delete: {0}": "Failed to delete: {0}",
     "Failed to rename: {0}": "Failed to rename: {0}",
-    "Failed to reveal in Explorer: {0}": "Failed to reveal in Explorer: {0}",
     "Move to Trash": "Move to Trash",
     "Name cannot be empty": "Name cannot be empty",
     "Name contains invalid characters: / \\ : * ? \" < > |": "Name contains invalid characters: / \\ : * ? \" < > |",

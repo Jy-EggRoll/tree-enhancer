@@ -133,19 +133,12 @@ export function activate(context: vscode.ExtensionContext) {
                 fileOps.deletePermanently(getSelection(treeItem));
             },
         );
-        const revealInExplorerCommand = vscode.commands.registerCommand(
-            "tree-enhancer.revealInExplorer",
-            (treeItem?: TerminalFileTreeItem) => {
-                fileOps.revealInExplorer(getSelection(treeItem));
-            },
-        );
 
         context.subscriptions.push(newFileCommand);
         context.subscriptions.push(newFolderCommand);
         context.subscriptions.push(renameCommand);
         context.subscriptions.push(deleteCommand);
         context.subscriptions.push(deletePermanentlyCommand);
-        context.subscriptions.push(revealInExplorerCommand);
 
         context.subscriptions.push(terminalTracker);
         context.subscriptions.push(terminalTreeProvider);

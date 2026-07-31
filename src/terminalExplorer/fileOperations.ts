@@ -6,8 +6,8 @@ const log = getLogger();
 
 /**
  * 文件操作命令处理器。
- * 为终端文件浏览器提供新建、重命名、删除、在资源管理器中定位等基础文件操作。
- * 支持多选批量操作（仅适用于 delete、deletePermanently、revealInExplorer）。
+ * 为终端文件浏览器提供新建、重命名、删除等基础文件操作。
+ * 支持多选批量操作（仅适用于 delete、deletePermanently）。
  */
 export class FileOperationHandlers {
     private treeProvider: TerminalFileTreeProvider;
@@ -150,31 +150,6 @@ export class FileOperationHandlers {
             confirmMessage: vscode.l10n.t("Delete Permanently"),
             skipConfirmation: false,
         });
-    }
-
-    /**
-     * 在 VSCode 自带资源管理器中定位文件/文件夹
-     */
-    public async revealInExplorer(items: TerminalFileTreeItem[]): Promise<void> {
-        for (const treeItem of items) {
-            // 检查文件是否在工作区内：revealInExplorer 对工作区外路径静默无操作
-            if (!vscode.workspace.getWorkspaceFolder(treeItem.uri)) {
-                vscode.window.showInformationMessage(
-                    vscode.l10n.t("'{0}' is outside the current workspace and cannot be revealed.", this.getName(treeItem)),
-                );
-                continue;
-            }
-            try {
-                await vscode.commands.executeCommand("revealInExplorer", treeItem.uri);
-            } catch (error) {
-                vscode.window.showErrorMessage(
-                    vscode.l10n.t(
-                        "Failed to reveal in Explorer: {0}",
-                        error instanceof Error ? error.message : String(error),
-                    ),
-                );
-            }
-        }
     }
 
     // -----------------------------------------------------------------

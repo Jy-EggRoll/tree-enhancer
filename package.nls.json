@@ -20,6 +20,5 @@
     "description.terminalExplorer.newFolder": "New Folder",
     "description.terminalExplorer.rename": "Rename",
     "description.terminalExplorer.delete": "Move to Trash",
-    "description.terminalExplorer.deletePermanently": "Delete Permanently",
-    "description.terminalExplorer.revealInExplorer": "Reveal in Default File Explorer"
+    "description.terminalExplorer.deletePermanently": "Delete Permanently"
 }

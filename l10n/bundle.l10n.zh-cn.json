@@ -1,6 +1,5 @@
 {
     "'{0}' has unsaved changes. Renaming will abandon them. Continue?": "'{0}' 有未保存的更改，重命名将丢弃这些修改。是否继续？",
-    "'{0}' is outside the current workspace and cannot be revealed.": "'{0}' 不在当前工作区内，无法定位。",
     "Activating Extension: Tree Enhancer": "正在激活扩展：Tree Enhancer",
     "Are you sure you want to delete file '{0}'?": "确定要删除文件 '{0}' 吗？",
     "Are you sure you want to delete folder '{0}' and all its contents?": "确定要删除文件夹 '{0}' 及其所有内容吗？",
@@ -16,7 +15,6 @@
     "Failed to create folder: {0}": "创建文件夹失败：{0}",
     "Failed to delete: {0}": "删除失败：{0}",
     "Failed to rename: {0}": "重命名失败：{0}",
-    "Failed to reveal in Explorer: {0}": "在资源管理器中定位失败：{0}",
     "Move to Trash": "移至回收站",
     "Name cannot be empty": "名称不能为空",
     "Name contains invalid characters: / \\ : * ? \" < > |": "名称包含非法字符：/ \\ : * ? \" < > |",

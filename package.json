@@ -50,11 +50,6 @@
                 "command": "tree-enhancer.deletePermanently",
                 "title": "%description.terminalExplorer.deletePermanently%",
                 "icon": "$(trash)"
-            },
-            {
-                "command": "tree-enhancer.revealInExplorer",
-                "title": "%description.terminalExplorer.revealInExplorer%",
-                "icon": "$(eye)"
             }
         ],
         "configuration": {
@@ -181,11 +176,6 @@
                     "command": "tree-enhancer.deletePermanently",
                     "when": "view == tree-enhancer.terminalExplorer",
                     "group": "5_modification@3"
-                },
-                {
-                    "command": "tree-enhancer.revealInExplorer",
-                    "when": "view == tree-enhancer.terminalExplorer",
-                    "group": "navigation@99"
                 }
             ],
             "view/title": [
