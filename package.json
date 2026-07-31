@@ -25,6 +25,36 @@
             {
                 "command": "tree-enhancer.calculateFolder",
                 "title": "%description.calculateFolder%"
+            },
+            {
+                "command": "tree-enhancer.newFile",
+                "title": "%description.terminalExplorer.newFile%",
+                "icon": "$(new-file)"
+            },
+            {
+                "command": "tree-enhancer.newFolder",
+                "title": "%description.terminalExplorer.newFolder%",
+                "icon": "$(new-folder)"
+            },
+            {
+                "command": "tree-enhancer.rename",
+                "title": "%description.terminalExplorer.rename%",
+                "icon": "$(edit)"
+            },
+            {
+                "command": "tree-enhancer.deleteFile",
+                "title": "%description.terminalExplorer.delete%",
+                "icon": "$(trash)"
+            },
+            {
+                "command": "tree-enhancer.deletePermanently",
+                "title": "%description.terminalExplorer.deletePermanently%",
+                "icon": "$(trash)"
+            },
+            {
+                "command": "tree-enhancer.revealInExplorer",
+                "title": "%description.terminalExplorer.revealInExplorer%",
+                "icon": "$(eye)"
             }
         ],
         "configuration": {
@@ -115,6 +145,60 @@
                     "group": "navigation@99",
                     "when": "explorerResourceIsFolder"
                 }
+            ],
+            "view/item/context": [
+                {
+                    "command": "tree-enhancer.newFile",
+                    "when": "view == tree-enhancer.terminalExplorer && viewItem == folder",
+                    "group": "inline@1"
+                },
+                {
+                    "command": "tree-enhancer.newFolder",
+                    "when": "view == tree-enhancer.terminalExplorer && viewItem == folder",
+                    "group": "inline@2"
+                },
+                {
+                    "command": "tree-enhancer.rename",
+                    "when": "view == tree-enhancer.terminalExplorer && viewItem == file",
+                    "group": "inline@1"
+                },
+                {
+                    "command": "tree-enhancer.rename",
+                    "when": "view == tree-enhancer.terminalExplorer && viewItem == file",
+                    "group": "5_modification@1"
+                },
+                {
+                    "command": "tree-enhancer.rename",
+                    "when": "view == tree-enhancer.terminalExplorer && viewItem == folder",
+                    "group": "5_modification@1"
+                },
+                {
+                    "command": "tree-enhancer.deleteFile",
+                    "when": "view == tree-enhancer.terminalExplorer",
+                    "group": "5_modification@2"
+                },
+                {
+                    "command": "tree-enhancer.deletePermanently",
+                    "when": "view == tree-enhancer.terminalExplorer",
+                    "group": "5_modification@3"
+                },
+                {
+                    "command": "tree-enhancer.revealInExplorer",
+                    "when": "view == tree-enhancer.terminalExplorer",
+                    "group": "navigation@99"
+                }
+            ],
+            "view/title": [
+                {
+                    "command": "tree-enhancer.newFile",
+                    "when": "view == tree-enhancer.terminalExplorer",
+                    "group": "navigation@1"
+                },
+                {
+                    "command": "tree-enhancer.newFolder",
+                    "when": "view == tree-enhancer.terminalExplorer",
+                    "group": "navigation@2"
+                }
             ]
         }
     },
@@ -132,7 +216,6 @@
         "@vscode/test-cli": "^0.0.11",
         "@vscode/vsce": "^3.3.2",
         "esbuild": "^0.25.9",
-        "npm-run-all": "^4.1.5",
         "typescript": "^5.8.3"
     },
     "displayName": "Tree Enhancer",
@@ -166,12 +249,7 @@
         "compile-tests": "pnpm tsc -p . --outDir out",
         "gen-l10n": "npx @vscode/l10n-dev export -o ./l10n ./src && node scripts/sort-l10n.mjs",
         "package": "pnpm run check-types && node esbuild.js --production",
-        "pretest": "pnpm run compile-tests && pnpm run compile",
-        "vscode:prepublish": "pnpm run package",
-        "watch": "npm-run-all -p watch:*",
-        "watch-tests": "tsc -p . -w --outDir out",
-        "watch:esbuild": "node esbuild.js --watch",
-        "watch:tsc": "tsc --noEmit --watch --project tsconfig.json"
+        "vscode:prepublish": "pnpm run package"
     },
     "version": "1.11.0"
 }
