@@ -6,6 +6,8 @@ import { CalculateFolderCommand } from "./calculator/calculateFolderCommand";
 import { FileWatcherManager } from "./utils/fileWatcher";
 import { StatusBarManager } from "./statusBarManager";
 import { SelectionMonitor } from "./selectionMonitor";
+import { TerminalTracker } from "./terminalExplorer/terminalTracker";
+import { TerminalFileTreeProvider } from "./terminalExplorer/treeDataProvider";
 import sourceMapSupport from "source-map-support";
 
 const log = getLogger();
@@ -65,6 +67,29 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(calculateCommand);
     context.subscriptions.push(dismissCommand);
     context.subscriptions.push(calculateFolderCommandHandler);
+
+    // 终端文件浏览器：追踪终端 CWD 并构建自定义文件树
+    if (ConfigManager.getTerminalExplorerEnabled()) {
+        const terminalTracker = new TerminalTracker();
+        const terminalTreeProvider = new TerminalFileTreeProvider();
+
+        // 当终端 CWD 变化时，刷新树视图
+        terminalTracker.onDidChangeCwd((cwd) => {
+            terminalTreeProvider.setCwd(cwd);
+        });
+
+        const treeView = vscode.window.createTreeView(
+            "tree-enhancer.terminalExplorer",
+            {
+                treeDataProvider: terminalTreeProvider,
+                showCollapseAll: true,
+            },
+        );
+
+        context.subscriptions.push(terminalTracker);
+        context.subscriptions.push(terminalTreeProvider);
+        context.subscriptions.push(treeView);
+    }
 
     log.debug(
         vscode.l10n.t(
