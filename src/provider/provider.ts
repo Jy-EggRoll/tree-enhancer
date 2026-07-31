@@ -31,7 +31,7 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider {
 
             const stats = await FileUtils.getFileStats(uri.fsPath); // 获取文件或文件夹的基本统计信息
             if (!stats) {
-                log.warn(
+                log.debug(
                     vscode.l10n.t(
                         "[File Access] Unable to retrieve file information: {0}",
                         uri.fsPath,
