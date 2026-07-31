@@ -13,5 +13,7 @@
     "description.imageFileTemplate": "图片文件悬浮提示的显示模板，建议在 settings.json 中设置。支持的占位符：\n- {name}：文件名\n- {size}：自动单位的文件大小\n- {rawSize}：原始文件大小（以字节为单位）\n- {modifiedTime}：格式化的修改时间\n- {resolution}：图片分辨率\n- {width}：图片宽度\n- {height}：图片高度",
     "description.imageResolutionTemplate": "图片分辨率信息的显示模板。支持的占位符：\n- {width}：图片宽度（像素）\n- {height}：图片高度（像素）",
     "description.largeFileThreshold": "大文件识别阈值，使用用户设定的单位（MB 或 MiB）。超过此大小的文件将显示 L 标识。设置为 0 表示关闭大文件识别功能。",
-    "description.startupDelay": "VSCode 启动后扩展开始工作的延迟时间（秒）。设置为 0 表示不延迟，启动时立即进行计算。"
+    "description.startupDelay": "VSCode 启动后扩展开始工作的延迟时间（秒）。设置为 0 表示不延迟，启动时立即进行计算。",
+    "description.terminalExplorer": "终端文件（Tree Enhancer）",
+    "description.terminalExplorer.enabled": "启用/禁用终端文件浏览器视图。启用后，Explorer 侧栏中将出现一个自定义文件树，始终追随当前终端的工作目录。"
 }

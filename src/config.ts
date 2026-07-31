@@ -115,4 +115,11 @@ export class ConfigManager {
     public static getFileInfoEnabled(): boolean {
         return this.get<boolean>("fileInfo.enabled", true);
     }
+
+    /**
+     * 获取终端文件浏览器是否启用
+     */
+    public static getTerminalExplorerEnabled(): boolean {
+        return this.get<boolean>("terminalExplorer.enabled", true);
+    }
 }

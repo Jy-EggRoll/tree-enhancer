@@ -12,6 +12,15 @@
         "Other"
     ],
     "contributes": {
+        "views": {
+            "explorer": [
+                {
+                    "id": "tree-enhancer.terminalExplorer",
+                    "name": "%description.terminalExplorer%",
+                    "when": "config.tree-enhancer.terminalExplorer.enabled"
+                }
+            ]
+        },
         "commands": [
             {
                 "command": "tree-enhancer.calculateFolder",
@@ -83,6 +92,11 @@
                     "maximum": 10,
                     "minimum": 0,
                     "type": "number"
+                },
+                "tree-enhancer.terminalExplorer.enabled": {
+                    "default": true,
+                    "description": "%description.terminalExplorer.enabled%",
+                    "type": "boolean"
                 }
             },
             "title": "Tree Enhancer"

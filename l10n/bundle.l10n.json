@@ -31,5 +31,11 @@
     "[Selection Monitor] Failed to stat file: {0}, error: {1}": "[Selection Monitor] Failed to stat file: {0}, error: {1}",
     "[Selection Monitor] File selected: {0}, size: {1}, modified: {2}": "[Selection Monitor] File selected: {0}, size: {1}, modified: {2}",
     "[StatusBar Manager] Auto-dismiss disabled, will not auto-dismiss": "[StatusBar Manager] Auto-dismiss disabled, will not auto-dismiss",
-    "[StatusBar Manager] Auto-dismissed after {0} seconds": "[StatusBar Manager] Auto-dismissed after {0} seconds"
+    "[StatusBar Manager] Auto-dismissed after {0} seconds": "[StatusBar Manager] Auto-dismissed after {0} seconds",
+    "[Terminal Explorer] Active terminal changed": "[Terminal Explorer] Active terminal changed",
+    "[Terminal Explorer] CWD changed to: {0}": "[Terminal Explorer] CWD changed to: {0}",
+    "[Terminal Explorer] No active terminal, hiding tree": "[Terminal Explorer] No active terminal, hiding tree",
+    "[Terminal Explorer] Terminal closed": "[Terminal Explorer] Terminal closed",
+    "[Terminal Explorer] Terminal opened": "[Terminal Explorer] Terminal opened",
+    "[Terminal Explorer] Terminal tracking started": "[Terminal Explorer] Terminal tracking started"
 }

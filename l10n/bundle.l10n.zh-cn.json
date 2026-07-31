@@ -31,5 +31,11 @@
     "[Selection Monitor] Failed to stat file: {0}, error: {1}": "[选中监控] 获取文件状态失败：{0}，错误：{1}",
     "[Selection Monitor] File selected: {0}, size: {1}, modified: {2}": "[选中监控] 已选中文件：{0}，大小：{1}，修改时间：{2}",
     "[StatusBar Manager] Auto-dismiss disabled, will not auto-dismiss": "[状态栏管理器] 自动消失已禁用，不会自动消失",
-    "[StatusBar Manager] Auto-dismissed after {0} seconds": "[状态栏管理器] 已在 {0} 秒后自动消失"
+    "[StatusBar Manager] Auto-dismissed after {0} seconds": "[状态栏管理器] 已在 {0} 秒后自动消失",
+    "[Terminal Explorer] Active terminal changed": "[终端浏览器] 活动终端已切换",
+    "[Terminal Explorer] CWD changed to: {0}": "[终端浏览器] 工作目录已更改为：{0}",
+    "[Terminal Explorer] No active terminal, hiding tree": "[终端浏览器] 无活动终端，隐藏树视图",
+    "[Terminal Explorer] Terminal closed": "[终端浏览器] 终端已关闭",
+    "[Terminal Explorer] Terminal opened": "[终端浏览器] 终端已打开",
+    "[Terminal Explorer] Terminal tracking started": "[终端浏览器] 终端追踪已启动"
 }
