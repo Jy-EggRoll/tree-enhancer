@@ -18,7 +18,8 @@ export class FileOperationHandlers {
 
     /**
      * 新建文件。
-     * 有选中项时在其所在目录创建；无选中项时在当前 CWD 根目录创建（标题栏按钮触发）。
+     * 标题栏触发时固定创建在当前 CWD 根目录；右键菜单触发时创建在选中项所在目录。
+     * 输入框中明确提示实际创建位置，避免用户建完找不到。
      */
     public async newFile(items: TerminalFileTreeItem[]): Promise<void> {
         const parentDir = this.getParentDir(items);
@@ -26,7 +27,10 @@ export class FileOperationHandlers {
             return;
         }
         const fileName = await vscode.window.showInputBox({
-            prompt: vscode.l10n.t("Enter file name"),
+            prompt: vscode.l10n.t(
+                "Enter a name for the new file in {0}",
+                parentDir.fsPath,
+            ),
             placeHolder: "example.txt",
             validateInput: (value) => this.validateFileName(value, parentDir),
         });
@@ -48,7 +52,8 @@ export class FileOperationHandlers {
 
     /**
      * 新建文件夹。
-     * 有选中项时在其所在目录创建；无选中项时在当前 CWD 根目录创建（标题栏按钮触发）。
+     * 标题栏触发时固定创建在当前 CWD 根目录；右键菜单触发时创建在选中项所在目录。
+     * 输入框中明确提示实际创建位置。
      */
     public async newFolder(items: TerminalFileTreeItem[]): Promise<void> {
         const parentDir = this.getParentDir(items);
@@ -56,7 +61,10 @@ export class FileOperationHandlers {
             return;
         }
         const folderName = await vscode.window.showInputBox({
-            prompt: vscode.l10n.t("Enter folder name"),
+            prompt: vscode.l10n.t(
+                "Enter a name for the new folder in {0}",
+                parentDir.fsPath,
+            ),
             placeHolder: "new-folder",
             validateInput: (value) => this.validateFileName(value, parentDir),
         });

@@ -102,17 +102,19 @@ export function activate(context: vscode.ExtensionContext) {
             return treeItem ? [treeItem] : [];
         };
 
-        // 注册文件操作命令（右键菜单触发，支持多选）
+        // 注册文件操作命令
+        // newFile/newFolder：标题栏触发（无右键项）时固定创建在当前 CWD 根目录；
+        // 右键菜单触发时沿用选中项所在目录。其余命令支持多选。
         const newFileCommand = vscode.commands.registerCommand(
             "tree-enhancer.newFile",
             (treeItem?: TerminalFileTreeItem) => {
-                fileOps.newFile(getSelection(treeItem));
+                fileOps.newFile(treeItem ? getSelection(treeItem) : []);
             },
         );
         const newFolderCommand = vscode.commands.registerCommand(
             "tree-enhancer.newFolder",
             (treeItem?: TerminalFileTreeItem) => {
-                fileOps.newFolder(getSelection(treeItem));
+                fileOps.newFolder(treeItem ? getSelection(treeItem) : []);
             },
         );
         const renameCommand = vscode.commands.registerCommand(
