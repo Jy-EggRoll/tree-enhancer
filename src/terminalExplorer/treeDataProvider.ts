@@ -54,12 +54,19 @@ export class TerminalFileTreeItem extends vscode.TreeItem {
  * 仅展开时读取目录内容（懒加载），保证性能。
  */
 export class TerminalFileTreeProvider
-    implements vscode.TreeDataProvider<TerminalFileTreeItem>, vscode.Disposable
+    implements
+        vscode.TreeDataProvider<TerminalFileTreeItem>,
+        vscode.TreeDragAndDropController<TerminalFileTreeItem>,
+        vscode.Disposable
 {
     private _onDidChangeTreeData = new vscode.EventEmitter<
         TerminalFileTreeItem | undefined | void
     >();
     readonly onDidChangeTreeData = this._onDidChangeTreeData.event;
+
+    // 拖放：树内部专用 MIME，仅接受来自同一树视图的拖放
+    dropMimeTypes = ["application/vnd.code.tree.treeEnhancerTerminalExplorer"];
+    dragMimeTypes = ["text/uri-list"];
 
     private _cwd?: vscode.Uri;
     private _fileWatcher?: vscode.FileSystemWatcher;
@@ -188,6 +195,69 @@ export class TerminalFileTreeProvider
         _element: TerminalFileTreeItem,
     ): vscode.ProviderResult<TerminalFileTreeItem> {
         return null;
+    }
+
+    /**
+     * 拖放：将拖拽的 TreeItem 列表编码为 DataTransfer
+     */
+    public handleDrag(
+        source: TerminalFileTreeItem[],
+        dataTransfer: vscode.DataTransfer,
+        _token: vscode.CancellationToken,
+    ): void {
+        const transferItem = new vscode.DataTransferItem(source);
+        dataTransfer.set(
+            "application/vnd.code.tree.treeEnhancerTerminalExplorer",
+            transferItem,
+        );
+    }
+
+    /**
+     * 拖放：将拖拽项移动到目标目录，通过 workspace.fs.rename 实现批量移动
+     */
+    public async handleDrop(
+        target: TerminalFileTreeItem | undefined,
+        dataTransfer: vscode.DataTransfer,
+        _token: vscode.CancellationToken,
+    ): Promise<void> {
+        const transferItem = dataTransfer.get(
+            "application/vnd.code.tree.treeEnhancerTerminalExplorer",
+        );
+        if (!transferItem) {
+            return;
+        }
+
+        const draggedItems = transferItem.value as TerminalFileTreeItem[];
+        // 目标目录：有目标时取目标所在目录（文件取其父目录），否则用 CWD
+        const targetDir = target
+            ? (target.isDirectory
+                ? target.uri
+                : vscode.Uri.joinPath(target.uri, ".."))
+            : this._cwd;
+        if (!targetDir) {
+            return;
+        }
+
+        for (const item of draggedItems) {
+            const name = item.uri.path.split("/").pop();
+            if (!name) {
+                continue;
+            }
+            const newUri = vscode.Uri.joinPath(targetDir, name);
+
+            // 跳过同路径或同名冲突
+            if (newUri.fsPath === item.uri.fsPath) {
+                continue;
+            }
+            try {
+                await vscode.workspace.fs.rename(item.uri, newUri, {
+                    overwrite: false,
+                });
+            } catch {
+                // 权限不足或目标已存在等，静默跳过
+            }
+        }
+        this._onDidChangeTreeData.fire();
     }
 
     /**

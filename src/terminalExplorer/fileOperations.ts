@@ -177,6 +177,90 @@ export class FileOperationHandlers {
         }
     }
 
+    /**
+     * 上传本地文件到目标文件夹（适用于远程环境，也兼容本地）
+     * 通过 VSCode 的 workspace.fs 抽象，自动处理跨 Scheme 传输
+     */
+    public async upload(items: TerminalFileTreeItem[]): Promise<void> {
+        const targetItem = items[0];
+        if (!targetItem) {
+            return;
+        }
+        const targetDir = targetItem.isDirectory
+            ? targetItem.uri
+            : vscode.Uri.joinPath(targetItem.uri, "..");
+
+        const fileUris = await vscode.window.showOpenDialog({
+            canSelectMany: true,
+            openLabel: vscode.l10n.t("Upload"),
+            title: vscode.l10n.t("Select files to upload"),
+        });
+        if (!fileUris || fileUris.length === 0) {
+            return;
+        }
+
+        for (const fileUri of fileUris) {
+            try {
+                const content = await vscode.workspace.fs.readFile(fileUri);
+                const name = fileUri.path.split(/[/\\]/).pop() || "file";
+                const destUri = vscode.Uri.joinPath(targetDir, name);
+                await vscode.workspace.fs.writeFile(destUri, content);
+            } catch (error) {
+                vscode.window.showErrorMessage(
+                    vscode.l10n.t(
+                        "Failed to upload: {0}",
+                        error instanceof Error ? error.message : String(error),
+                    ),
+                );
+            }
+        }
+        this.treeProvider.refresh();
+    }
+
+    /**
+     * 下载远程文件到本地。
+     * 仅适用于远程环境（URI scheme 非 file），文件夹会引导至自带资源管理器。
+     */
+    public async download(items: TerminalFileTreeItem[]): Promise<void> {
+        for (const treeItem of items) {
+            if (treeItem.isDirectory) {
+                // 文件夹下载：引导至自带资源管理器
+                const reveal = await vscode.window.showInformationMessage(
+                    vscode.l10n.t(
+                        "Downloading folders is not yet supported. Would you like to locate '{0}' in the built-in file explorer instead?",
+                        this.getName(treeItem),
+                    ),
+                    vscode.l10n.t("Reveal in File Explorer"),
+                );
+                if (reveal) {
+                    await vscode.commands.executeCommand("revealInExplorer", treeItem.uri);
+                }
+                continue;
+            }
+
+            const name = this.getName(treeItem);
+            const localUri = await vscode.window.showSaveDialog({
+                defaultUri: vscode.Uri.file(name),
+                title: vscode.l10n.t("Download '{0}'", name),
+            });
+            if (!localUri) {
+                continue;
+            }
+
+            try {
+                const content = await vscode.workspace.fs.readFile(treeItem.uri);
+                await vscode.workspace.fs.writeFile(localUri, content);
+            } catch (error) {
+                vscode.window.showErrorMessage(
+                    vscode.l10n.t(
+                        "Failed to download: {0}",
+                        error instanceof Error ? error.message : String(error),
+                    ),
+                );
+            }
+        }
+    }
+
     // -----------------------------------------------------------------
     // 私有方法
     // -----------------------------------------------------------------

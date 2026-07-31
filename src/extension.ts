@@ -85,6 +85,7 @@ export function activate(context: vscode.ExtensionContext) {
                 treeDataProvider: terminalTreeProvider,
                 showCollapseAll: true,
                 canSelectMany: true,
+                dragAndDropController: terminalTreeProvider,
             },
         );
 
@@ -139,6 +140,18 @@ export function activate(context: vscode.ExtensionContext) {
                 fileOps.revealInExplorer(getSelection(treeItem));
             },
         );
+        const uploadCommand = vscode.commands.registerCommand(
+            "tree-enhancer.upload",
+            (treeItem?: TerminalFileTreeItem) => {
+                fileOps.upload(getSelection(treeItem));
+            },
+        );
+        const downloadCommand = vscode.commands.registerCommand(
+            "tree-enhancer.download",
+            (treeItem?: TerminalFileTreeItem) => {
+                fileOps.download(getSelection(treeItem));
+            },
+        );
 
         context.subscriptions.push(newFileCommand);
         context.subscriptions.push(newFolderCommand);
@@ -146,6 +159,8 @@ export function activate(context: vscode.ExtensionContext) {
         context.subscriptions.push(deleteCommand);
         context.subscriptions.push(deletePermanentlyCommand);
         context.subscriptions.push(revealInExplorerCommand);
+        context.subscriptions.push(uploadCommand);
+        context.subscriptions.push(downloadCommand);
 
         context.subscriptions.push(terminalTracker);
         context.subscriptions.push(terminalTreeProvider);
