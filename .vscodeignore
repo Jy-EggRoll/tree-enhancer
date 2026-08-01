@@ -21,3 +21,12 @@ readme-img/
 
 # 排除 lock 文件
 pnpm-lock.yaml
+
+# 排除维护者内部文档与工作区文件
+AGENTS.md
+RELEASE.md
+pnpm-workspace.yaml
+scripts/
+
+# 排除许可证文件（package.json 中 license 字段已声明 MIT）
+LICENSE.txt
