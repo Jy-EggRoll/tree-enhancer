@@ -122,4 +122,11 @@ export class ConfigManager {
     public static getTerminalExplorerEnabled(): boolean {
         return this.get<boolean>("terminalExplorer.enabled", true);
     }
+
+    /**
+     * 获取终端文件浏览器是否遵循 files.exclude 排除规则
+     */
+    public static getTerminalExplorerFollowExcludes(): boolean {
+        return this.get<boolean>("terminalExplorer.followExcludes", false);
+    }
 }

@@ -50,6 +50,11 @@
                 "command": "tree-enhancer.deletePermanently",
                 "title": "%description.terminalExplorer.deletePermanently%",
                 "icon": "$(trash)"
+            },
+            {
+                "command": "tree-enhancer.download",
+                "title": "%description.terminalExplorer.download%",
+                "icon": "$(cloud-download)"
             }
         ],
         "configuration": {
@@ -122,6 +127,11 @@
                     "default": true,
                     "description": "%description.terminalExplorer.enabled%",
                     "type": "boolean"
+                },
+                "tree-enhancer.terminalExplorer.followExcludes": {
+                    "default": false,
+                    "description": "%description.terminalExplorer.followExcludes%",
+                    "type": "boolean"
                 }
             },
             "title": "Tree Enhancer"
@@ -186,6 +196,11 @@
                     "command": "tree-enhancer.deletePermanently",
                     "when": "view == tree-enhancer.terminalExplorer",
                     "group": "5_modification@3"
+                },
+                {
+                    "command": "tree-enhancer.download",
+                    "when": "view == tree-enhancer.terminalExplorer",
+                    "group": "5_modification@4"
                 }
             ],
             "view/title": [

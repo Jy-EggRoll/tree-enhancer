@@ -16,9 +16,11 @@
     "description.startupDelay": "VSCode 启动后扩展开始工作的延迟时间（秒）。设置为 0 表示不延迟，启动时立即进行计算。",
     "description.terminalExplorer": "文件管理器（终端集成）",
     "description.terminalExplorer.enabled": "启用/禁用终端文件浏览器视图。启用后，Explorer 侧栏中将出现一个自定义文件树，始终追随当前终端的工作目录。",
+    "description.terminalExplorer.followExcludes": "终端文件浏览器是否遵循工作区的 files.exclude 排除规则。关闭时（默认），显示终端工作目录下的所有文件和文件夹，包括被资源管理器排除的项（如 .git）；开启后，隐藏符合 files.exclude 的条目，与资源管理器显示规则一致。",
     "description.terminalExplorer.newFile": "新建文件",
     "description.terminalExplorer.newFolder": "新建文件夹",
     "description.terminalExplorer.rename": "重命名",
     "description.terminalExplorer.delete": "移至回收站",
-    "description.terminalExplorer.deletePermanently": "彻底删除"
+    "description.terminalExplorer.deletePermanently": "彻底删除",
+    "description.terminalExplorer.download": "下载..."
 }

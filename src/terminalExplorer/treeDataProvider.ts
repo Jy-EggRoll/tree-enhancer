@@ -1,4 +1,5 @@
 import * as vscode from "vscode";
+import { minimatch } from "minimatch";
 import { getLogger } from "../utils/func";
 
 const log = getLogger();
@@ -64,6 +65,59 @@ export class TerminalFileTreeProvider
     private _cwd?: vscode.Uri;
     private _fileWatcher?: vscode.FileSystemWatcher;
 
+    /** 是否遵循 files.exclude（由 tree-enhancer.terminalExplorer.followExcludes 控制） */
+    private followExcludes: boolean = false;
+
+    /** 已启用的 files.exclude 模式（与官方资源管理器显示规则一致） */
+    private excludePatterns: string[] = [];
+
+    constructor() {
+        this.reloadExcludeConfig();
+    }
+
+    /**
+     * 加载 followExcludes 开关与 files.exclude 配置。
+     * 开关关闭时不加载排除模式（树显示全部内容）。
+     */
+    private reloadExcludeConfig(): void {
+        this.followExcludes = vscode.workspace
+            .getConfiguration("tree-enhancer.terminalExplorer")
+            .get<boolean>("followExcludes", false);
+
+        if (!this.followExcludes) {
+            this.excludePatterns = [];
+            return;
+        }
+
+        const excludeConfig = vscode.workspace
+            .getConfiguration("files")
+            .get<Record<string, boolean>>("exclude");
+        this.excludePatterns = excludeConfig
+            ? Object.keys(excludeConfig).filter((key) => excludeConfig[key])
+            : [];
+    }
+
+    /**
+     * 判断 uri 是否命中 files.exclude。
+     * 仅在 followExcludes 开启时生效；对工作区外的路径不过滤
+     * （与官方一致：工作区外的路径无相对根可依，官方同样不过滤）。
+     */
+    private isExcluded(uri: vscode.Uri): boolean {
+        if (!this.followExcludes || this.excludePatterns.length === 0) {
+            return false;
+        }
+
+        const relative = vscode.workspace.asRelativePath(uri, false);
+        // 工作区外的路径 asRelativePath 会原样返回绝对路径，此时跳过过滤
+        if (vscode.Uri.file(relative).fsPath === uri.fsPath) {
+            return false;
+        }
+
+        return this.excludePatterns.some((pattern) =>
+            minimatch(relative, pattern, { dot: true }),
+        );
+    }
+
     /**
      * 公开当前工作目录，供外部组件（如文件操作）在无选中项时回退使用
      */
@@ -87,6 +141,15 @@ export class TerminalFileTreeProvider
         if (uri) {
             this.createFileWatcher(uri);
         }
+    }
+
+    /**
+     * 处理排除相关配置变更（followExcludes 开关或 files.exclude）：
+     * 重载模式并刷新整棵树。
+     */
+    public onExcludeConfigChanged(): void {
+        this.reloadExcludeConfig();
+        this._onDidChangeTreeData.fire();
     }
 
     /**
@@ -163,6 +226,8 @@ export class TerminalFileTreeProvider
                         type === vscode.FileType.Directory,
                     );
                 })
+                // 遵循 files.exclude（仅当 followExcludes 开关开启时）
+                .filter((item) => !this.isExcluded(item.uri))
                 .sort((a, b) => {
                     // 目录优先，同类型按名称字母序排列
                     if (a.isDirectory !== b.isDirectory) {

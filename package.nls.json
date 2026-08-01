@@ -16,9 +16,11 @@
     "description.startupDelay": "Delay (in seconds) before the extension starts working after VSCode startup. Set to 0 for no delay (calculates immediately on startup).",
     "description.terminalExplorer": "File Manager (Terminal)",
     "description.terminalExplorer.enabled": "Enable/disable the Terminal File Explorer view. When enabled, a custom file tree will appear in the Explorer sidebar that follows the current terminal's working directory.",
+    "description.terminalExplorer.followExcludes": "Whether the Terminal File Explorer should respect the workspace's files.exclude patterns. When disabled (default), all files and folders in the terminal's working directory are shown, including ones excluded by the Explorer (e.g. .git). When enabled, the tree hides entries matching files.exclude, matching the Explorer's display rules.",
     "description.terminalExplorer.newFile": "New File",
     "description.terminalExplorer.newFolder": "New Folder",
     "description.terminalExplorer.rename": "Rename",
     "description.terminalExplorer.delete": "Move to Trash",
-    "description.terminalExplorer.deletePermanently": "Delete Permanently"
+    "description.terminalExplorer.deletePermanently": "Delete Permanently",
+    "description.terminalExplorer.download": "Download..."
 }
