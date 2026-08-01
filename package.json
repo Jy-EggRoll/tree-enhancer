@@ -135,13 +135,6 @@
             },
             "title": "Tree Enhancer"
         },
-        "keybindings": [
-            {
-                "command": "tree-enhancer.calculateFolder",
-                "key": "alt+enter",
-                "when": "explorerViewletFocus && explorerResourceIsFolder"
-            }
-        ],
         "menus": {
             "explorer/context": [
                 {

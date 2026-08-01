@@ -46,7 +46,8 @@ export class CalculateFolderCommand {
     }
 
     /**
-     * 重新开始计算（从选中项）
+     * 重新开始计算（从选中项）。
+     * 注意：命令必须携带目标文件夹 uri 调用（右键菜单来源），不再支持无参快捷键触发。
      */
     public async execute(uri?: vscode.Uri): Promise<void> {
         if (this.isCalculating) {
@@ -66,35 +67,19 @@ export class CalculateFolderCommand {
                     "[Calculate Folder Command] Result dismissed, starting new calculation",
                 ),
             );
-        } else if (uri) {
-            log.debug(
-                vscode.l10n.t(
-                    "[Calculate Folder Command] Calculated by Context Menu",
-                ),
-            );
         }
 
         this.isCalculating = true;
         FolderCalculator.resetCancel();
 
-        const targetUri = uri;
-
-        if (!targetUri) {
-            const speUri = await this.getUriSpecial();
-            if (!speUri) {
-                this.isCalculating = false;
-                return;
-            }
-            await this.calculateFolder(speUri);
-            log.debug(
-                vscode.l10n.t(
-                    "[Calculate Folder Command] Calculated by Keyboard Shortcut",
-                ),
-            );
+        if (!uri) {
+            // 无目标 uri（例如从命令面板手动触发）时无法确定要计算哪个文件夹，直接放弃。
+            // 曾支持过 alt+enter 快捷键无参触发，依赖下方被注释的剪贴板中转方案，现已移除。
+            this.isCalculating = false;
             return;
         }
 
-        await this.calculateFolder(targetUri);
+        await this.calculateFolder(uri);
     }
 
     /**
@@ -140,20 +125,29 @@ export class CalculateFolderCommand {
     }
 
     /**
-     * 特殊方式-剪贴板中转（经测试，并不会污染剪贴板条目）
+     * 奇技淫巧（HACK）- 已停用，仅保留代码供参考，请勿重新启用！
+     *
+     * 剪贴板中转方案：利用官方 "copyFilePath" 命令间接获取“资源管理器当前选中项”的路径。
+     *
+     * 说明：
+     * 1. 仅在 Windows 上经过完善测试确认无副作用（不会污染剪贴板）。
+     * 2. 不推荐作为常规写法：依赖剪贴板状态与 VSCode 内部命令的行为细节，
+     *    一旦 VSCode 官方调整 "copyFilePath" 或剪贴板 API，极易产生难以排查的竞态问题。
+     *
+     * 曾用于支持 alt+enter 快捷键无参触发命令（已随该功能一并移除）。
      */
-    private async getUriSpecial(): Promise<vscode.Uri | undefined> {
-        const originalClipboard = await vscode.env.clipboard.readText();
-        await vscode.commands.executeCommand("copyFilePath");
-        const copiedPath = await vscode.env.clipboard.readText();
-        await vscode.env.clipboard.writeText(originalClipboard); // 恢复原始剪贴板内容
-
-        if (copiedPath && copiedPath !== originalClipboard) {
-            return vscode.Uri.file(copiedPath);
-        }
-
-        return undefined;
-    }
+    // private async getUriSpecial(): Promise<vscode.Uri | undefined> {
+    //     const originalClipboard = await vscode.env.clipboard.readText();
+    //     await vscode.commands.executeCommand("copyFilePath");
+    //     const copiedPath = await vscode.env.clipboard.readText();
+    //     await vscode.env.clipboard.writeText(originalClipboard); // 恢复原始剪贴板内容
+    //
+    //     if (copiedPath && copiedPath !== originalClipboard) {
+    //         return vscode.Uri.file(copiedPath);
+    //     }
+    //
+    //     return undefined;
+    // }
 
     /**
      * 显示计算结果

@@ -43,8 +43,6 @@
     "Uploading": "Uploading",
     "[Activation Complete] Extension has been successfully activated": "[Activation Complete] Extension has been successfully activated",
     "[Basic Decoration] {0} decoration generated": "[Basic Decoration] {0} decoration generated",
-    "[Calculate Folder Command] Calculated by Context Menu": "[Calculate Folder Command] Calculated by Context Menu",
-    "[Calculate Folder Command] Calculated by Keyboard Shortcut": "[Calculate Folder Command] Calculated by Keyboard Shortcut",
     "[Calculate Folder Command] Calculation cancelled by user": "[Calculate Folder Command] Calculation cancelled by user",
     "[Calculate Folder Command] Calculation cancelled, result discarded": "[Calculate Folder Command] Calculation cancelled, result discarded",
     "[Calculate Folder Command] Calculation failed: {0}": "[Calculate Folder Command] Calculation failed: {0}",

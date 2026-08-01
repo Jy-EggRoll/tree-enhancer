@@ -43,8 +43,6 @@
     "Uploading": "正在上传",
     "[Activation Complete] Extension has been successfully activated": "[激活完成] 扩展已成功激活",
     "[Basic Decoration] {0} decoration generated": "[基础装饰] {0} 的装饰已生成",
-    "[Calculate Folder Command] Calculated by Context Menu": "[文件夹计算命令] 通过上下文菜单计算",
-    "[Calculate Folder Command] Calculated by Keyboard Shortcut": "[文件夹计算命令] 通过快捷键计算",
     "[Calculate Folder Command] Calculation cancelled by user": "[文件夹计算命令] 用户取消了计算",
     "[Calculate Folder Command] Calculation cancelled, result discarded": "[文件夹计算命令] 计算已取消，结果已丢弃",
     "[Calculate Folder Command] Calculation failed: {0}": "[文件夹计算命令] 计算失败：{0}",
