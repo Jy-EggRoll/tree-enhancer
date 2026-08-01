@@ -13,7 +13,7 @@ const TREE_MIME = "application/vnd.code.tree.terminalexplorer";
 function getOverwriteConfirmMessage(existing: string[]): string {
     return existing.length === 1
         ? vscode.l10n.t(
-            "A file or folder with the name '{0}' already exists in the destination folder. Do you want to replace it?",
+            "A file or folder with the name {0} already exists in the destination folder. Do you want to replace it?",
             existing[0],
         )
         : vscode.l10n.t(
@@ -115,8 +115,8 @@ export class TerminalFileDragAndDrop
         if (confirmMove) {
             const targetName = target ? this.getName(target) : targetDir.fsPath;
             const message = valid.length === 1
-                ? vscode.l10n.t("Are you sure you want to move '{0}' into '{1}'?", this.getName(valid[0]), targetName)
-                : vscode.l10n.t("Are you sure you want to move the following {0} files into '{1}'?", String(valid.length), targetName);
+                ? vscode.l10n.t("Are you sure you want to move {0} into {1}?", this.getName(valid[0]), targetName)
+                : vscode.l10n.t("Are you sure you want to move the following {0} files into {1}?", String(valid.length), targetName);
             const choice = await vscode.window.showWarningMessage(
                 message,
                 { modal: true },
@@ -267,7 +267,7 @@ export class TerminalFileDragAndDrop
                         firstUploadedFile = firstUploadedFile ?? destination;
                     } catch (error) {
                         vscode.window.showErrorMessage(
-                            vscode.l10n.t("Failed to upload '{0}': {1}", file.name, error instanceof Error ? error.message : String(error)),
+                            vscode.l10n.t("Failed to upload {0}: {1}", file.name, error instanceof Error ? error.message : String(error)),
                         );
                     }
                 }

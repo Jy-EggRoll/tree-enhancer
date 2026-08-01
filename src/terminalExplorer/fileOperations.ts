@@ -110,7 +110,7 @@ export class FileOperationHandlers {
         // 检查是否有未保存更改：重命名磁盘文件会孤立 dirty editor
         if (!treeItem.isDirectory && this.hasUnsavedChanges(treeItem.uri)) {
             const proceed = await vscode.window.showWarningMessage(
-                vscode.l10n.t("'{0}' has unsaved changes. Renaming will abandon them. Continue?", oldName),
+                vscode.l10n.t("{0} has unsaved changes. Renaming will abandon them. Continue?", oldName),
                 { modal: true },
                 vscode.l10n.t("Continue"),
             );
@@ -212,7 +212,7 @@ export class FileOperationHandlers {
             } catch (error) {
                 const errMsg = error instanceof Error ? error.message : String(error);
                 vscode.window.showErrorMessage(
-                    vscode.l10n.t("Failed to download '{0}': {1}", name, errMsg),
+                    vscode.l10n.t("Failed to download {0}: {1}", name, errMsg),
                 );
             }
         }
@@ -257,7 +257,7 @@ export class FileOperationHandlers {
         } catch (error) {
             vscode.window.showErrorMessage(
                 vscode.l10n.t(
-                    "Failed to list workspace files in '{0}': {1}",
+                    "Failed to list workspace files in {0}: {1}",
                     item.uri.fsPath,
                     error instanceof Error ? error.message : String(error),
                 ),
@@ -268,7 +268,7 @@ export class FileOperationHandlers {
         if (workspaceFiles.length === 0) {
             vscode.window.showWarningMessage(
                 vscode.l10n.t(
-                    "No .code-workspace file found in '{0}'.",
+                    "No .code-workspace file found in {0}.",
                     item.uri.fsPath,
                 ),
             );
@@ -380,7 +380,7 @@ export class FileOperationHandlers {
             // 回收站失败（任何原因），询问用户是否彻底删除
             const permChoice = await vscode.window.showWarningMessage(
                 vscode.l10n.t(
-                    "Trash is not available for '{0}'. Would you like to permanently delete it instead?",
+                    "Trash is not available for {0}. Would you like to permanently delete it instead?",
                     this.getName(item),
                 ),
                 { modal: true },
@@ -414,8 +414,8 @@ export class FileOperationHandlers {
      */
     private getSingleDeleteMessage(name: string, isDirectory: boolean): string {
         return isDirectory
-            ? vscode.l10n.t("Are you sure you want to delete folder '{0}' and all its contents?", name)
-            : vscode.l10n.t("Are you sure you want to delete file '{0}'?", name);
+            ? vscode.l10n.t("Are you sure you want to delete folder {0} and all its contents?", name)
+            : vscode.l10n.t("Are you sure you want to delete file {0}?", name);
     }
 
     private getName(treeItem: TerminalFileTreeItem): string {
@@ -543,7 +543,7 @@ export class FileOperationHandlers {
         // （vscode.window.showInputBox 的 validateInput 支持异步校验）
         return this.checkExists(
             vscode.Uri.joinPath(parentDir, name),
-            vscode.l10n.t("A file or folder with the name '{0}' already exists in this location.", name),
+            vscode.l10n.t("A file or folder with the name {0} already exists in this location.", name),
         );
     }
 
@@ -572,7 +572,7 @@ export class FileOperationHandlers {
         }
         return this.checkExists(
             targetUri,
-            vscode.l10n.t("A file or folder with the name '{0}' already exists in this location.", newName),
+            vscode.l10n.t("A file or folder with the name {0} already exists in this location.", newName),
         );
     }
 
