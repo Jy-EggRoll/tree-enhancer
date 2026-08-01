@@ -169,6 +169,22 @@ export function activate(context: vscode.ExtensionContext) {
                 fileOps.download(getSelection(treeItem));
             },
         );
+        const openFolderInNewWindowCommand = vscode.commands.registerCommand(
+            "tree-enhancer.openFolderInNewWindow",
+            (treeItem?: TerminalFileTreeItem) => {
+                if (treeItem) {
+                    fileOps.openFolderInNewWindow(treeItem);
+                }
+            },
+        );
+        const openWorkspaceInNewWindowCommand = vscode.commands.registerCommand(
+            "tree-enhancer.openWorkspaceInNewWindow",
+            (treeItem?: TerminalFileTreeItem) => {
+                if (treeItem) {
+                    fileOps.openWorkspaceInNewWindow(treeItem);
+                }
+            },
+        );
 
         context.subscriptions.push(newFileCommand);
         context.subscriptions.push(newFolderCommand);
@@ -176,6 +192,8 @@ export function activate(context: vscode.ExtensionContext) {
         context.subscriptions.push(deleteCommand);
         context.subscriptions.push(deletePermanentlyCommand);
         context.subscriptions.push(downloadCommand);
+        context.subscriptions.push(openFolderInNewWindowCommand);
+        context.subscriptions.push(openWorkspaceInNewWindowCommand);
 
         context.subscriptions.push(terminalTracker);
         context.subscriptions.push(terminalTreeProvider);

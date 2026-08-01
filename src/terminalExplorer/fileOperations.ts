@@ -218,6 +218,94 @@ export class FileOperationHandlers {
         }
     }
 
+    /**
+     * 在新窗口中打开文件夹。
+     * 等价于在终端执行 `code <路径>`：通过官方内置命令 vscode.openFolder 实现，
+     * 传入 forceNewWindow: true 强制新窗口打开。
+     * 注意：vscode.openFolder 以同一窗口打开会关闭当前扩展宿主进程，
+     * 因此一律使用新窗口，避免中断本扩展的运行。
+     * 远程环境下传入的 uri 为 vscode-remote://，会在新窗口以远程宿主打开。
+     */
+    public async openFolderInNewWindow(item: TerminalFileTreeItem): Promise<void> {
+        if (!item.isDirectory) {
+            return;
+        }
+        await vscode.commands.executeCommand("vscode.openFolder", item.uri, {
+            forceNewWindow: true,
+        });
+    }
+
+    /**
+     * 在新窗口中打开文件夹下的工作区。
+     * 优先查找所选文件夹顶层的 .code-workspace 文件：
+     *  - 找到多个 → QuickPick 让用户选择
+     *  - 恰好一个 → 直接打开
+     *  - 没有 → 提示未找到
+     * 打开方式与 openFolderInNewWindow 相同（vscode.openFolder 支持 workspace 文件 URI）。
+     */
+    public async openWorkspaceInNewWindow(item: TerminalFileTreeItem): Promise<void> {
+        if (!item.isDirectory) {
+            return;
+        }
+
+        let workspaceFiles: vscode.Uri[] = [];
+        try {
+            const entries = await vscode.workspace.fs.readDirectory(item.uri);
+            workspaceFiles = entries
+                .filter(([name, type]) => type === vscode.FileType.File && name.endsWith(".code-workspace"))
+                .map(([name]) => vscode.Uri.joinPath(item.uri, name));
+        } catch (error) {
+            vscode.window.showErrorMessage(
+                vscode.l10n.t(
+                    "Failed to list workspace files in '{0}': {1}",
+                    item.uri.fsPath,
+                    error instanceof Error ? error.message : String(error),
+                ),
+            );
+            return;
+        }
+
+        if (workspaceFiles.length === 0) {
+            vscode.window.showWarningMessage(
+                vscode.l10n.t(
+                    "No .code-workspace file found in '{0}'.",
+                    item.uri.fsPath,
+                ),
+            );
+            return;
+        }
+
+        let target: vscode.Uri;
+        if (workspaceFiles.length === 1) {
+            target = workspaceFiles[0];
+        } else {
+            const picked = await vscode.window.showQuickPick(
+                workspaceFiles.map((uri) => ({
+                    label: uri.path.split("/").pop() || uri.fsPath,
+                    description: uri.fsPath,
+                    uri,
+                })),
+                {
+                    title: vscode.l10n.t(
+                        "Select a workspace file to open in a new window",
+                    ),
+                    placeHolder: vscode.l10n.t(
+                        "Select a workspace file to open in a new window",
+                    ),
+                    matchOnDescription: true,
+                },
+            );
+            if (!picked) {
+                return;
+            }
+            target = picked.uri;
+        }
+
+        await vscode.commands.executeCommand("vscode.openFolder", target, {
+            forceNewWindow: true,
+        });
+    }
+
     // -----------------------------------------------------------------
     // 私有方法
     // -----------------------------------------------------------------

@@ -22,5 +22,7 @@
     "description.terminalExplorer.rename": "Rename",
     "description.terminalExplorer.delete": "Move to Trash",
     "description.terminalExplorer.deletePermanently": "Delete Permanently",
-    "description.terminalExplorer.download": "Download..."
+    "description.terminalExplorer.download": "Download...",
+    "description.terminalExplorer.openFolderInNewWindow": "Open Folder in New Window",
+    "description.terminalExplorer.openWorkspaceInNewWindow": "Open Workspace in New Window"
 }

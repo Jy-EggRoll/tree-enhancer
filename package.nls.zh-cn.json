@@ -22,5 +22,7 @@
     "description.terminalExplorer.rename": "重命名",
     "description.terminalExplorer.delete": "移至回收站",
     "description.terminalExplorer.deletePermanently": "彻底删除",
-    "description.terminalExplorer.download": "下载..."
+    "description.terminalExplorer.download": "下载...",
+    "description.terminalExplorer.openFolderInNewWindow": "在新窗口中打开文件夹",
+    "description.terminalExplorer.openWorkspaceInNewWindow": "在新窗口中打开文件夹下的工作区"
 }

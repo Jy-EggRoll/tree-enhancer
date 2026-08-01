@@ -55,6 +55,14 @@
                 "command": "tree-enhancer.download",
                 "title": "%description.terminalExplorer.download%",
                 "icon": "$(cloud-download)"
+            },
+            {
+                "command": "tree-enhancer.openFolderInNewWindow",
+                "title": "%description.terminalExplorer.openFolderInNewWindow%"
+            },
+            {
+                "command": "tree-enhancer.openWorkspaceInNewWindow",
+                "title": "%description.terminalExplorer.openWorkspaceInNewWindow%"
             }
         ],
         "configuration": {
@@ -201,6 +209,16 @@
                     "command": "tree-enhancer.download",
                     "when": "view == tree-enhancer.terminalExplorer && remoteName != null",
                     "group": "5_modification@4"
+                },
+                {
+                    "command": "tree-enhancer.openFolderInNewWindow",
+                    "when": "view == tree-enhancer.terminalExplorer && viewItem == folder",
+                    "group": "2_open@1"
+                },
+                {
+                    "command": "tree-enhancer.openWorkspaceInNewWindow",
+                    "when": "view == tree-enhancer.terminalExplorer && viewItem == folder",
+                    "group": "2_open@2"
                 }
             ],
             "view/title": [
