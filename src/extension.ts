@@ -8,6 +8,7 @@ import { StatusBarManager } from "./statusBarManager";
 import { SelectionMonitor } from "./selectionMonitor";
 import { TerminalTracker } from "./terminalExplorer/terminalTracker";
 import { TerminalFileTreeProvider, TerminalFileTreeItem } from "./terminalExplorer/treeDataProvider";
+import { TerminalFileDragAndDrop } from "./terminalExplorer/treeDragAndDrop";
 import { FileOperationHandlers } from "./terminalExplorer/fileOperations";
 import sourceMapSupport from "source-map-support";
 
@@ -79,48 +80,86 @@ export function activate(context: vscode.ExtensionContext) {
             terminalTreeProvider.setCwd(cwd);
         });
 
+        // 排除相关配置变化（followExcludes 开关或 files.exclude）时刷新树
+        const excludeConfigDisposable =
+            vscode.workspace.onDidChangeConfiguration((event) => {
+                if (
+                    event.affectsConfiguration(
+                        "tree-enhancer.terminalExplorer.followExcludes",
+                    ) ||
+                    event.affectsConfiguration("files.exclude")
+                ) {
+                    terminalTreeProvider.onExcludeConfigChanged();
+                }
+            });
+        context.subscriptions.push(excludeConfigDisposable);
+
+        // 创建终端文件树的拖放控制器（树内移动 + OS 拖入上传）
+        // 尊重 explorer.enableDragAndDrop：设为 false 时不注册控制器，禁用拖放
+        // 注：TreeView 的 dragAndDropController 仅在创建时确定，无法在运行时动态切换，
+        // 因此该设置变更需重启生效（官方 explorer 虽实时响应，但扩展 API 无动态接口）。
+        const enableDragAndDrop = vscode.workspace
+            .getConfiguration("explorer")
+            .get<boolean>("enableDragAndDrop", true);
+        const dragAndDrop = enableDragAndDrop
+            ? new TerminalFileDragAndDrop(terminalTreeProvider)
+            : undefined;
+
         const treeView = vscode.window.createTreeView(
             "tree-enhancer.terminalExplorer",
             {
                 treeDataProvider: terminalTreeProvider,
                 showCollapseAll: true,
                 canSelectMany: true,
+                dragAndDropController: dragAndDrop,
             },
         );
 
         // 创建文件操作命令处理器
-        const fileOps = new FileOperationHandlers(terminalTreeProvider);
+        const fileOps = new FileOperationHandlers(
+            terminalTreeProvider,
+            context.globalState,
+        );
 
         // 辅助函数：获取操作目标项列表
-        // 优先使用 TreeView 已选中的项（支持多选）；
-        // 若无选中项则回退到右键菜单传递的单个项（单点右键）
+        // 对齐官方资源管理器右键语义（treeView.ts onContextMenu）：
+        // 右键点击不会改变 treeView.selection（selection 只读），但命令收到的 treeItem 是右键项。
+        //  - 右键项在当前选中集中 → 操作整个选中集（多选批量）
+        //  - 右键项不在选中集中 → 只操作该右键项
+        // 无右键项（标题栏按钮触发）→ 使用当前选中集
         const getSelection = (treeItem?: TerminalFileTreeItem): TerminalFileTreeItem[] => {
             const selection = [...treeView.selection] as TerminalFileTreeItem[];
-            if (selection.length > 0) {
-                return selection;
+            if (treeItem) {
+                const isInSelection = selection.some(
+                    (item) => item.uri.toString() === treeItem.uri.toString(),
+                );
+                return isInSelection ? selection : [treeItem];
             }
-            return treeItem ? [treeItem] : [];
+            return selection;
         };
 
         // 注册文件操作命令
-        // newFile/newFolder：标题栏触发（无右键项）时固定创建在当前 CWD 根目录；
-        // 右键菜单触发时沿用选中项所在目录。其余命令支持多选。
+        // 注意：
+        //  - newFile/newFolder/rename 只作用于"右键项所在位置"，不应受选中集影响。
+        //    若传 getSelection(treeItem)，多选时（如选中 [A,B] 再右键 B）
+        //    可能定位/重命名到选中集首项 A，与用户意图不符。
+        //  - delete/download 支持多选批量，故传整个选中集。
         const newFileCommand = vscode.commands.registerCommand(
             "tree-enhancer.newFile",
             (treeItem?: TerminalFileTreeItem) => {
-                fileOps.newFile(treeItem ? getSelection(treeItem) : []);
+                fileOps.newFile(treeItem ? [treeItem] : []);
             },
         );
         const newFolderCommand = vscode.commands.registerCommand(
             "tree-enhancer.newFolder",
             (treeItem?: TerminalFileTreeItem) => {
-                fileOps.newFolder(treeItem ? getSelection(treeItem) : []);
+                fileOps.newFolder(treeItem ? [treeItem] : []);
             },
         );
         const renameCommand = vscode.commands.registerCommand(
             "tree-enhancer.rename",
             (treeItem?: TerminalFileTreeItem) => {
-                fileOps.rename(getSelection(treeItem));
+                fileOps.rename(treeItem ? [treeItem] : []);
             },
         );
         const deleteCommand = vscode.commands.registerCommand(
@@ -135,12 +174,19 @@ export function activate(context: vscode.ExtensionContext) {
                 fileOps.deletePermanently(getSelection(treeItem));
             },
         );
+        const downloadCommand = vscode.commands.registerCommand(
+            "tree-enhancer.download",
+            (treeItem?: TerminalFileTreeItem) => {
+                fileOps.download(getSelection(treeItem));
+            },
+        );
 
         context.subscriptions.push(newFileCommand);
         context.subscriptions.push(newFolderCommand);
         context.subscriptions.push(renameCommand);
         context.subscriptions.push(deleteCommand);
         context.subscriptions.push(deletePermanentlyCommand);
+        context.subscriptions.push(downloadCommand);
 
         context.subscriptions.push(terminalTracker);
         context.subscriptions.push(terminalTreeProvider);
