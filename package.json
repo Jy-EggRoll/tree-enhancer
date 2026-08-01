@@ -235,6 +235,7 @@
                 {
                     "id": "tree-enhancer.terminalExplorer",
                     "name": "%description.terminalExplorer%",
+                    "icon": "$(terminal)",
                     "when": "config.tree-enhancer.terminalExplorer.enabled"
                 }
             ]
