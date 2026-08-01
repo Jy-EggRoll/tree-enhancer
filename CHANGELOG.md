@@ -1,5 +1,12 @@
 # 更新日志 | Change Log
 
+## 2.1.0
+
+- ✨ feat: 终端文件浏览器回归资源管理器侧栏，不再占用独立活动栏图标。无活动终端时自动回退显示用户主目录，确保视图始终可用 | Terminal File Explorer returns to the Explorer sidebar — no longer occupies a separate Activity Bar icon. Falls back to the user's home directory when no active terminal is present, ensuring the view is always available
+- ✨ feat: 终端文件树文件夹右键菜单新增"计算文件夹大小"，快捷键 `Alt+Enter` 同步移除 | Added "Calculate Folder Size" to the terminal file tree folder context menu; the `Alt+Enter` keyboard shortcut removed
+- 🐛 fix: 修复无工作区且无活动终端时终端文件树显示为空的问题，新增用户主目录作为终态回退 | Fixed the terminal file tree showing empty content when no workspace folder is open and no terminal is active — the user's home directory is used as the final fallback
+- 🔧 config: 许可证修正为 GPLv3；`.vscodeignore` 排除维护者内部文件，精简 vsix 包 | License corrected to GPLv3; `.vscodeignore` excludes maintainer-internal files to slim the vsix package
+
 ## 2.0.0
 
 - ✨ feat: 全新终端文件浏览器：在资源管理器侧栏新增自定义文件树，实时追踪终端工作目录（CWD），切换终端自动跟随；集新建、重命名、删除、拖放移动、拖入上传、远程一键下载于一体 | All-new Terminal File Explorer: a custom tree in the Explorer sidebar that tracks the terminal's working directory (CWD) and follows terminal switches, combining create, rename, delete, drag-and-drop move, drop-in upload, and one-click remote download

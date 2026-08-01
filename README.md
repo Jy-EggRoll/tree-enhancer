@@ -8,12 +8,12 @@
 
 ## 功能演示
 
-- 终端文件浏览器：在活动栏中新增一个独立的文件管理器图标，其自定义文件树始终追随当前终端的工作目录（CWD）。切换终端时树自动跟随切换，是您"终端的文件管理器"。即使未打开工作区，只要 VSCode 内有终端打开，也能正常使用。
+- 终端文件浏览器：在资源管理器侧栏中新增一个自定义文件树，始终追随当前终端的工作目录（CWD）。切换终端时树自动跟随切换，是您"终端的文件管理器"。
 
     - 支持新建文件 / 新建文件夹、重命名、删除（回收站与彻底删除），支持多选批量删除
     - 支持拖放：树内移动文件，或从系统拖入文件进行上传
     - 远程模式下支持将文件下载到本地
-    - 文件夹右键菜单支持在新窗口中打开该文件夹，或打开该文件夹下的 `.code-workspace` 工作区
+    - 文件夹右键菜单支持计算文件夹大小、在新窗口中打开该文件夹，或打开该文件夹下的 `.code-workspace` 工作区
     - 可通过设置开启遵循 `files.exclude` 排除规则（默认关闭，显示全部文件与文件夹）
 
     <!-- TODO: 待补充截图 -->
@@ -92,12 +92,12 @@
 
 ## Feature Demonstration
 
-- Terminal File Explorer: Adds an independent file manager icon in the Activity Bar whose custom file tree always follows the working directory (CWD) of the current terminal. The tree switches automatically when you switch terminals — it is your "file manager for the terminal". Works even when no workspace folder is open, as long as a terminal is open in VSCode.
+- Terminal File Explorer: A custom file tree is added to the Explorer sidebar that always follows the working directory (CWD) of the current terminal. The tree switches automatically when you switch terminals — it is your "file manager for the terminal".
 
     - Create new files / new folders, rename, delete (Move to Trash and Delete Permanently), with multi-select batch delete support
     - Drag and drop support: move files within the tree, or drag files in from your system to upload
     - In remote mode, files can be downloaded to your local machine
-    - Folder context menu supports opening the folder in a new window, or opening a `.code-workspace` workspace file under the folder
+    - Folder context menu supports calculating folder size, opening the folder in a new window, or opening a `.code-workspace` workspace file under the folder
     - Optionally respects the `files.exclude` patterns via settings (off by default; shows all files and folders)
 
     <!-- TODO: add screenshot -->

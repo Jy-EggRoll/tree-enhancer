@@ -131,6 +131,7 @@ export class TerminalFileTreeProvider
      * @param uri 新的 CWD URI，或 undefined 表示清空树
      */
     public setCwd(uri: vscode.Uri | undefined): void {
+        if (!uri) return;
         this._cwd = uri;
         this._onDidChangeTreeData.fire();
 

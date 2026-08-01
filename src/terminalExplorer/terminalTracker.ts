@@ -118,13 +118,28 @@ export class TerminalTracker implements vscode.Disposable {
     private refresh(): void {
         const terminal = vscode.window.activeTerminal;
         if (!terminal) {
-            log.debug(
-                vscode.l10n.t(
-                    "[Terminal Explorer] No active terminal, hiding tree",
-                ),
-            );
-            this._currentCwd = undefined;
-            this._onDidChangeCwd.fire(undefined);
+            // 无活动终端时，以工作区根目录或用户主目录作为回退，
+            // 确保树始终有内容可展示，不依赖终端存在。
+            const fallback =
+                vscode.workspace.workspaceFolders?.[0]?.uri ??
+                vscode.Uri.file(
+                    process.env.HOME ||
+                        process.env.USERPROFILE ||
+                        "/",
+                );
+            if (
+                !this._currentCwd ||
+                this._currentCwd.fsPath !== fallback.fsPath
+            ) {
+                log.debug(
+                    vscode.l10n.t(
+                        "[Terminal Explorer] No active terminal, fallback to: {0}",
+                        fallback.fsPath,
+                    ),
+                );
+                this._currentCwd = fallback;
+                this._onDidChangeCwd.fire(fallback);
+            }
             return;
         }
 
