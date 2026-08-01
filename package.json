@@ -268,7 +268,7 @@
         "信息"
     ],
     "l10n": "./l10n",
-    "license": "MIT",
+    "license": "SEE LICENSE IN LICENSE",
     "main": "./dist/extension.js",
     "name": "eggroll-tree-enhancer",
     "publisher": "Jy-EggRoll",

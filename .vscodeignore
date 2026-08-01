@@ -27,6 +27,3 @@ AGENTS.md
 RELEASE.md
 pnpm-workspace.yaml
 scripts/
-
-# 排除许可证文件（package.json 中 license 字段已声明 MIT）
-LICENSE.txt
