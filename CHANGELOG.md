@@ -1,5 +1,13 @@
 # 更新日志 | Change Log
 
+## 2.0.0
+
+- ✨ feat: 全新终端文件浏览器：在资源管理器侧栏新增自定义文件树，实时追踪终端工作目录（CWD），切换终端自动跟随；集新建、重命名、删除、拖放移动、拖入上传、远程一键下载于一体 | All-new Terminal File Explorer: a custom tree in the Explorer sidebar that tracks the terminal's working directory (CWD) and follows terminal switches, combining create, rename, delete, drag-and-drop move, drop-in upload, and one-click remote download
+- ✨ feat: 文件夹右键菜单新增"在新窗口中打开文件夹"与"在新窗口中打开文件夹下的工作区" | Added "Open Folder in New Window" and "Open Workspace in New Window" to the folder context menu
+- 🔧 config: 配置系统全面重构，所有设置修改即时生效，无需重启 | Configuration system fully reworked — every setting change now applies instantly without restarting
+- 🔨 chore: 基于 VSCode 终端 Shell Integration API 重构底层架构，代码更简洁高效 | Rebuilt the underlying architecture on VSCode's terminal Shell Integration API for a cleaner, more efficient codebase
+- 🔧 config: 文件信息自动显示默认改为关闭；下载默认定位源文件自身路径，避免远程误操作产生副本 | File info auto-display now defaults to off; downloads default to the source file path to prevent accidental remote copies
+
 ## 1.11.0
 
 - ✨ feat: 新增文件选中监控与状态栏统一管理 | Added file selection monitoring and unified status bar management
