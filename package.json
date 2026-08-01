@@ -223,12 +223,21 @@
                 }
             ]
         },
+        "viewsContainers": {
+            "activitybar": [
+                {
+                    "id": "tree-enhancer",
+                    "title": "%description.terminalExplorer%",
+                    "icon": "$(file-code)"
+                }
+            ]
+        },
         "views": {
-            "explorer": [
+            "tree-enhancer": [
                 {
                     "id": "tree-enhancer.terminalExplorer",
                     "name": "%description.terminalExplorer%",
-                    "icon": "$(terminal)",
+                    "icon": "$(file-code)",
                     "when": "config.tree-enhancer.terminalExplorer.enabled"
                 }
             ]

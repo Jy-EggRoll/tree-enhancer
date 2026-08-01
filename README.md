@@ -8,7 +8,7 @@
 
 ## 功能演示
 
-- 终端文件浏览器：在 Explorer 侧栏中新增一个自定义文件树，始终追随当前终端的工作目录（CWD）。切换终端时树自动跟随切换，是您"终端的文件管理器"。
+- 终端文件浏览器：在活动栏中新增一个独立的文件管理器图标，其自定义文件树始终追随当前终端的工作目录（CWD）。切换终端时树自动跟随切换，是您"终端的文件管理器"。即使未打开工作区，只要 VSCode 内有终端打开，也能正常使用。
 
     - 支持新建文件 / 新建文件夹、重命名、删除（回收站与彻底删除），支持多选批量删除
     - 支持拖放：树内移动文件，或从系统拖入文件进行上传
@@ -92,7 +92,7 @@
 
 ## Feature Demonstration
 
-- Terminal File Explorer: A custom file tree is added to the Explorer sidebar that always follows the working directory (CWD) of the current terminal. The tree switches automatically when you switch terminals — it is your "file manager for the terminal".
+- Terminal File Explorer: Adds an independent file manager icon in the Activity Bar whose custom file tree always follows the working directory (CWD) of the current terminal. The tree switches automatically when you switch terminals — it is your "file manager for the terminal". Works even when no workspace folder is open, as long as a terminal is open in VSCode.
 
     - Create new files / new folders, rename, delete (Move to Trash and Delete Permanently), with multi-select batch delete support
     - Drag and drop support: move files within the tree, or drag files in from your system to upload

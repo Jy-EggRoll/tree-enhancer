@@ -15,7 +15,7 @@
     "description.largeFileThreshold": "Large file recognition threshold in user-configured units (MB or MiB). Files exceeding this size will display a 'L' badge. Set to 0 to disable large file recognition.",
     "description.startupDelay": "Delay (in seconds) before the extension starts working after VSCode startup. Set to 0 for no delay (calculates immediately on startup).",
     "description.terminalExplorer": "File Manager (Terminal)",
-    "description.terminalExplorer.enabled": "Enable/disable the Terminal File Explorer view. When enabled, a custom file tree will appear in the Explorer sidebar that follows the current terminal's working directory.",
+    "description.terminalExplorer.enabled": "Enable/disable the Terminal File Explorer view. When enabled, a custom file tree will appear as an independent icon in the Activity Bar that follows the current terminal's working directory. Works even when no workspace folder is open, as long as a terminal is open in VSCode.",
     "description.terminalExplorer.followExcludes": "Whether the Terminal File Explorer should respect the workspace's files.exclude patterns. When disabled (default), all files and folders in the terminal's working directory are shown, including ones excluded by the Explorer (e.g. .git). When enabled, the tree hides entries matching files.exclude, matching the Explorer's display rules.",
     "description.terminalExplorer.newFile": "New File",
     "description.terminalExplorer.newFolder": "New Folder",
