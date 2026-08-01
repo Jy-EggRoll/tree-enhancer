@@ -180,12 +180,11 @@ export class FileOperationHandlers {
         for (const item of items) {
             const name = this.getName(item);
 
-            // 默认保存路径：用户主目录 + 文件名
-            // 不做下载目录记忆，避免跨会话/远程环境串扰导致路径错乱
-            const defaultUri = vscode.Uri.joinPath(
-                vscode.Uri.file(this.getDefaultDirectory()),
-                name,
-            );
+            // 默认保存路径：源文件自身的路径。
+            // 对话框默认定位在远程文件系统的源文件位置；若用户直接确认，
+            // destination == item.uri，fs.copy 复制到自身不会产生副本，无副作用。
+            // 要真正保存到物理机，用户需手动切换到对话框的"查看本地"选择路径。
+            const defaultUri = item.uri;
 
             const destination = await vscode.window.showSaveDialog({
                 saveLabel: vscode.l10n.t("Download"),
@@ -437,14 +436,6 @@ export class FileOperationHandlers {
 
             inputBox.show();
         });
-    }
-
-    /**
-     * 获取默认下载目录（用户主目录）。
-     * 对齐官方 FileDownload 默认路径行为（native 使用默认文件/文件夹路径）。
-     */
-    private getDefaultDirectory(): string {
-        return process.env.HOME || process.env.USERPROFILE || ".";
     }
 
     /**
