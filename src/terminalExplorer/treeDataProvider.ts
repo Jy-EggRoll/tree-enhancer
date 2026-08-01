@@ -7,12 +7,16 @@ const log = getLogger();
 /**
  * 终端文件树节点，复用 VSCode 内置 ThemeIcon 以保持与原生文件浏览器一致的视觉风格。
  * 目录节点可折叠（懒加载），文件节点可直接点击打开。
+ * 符号链接的箭头标识由 FileDecorationProvider 统一提供（同官方位于行最右侧），此处不处理。
  */
 export class TerminalFileTreeItem extends vscode.TreeItem {
     public readonly uri: vscode.Uri;
     public readonly isDirectory: boolean;
 
-    constructor(uri: vscode.Uri, isDirectory: boolean) {
+    constructor(
+        uri: vscode.Uri,
+        isDirectory: boolean,
+    ) {
         const name = uri.path.split("/").pop() || "";
         super(
             name,
@@ -24,16 +28,12 @@ export class TerminalFileTreeItem extends vscode.TreeItem {
         this.uri = uri;
         this.isDirectory = isDirectory;
 
-        // 使用 VSCode 内置图标，与原生文件浏览器风格一致
         this.iconPath = isDirectory
             ? vscode.ThemeIcon.Folder
             : vscode.ThemeIcon.File;
 
-        // 设置 resourceUri 以复用用户的文件图标主题
-        // 当 ThemeIcon + resourceUri 同时存在时，VSCode 根据文件扩展名匹配图标（如 .ts 显示 TS 图标）
         this.resourceUri = uri;
 
-        // 文件节点可点击打开（TreeView 自动根据 workbench.list.openMode 决定单击/双击触发）
         if (!isDirectory) {
             this.command = {
                 command: "vscode.open",
@@ -42,10 +42,7 @@ export class TerminalFileTreeItem extends vscode.TreeItem {
             };
         }
 
-        // contextValue 用于右键菜单的条件匹配
         this.contextValue = isDirectory ? "folder" : "file";
-
-        // 悬浮提示显示完整路径
         this.tooltip = uri.fsPath;
     }
 }
@@ -159,7 +156,8 @@ export class TerminalFileTreeProvider
     private createFileWatcher(cwd: vscode.Uri): void {
         try {
             const pattern = new vscode.RelativePattern(cwd, "*");
-            this._fileWatcher = vscode.workspace.createFileSystemWatcher(pattern);
+            this._fileWatcher =
+                vscode.workspace.createFileSystemWatcher(pattern);
 
             // 非递归监控仅监听 CWD 直接子节点，与懒加载树视图可见范围匹配
             this._fileWatcher.onDidChange(() => {
@@ -208,6 +206,7 @@ export class TerminalFileTreeProvider
     /**
      * 获取子节点。根节点（element 为 undefined）返回 CWD 下的内容，
      * 其他节点返回对应目录下的内容。
+     * readDirectory 对符号链接返回 目标类型|SymbolicLink 的位掩码，\n     * 故目录判断改用位运算而非 ===，避免符号链接目录（Directory|SymbolicLink=66）被误判。
      */
     public async getChildren(
         element?: TerminalFileTreeItem,
@@ -219,25 +218,30 @@ export class TerminalFileTreeProvider
 
         try {
             const entries = await vscode.workspace.fs.readDirectory(dirUri);
-            return entries
-                .map(([name, type]) => {
-                    const uri = vscode.Uri.joinPath(dirUri, name);
-                    return new TerminalFileTreeItem(
-                        uri,
-                        type === vscode.FileType.Directory,
-                    );
-                })
-                // 遵循 files.exclude（仅当 followExcludes 开关开启时）
-                .filter((item) => !this.isExcluded(item.uri))
-                .sort((a, b) => {
-                    // 目录优先，同类型按名称字母序排列
-                    if (a.isDirectory !== b.isDirectory) {
-                        return a.isDirectory ? -1 : 1;
-                    }
-                    return (a.label as string).localeCompare(
-                        b.label as string,
-                    );
-                });
+            const items = entries.map(([name, type]) => {
+                const uri = vscode.Uri.joinPath(dirUri, name);
+                const isDirectory =
+                    (type & vscode.FileType.Directory) !== 0;
+                return new TerminalFileTreeItem(
+                    uri,
+                    isDirectory,
+                );
+            });
+
+            return (
+                items
+                    // 遵循 files.exclude（仅当 followExcludes 开关开启时）
+                    .filter((item) => !this.isExcluded(item.uri))
+                    .sort((a, b) => {
+                        // 目录优先，同类型按名称字母序排列
+                        if (a.isDirectory !== b.isDirectory) {
+                            return a.isDirectory ? -1 : 1;
+                        }
+                        return (a.label as string).localeCompare(
+                            b.label as string,
+                        );
+                    })
+            );
         } catch {
             // 权限不足或目录不可达时静默返回空数组
             return [];
