@@ -188,7 +188,9 @@ export class FileOperationHandlers {
 
             const destination = await vscode.window.showSaveDialog({
                 saveLabel: vscode.l10n.t("Download"),
-                title: vscode.l10n.t("Choose Where to Download"),
+                title: vscode.l10n.t(
+                    "The filesystem is still remote. To download to your local machine, choose a local location.",
+                ),
                 defaultUri,
             });
             if (!destination) {
