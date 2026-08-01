@@ -113,7 +113,7 @@ export class ConfigManager {
      * 获取文件信息自动显示是否启用
      */
     public static getFileInfoEnabled(): boolean {
-        return this.get<boolean>("fileInfo.enabled", true);
+        return this.get<boolean>("fileInfo.enabled", false);
     }
 
     /**

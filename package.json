@@ -65,7 +65,7 @@
                     "type": "string"
                 },
                 "tree-enhancer.fileInfo.enabled": {
-                    "default": true,
+                    "default": false,
                     "description": "%description.fileInfo.enabled%",
                     "type": "boolean"
                 },

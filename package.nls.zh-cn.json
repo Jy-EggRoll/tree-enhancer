@@ -9,7 +9,7 @@
     "description.fileTemplate": "文件悬浮提示的显示模板，建议在 settings.json 中设置。支持的占位符：\n- {name}：文件名\n- {size}：自动单位的文件大小\n- {rawSize}：原始文件大小（以字节为单位）\n- {modifiedTime}：格式化的修改时间",
     "description.folderCalculator.dismissDelay": "文件夹计算结果在状态栏自动消失的延迟时间（秒），范围：0-3600 秒，设为 0 表示不自动消失，只能通过手动点击来关闭。",
     "description.folderCalculator.statusBarTemplate": "文件夹计算结果在状态栏的显示模板。支持的占位符：\n- {folderName}：文件夹名称\n- {totalSize}：自动单位的总大小\n- {fileCount}：文件数量\n- {folderCount}：文件夹数量\n- {modifiedTime}：最后修改时间",
-    "description.fileInfo.enabled": "启用/禁用在打开或切换文件时自动在状态栏显示文件信息",
+    "description.fileInfo.enabled": "启用/禁用在打开或切换文件时自动在状态栏显示文件信息（默认关闭）",
     "description.imageFileTemplate": "图片文件悬浮提示的显示模板，建议在 settings.json 中设置。支持的占位符：\n- {name}：文件名\n- {size}：自动单位的文件大小\n- {rawSize}：原始文件大小（以字节为单位）\n- {modifiedTime}：格式化的修改时间\n- {resolution}：图片分辨率\n- {width}：图片宽度\n- {height}：图片高度",
     "description.imageResolutionTemplate": "图片分辨率信息的显示模板。支持的占位符：\n- {width}：图片宽度（像素）\n- {height}：图片高度（像素）",
     "description.largeFileThreshold": "大文件识别阈值，使用用户设定的单位（MB 或 MiB）。超过此大小的文件将显示 L 标识。设置为 0 表示关闭大文件识别功能。",
