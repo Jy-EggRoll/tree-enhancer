@@ -105,9 +105,9 @@ export function activate(context: vscode.ExtensionContext) {
         );
 
         // 创建文件操作命令处理器
+        // 下载仅远程模式可用，不再需要 globalState（无下载目录记忆）
         const fileOps = new FileOperationHandlers(
             terminalTreeProvider,
-            context.globalState,
         );
 
         // 辅助函数：获取操作目标项列表

@@ -199,7 +199,7 @@
                 },
                 {
                     "command": "tree-enhancer.download",
-                    "when": "view == tree-enhancer.terminalExplorer",
+                    "when": "view == tree-enhancer.terminalExplorer && remoteName != null",
                     "group": "5_modification@4"
                 }
             ],

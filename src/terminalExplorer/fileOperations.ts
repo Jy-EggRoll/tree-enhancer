@@ -5,23 +5,15 @@ import { getLogger } from "../utils/func";
 const log = getLogger();
 
 /**
- * 记忆上次下载目录的全局存储键，行为对齐官方 Explorer 的
- * LAST_USED_DOWNLOAD_PATH_STORAGE_KEY（官方存储于 APPLICATION scope）。
- */
-const LAST_DOWNLOAD_PATH_KEY = "tree-enhancer.terminalExplorer.downloadPath";
-
-/**
  * 文件操作命令处理器。
  * 为终端文件浏览器提供新建、重命名、删除、下载等基础文件操作。
  * 支持多选批量操作（仅适用于 delete、deletePermanently、download）。
  */
 export class FileOperationHandlers {
     private treeProvider: TerminalFileTreeProvider;
-    private globalState: vscode.Memento;
 
-    constructor(treeProvider: TerminalFileTreeProvider, globalState: vscode.Memento) {
+    constructor(treeProvider: TerminalFileTreeProvider) {
         this.treeProvider = treeProvider;
-        this.globalState = globalState;
     }
 
     /**
@@ -173,8 +165,10 @@ export class FileOperationHandlers {
 
     /**
      * 下载文件/文件夹到本地。
+     * 仅在 VSCode 远程模式下可见（package.json 菜单 when: remoteName != null），
+     * 物理机本地文件系统不提供下载（本地文件复制无意义）。
      * 行为对齐官方 Explorer 的 explorer.download（FileDownload.doDownloadNative）：
-     *  - 弹出保存对话框，默认目录记忆上次下载位置
+     *  - 弹出保存对话框，默认目录为用户主目录
      *  - 通过 workspace.fs.copy 将远程文件复制到本地目标
      *  - 多选时逐个弹窗，用户取消一个则取消剩余
      */
@@ -186,17 +180,12 @@ export class FileOperationHandlers {
         for (const item of items) {
             const name = this.getName(item);
 
-            // 计算默认保存路径：记忆的下载目录 + 文件名；无记忆时回退到默认位置
-            const lastDownloadPath = this.globalState.get<string>(LAST_DOWNLOAD_PATH_KEY);
-            let defaultUri: vscode.Uri;
-            if (lastDownloadPath) {
-                defaultUri = vscode.Uri.joinPath(vscode.Uri.file(lastDownloadPath), name);
-            } else {
-                defaultUri = vscode.Uri.joinPath(
-                    vscode.Uri.file(this.getDefaultDirectory()),
-                    name,
-                );
-            }
+            // 默认保存路径：用户主目录 + 文件名
+            // 不做下载目录记忆，避免跨会话/远程环境串扰导致路径错乱
+            const defaultUri = vscode.Uri.joinPath(
+                vscode.Uri.file(this.getDefaultDirectory()),
+                name,
+            );
 
             const destination = await vscode.window.showSaveDialog({
                 saveLabel: vscode.l10n.t("Download"),
@@ -207,12 +196,6 @@ export class FileOperationHandlers {
                 // 用户取消一个下载，取消剩余（与官方 #86100 行为一致）
                 return;
             }
-
-            // 记忆本次下载目录，供下次使用（等价官方 dirname(destination).fsPath）
-            await this.globalState.update(
-                LAST_DOWNLOAD_PATH_KEY,
-                vscode.Uri.joinPath(destination, "..").fsPath,
-            );
 
             try {
                 await vscode.window.withProgress(
