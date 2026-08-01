@@ -92,6 +92,10 @@ export class FileUtils {
         return (stat.type & vscode.FileType.File) !== 0;
     }
 
+    public static isSymbolicLink(stat: vscode.FileStat): boolean {
+        return (stat.type & vscode.FileType.SymbolicLink) !== 0;
+    }
+
     public static isDirectoryType(fileType: vscode.FileType): boolean {
         return (fileType & vscode.FileType.Directory) !== 0;
     }

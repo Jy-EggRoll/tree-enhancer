@@ -1,5 +1,4 @@
 import * as vscode from "vscode";
-import * as fs from "fs";
 import { StatusBarManager } from "./statusBarManager";
 import { Formatters } from "./utils/formatters";
 import { getLogger } from "./utils/func";
@@ -46,12 +45,12 @@ export class SelectionMonitor implements vscode.Disposable {
      * 刷新当前文件的状态栏信息并重置超时
      * 供文件变更事件回调与配置监听（日期格式/大小单位/消失延迟等）调用
      */
-    public refreshCurrentFile(): void {
+    public async refreshCurrentFile(): Promise<void> {
         if (!this.enabled) {
             return;
         }
         if (this.currentUri) {
-            this.handleFileSelected(this.currentUri);
+            await this.handleFileSelected(this.currentUri);
         }
     }
 
@@ -59,25 +58,25 @@ export class SelectionMonitor implements vscode.Disposable {
      * 若当前激活的编辑器是文件，则显示其信息。
      * 供启动时与重新开启时（setEnabled(true)）调用。
      */
-    private handleActiveEditor(): void {
+    private async handleActiveEditor(): Promise<void> {
         if (!this.enabled) {
             return;
         }
         const activeEditor = vscode.window.activeTextEditor;
         if (activeEditor && activeEditor.document.uri.scheme === "file") {
-            this.handleFileSelected(activeEditor.document.uri);
+            await this.handleFileSelected(activeEditor.document.uri);
         }
     }
 
     private startListening(): void {
         // 监听当前激活的编辑器变化
         // 用户打开文件、切换标签页、关闭文件时触发
-        const disposable = vscode.window.onDidChangeActiveTextEditor((editor) => {
+        const disposable = vscode.window.onDidChangeActiveTextEditor(async (editor) => {
             if (!this.enabled) {
                 return;
             }
             if (editor && editor.document.uri.scheme === "file") {
-                this.handleFileSelected(editor.document.uri);
+                await this.handleFileSelected(editor.document.uri);
             } else if (!editor) {
                 // 所有编辑器已关闭，隐藏文件信息
                 this.currentUri = undefined;
@@ -94,13 +93,13 @@ export class SelectionMonitor implements vscode.Disposable {
     /**
      * 处理文件被选中
      */
-    private handleFileSelected(uri: vscode.Uri): void {
+    private async handleFileSelected(uri: vscode.Uri): Promise<void> {
         this.currentUri = uri;
         const filePath = uri.fsPath;
         const fileName = filePath.split(/[/\\]/).pop() || filePath;
 
         try {
-            const stat = fs.statSync(filePath);
+            const stat = await vscode.workspace.fs.stat(uri);
             const fileSize = Formatters.formatFileSize(stat.size);
             const modifiedTime = Formatters.formatDate(new Date(stat.mtime));
 
