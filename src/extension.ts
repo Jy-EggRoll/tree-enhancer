@@ -50,9 +50,19 @@ export function activate(context: vscode.ExtensionContext) {
     );
 
     // 注册文件夹计算命令
+    // 兼容两种调用来源的传参：
+    //  - 官方资源管理器右键/快捷键：传 vscode.Uri
+    //  - 终端文件树右键（view/item/context）：传 TerminalFileTreeItem
+    // 统一在此归一化为 Uri，再交给处理器执行。
     const calculateCommand = vscode.commands.registerCommand(
         "tree-enhancer.calculateFolder",
-        (uri?: vscode.Uri) => calculateFolderCommandHandler.execute(uri),
+        (target?: vscode.Uri | TerminalFileTreeItem) => {
+            const uri =
+                target instanceof vscode.Uri
+                    ? target
+                    : target?.uri;
+            calculateFolderCommandHandler.execute(uri);
+        },
     );
 
     // 注册 dismiss 命令

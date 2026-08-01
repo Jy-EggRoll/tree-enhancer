@@ -210,6 +210,11 @@
                     "command": "tree-enhancer.openWorkspaceInNewWindow",
                     "group": "2_open@2",
                     "when": "view == tree-enhancer.terminalExplorer && viewItem == folder"
+                },
+                {
+                    "command": "tree-enhancer.calculateFolder",
+                    "group": "3_calculation@1",
+                    "when": "view == tree-enhancer.terminalExplorer && viewItem == folder"
                 }
             ],
             "view/title": [
