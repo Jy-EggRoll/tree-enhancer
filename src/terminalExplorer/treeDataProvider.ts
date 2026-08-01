@@ -7,7 +7,8 @@ const log = getLogger();
 /**
  * 终端文件树节点，复用 VSCode 内置 ThemeIcon 以保持与原生文件浏览器一致的视觉风格。
  * 目录节点可折叠（懒加载），文件节点可直接点击打开。
- * 符号链接的箭头标识由 FileDecorationProvider 统一提供（同官方位于行最右侧），此处不处理。
+ * 符号链接的行最右侧 ⤷ 徽标与 tooltip 由 FileDecorationProvider 统一提供
+ *（工作区内走官方、工作区外走自建逻辑），此处只负责常规路径显示。
  */
 export class TerminalFileTreeItem extends vscode.TreeItem {
     public readonly uri: vscode.Uri;
@@ -206,7 +207,7 @@ export class TerminalFileTreeProvider
     /**
      * 获取子节点。根节点（element 为 undefined）返回 CWD 下的内容，
      * 其他节点返回对应目录下的内容。
-     * readDirectory 对符号链接返回 目标类型|SymbolicLink 的位掩码，\n     * 故目录判断改用位运算而非 ===，避免符号链接目录（Directory|SymbolicLink=66）被误判。
+     * readDirectory 对符号链接返回 目标类型|SymbolicLink 的位掩码，故目录判断改用位运算而非 ===，避免符号链接目录（Directory|SymbolicLink=66）被误判。
      */
     public async getChildren(
         element?: TerminalFileTreeItem,

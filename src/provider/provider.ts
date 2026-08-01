@@ -43,12 +43,18 @@ export class FileDecorationProvider implements vscode.FileDecorationProvider {
             const fileName = FileUtils.getFileName(uri.fsPath);
             const config = ConfigManager.getConfig();
 
-            // 符号链接（文件或目录）：仅加 right badge 箭头与本地化 tooltip，不改变图标
+            // 符号链接：工作区外由我们提供 ⤷ 徽标 + 本地化 tooltip；
+            // 工作区内由官方 ExplorerDecorationsProvider 处理，我们跳过避免双层叠加。
             if (FileUtils.isSymbolicLink(stats)) {
-                return {
-                    badge: "\u2937",
-                    tooltip: vscode.l10n.t("Symbolic Link"),
-                };
+                const inWorkspace =
+                    vscode.workspace.getWorkspaceFolder(uri) !== undefined;
+                if (!inWorkspace) {
+                    return {
+                        badge: "\u2937",
+                        tooltip: vscode.l10n.t("Symbolic Link"),
+                    };
+                }
+                return undefined;
             }
 
             // 普通文件夹直接跳过装饰，性能优先

@@ -14,6 +14,7 @@
     - 支持拖放：树内移动文件，或从系统拖入文件进行上传
     - 远程模式下支持将文件下载到本地
     - 文件夹右键菜单支持计算文件夹大小、在新窗口中打开该文件夹，或打开该文件夹下的 `.code-workspace` 工作区
+    - 符号链接文件与文件夹行最右侧显示官方同款 ⤷ 箭头标识，悬浮时显示"符号链接" tooltip | Symlinks show the official ⤷ arrow badge on the far right, with a localized tooltip
     - 可通过设置开启遵循 `files.exclude` 排除规则（默认关闭，显示全部文件与文件夹）
 
     <!-- TODO: 待补充截图 -->
@@ -98,6 +99,7 @@
     - Drag and drop support: move files within the tree, or drag files in from your system to upload
     - In remote mode, files can be downloaded to your local machine
     - Folder context menu supports calculating folder size, opening the folder in a new window, or opening a `.code-workspace` workspace file under the folder
+    - Symbolic links show the official ⤷ arrow badge on the far right, with a localized "Symbolic Link" tooltip
     - Optionally respects the `files.exclude` patterns via settings (off by default; shows all files and folders)
 
     <!-- TODO: add screenshot -->

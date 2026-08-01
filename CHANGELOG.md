@@ -4,6 +4,10 @@
 
 - ✨ feat: 终端文件浏览器回归资源管理器侧栏，不再占用独立活动栏图标。无活动终端时自动回退显示用户主目录，确保视图始终可用 | Terminal File Explorer returns to the Explorer sidebar — no longer occupies a separate Activity Bar icon. Falls back to the user's home directory when no active terminal is present, ensuring the view is always available
 - ✨ feat: 终端文件树文件夹右键菜单新增"计算文件夹大小"，快捷键 `Alt+Enter` 同步移除 | Added "Calculate Folder Size" to the terminal file tree folder context menu; the `Alt+Enter` keyboard shortcut removed
+- ✨ feat: 自定义文件树符号链接行最右侧 ⤷ 箭头标识（与官方一致），带本地化 tooltip | Symbolic links in the custom file tree show the official ⤷ arrow badge on the far right, with a localized "Symbolic Link" / "符号链接" tooltip
+- 🔧 config: 移除所有 l10n 字符串中 `'{0}'` 的单引号，UI 文案更清爽 | Removed single quotes around `{0}` in all l10n strings for cleaner UI text
+- 🔨 chore: 移除扩展运行时对 Node `fs` 的依赖，统一使用 `vscode.workspace.fs`，扩展可在 remote/web 环境下正常工作 | Removed all Node `fs` runtime dependencies in favor of `vscode.workspace.fs`, enabling the extension to work in remote/web environments
+- 🐛 fix: 目录类型判断从严格等于改为位运算，修复符号链接目录（Directory|SymbolicLink=66）被误判为非目录的隐含 bug | Directory type detection changed from strict equality to bitwise check, fixing the bug where symbolic link directories (Directory|SymbolicLink=66) were incorrectly treated as non-directories
 - 🐛 fix: 修复无工作区且无活动终端时终端文件树显示为空的问题，新增用户主目录作为终态回退 | Fixed the terminal file tree showing empty content when no workspace folder is open and no terminal is active — the user's home directory is used as the final fallback
 - 🔧 config: 许可证修正为 GPLv3；`.vscodeignore` 排除维护者内部文件，精简 vsix 包 | License corrected to GPLv3; `.vscodeignore` excludes maintainer-internal files to slim the vsix package
 
