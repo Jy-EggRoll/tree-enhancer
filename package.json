@@ -12,15 +12,6 @@
         "Other"
     ],
     "contributes": {
-        "views": {
-            "explorer": [
-                {
-                    "id": "tree-enhancer.terminalExplorer",
-                    "name": "%description.terminalExplorer%",
-                    "when": "config.tree-enhancer.terminalExplorer.enabled"
-                }
-            ]
-        },
         "commands": [
             {
                 "command": "tree-enhancer.calculateFolder",
@@ -28,33 +19,33 @@
             },
             {
                 "command": "tree-enhancer.newFile",
-                "title": "%description.terminalExplorer.newFile%",
-                "icon": "$(new-file)"
+                "icon": "$(new-file)",
+                "title": "%description.terminalExplorer.newFile%"
             },
             {
                 "command": "tree-enhancer.newFolder",
-                "title": "%description.terminalExplorer.newFolder%",
-                "icon": "$(new-folder)"
+                "icon": "$(new-folder)",
+                "title": "%description.terminalExplorer.newFolder%"
             },
             {
                 "command": "tree-enhancer.rename",
-                "title": "%description.terminalExplorer.rename%",
-                "icon": "$(edit)"
+                "icon": "$(edit)",
+                "title": "%description.terminalExplorer.rename%"
             },
             {
                 "command": "tree-enhancer.deleteFile",
-                "title": "%description.terminalExplorer.delete%",
-                "icon": "$(trash)"
+                "icon": "$(trash)",
+                "title": "%description.terminalExplorer.delete%"
             },
             {
                 "command": "tree-enhancer.deletePermanently",
-                "title": "%description.terminalExplorer.deletePermanently%",
-                "icon": "$(trash)"
+                "icon": "$(trash)",
+                "title": "%description.terminalExplorer.deletePermanently%"
             },
             {
                 "command": "tree-enhancer.download",
-                "title": "%description.terminalExplorer.download%",
-                "icon": "$(cloud-download)"
+                "icon": "$(cloud-download)",
+                "title": "%description.terminalExplorer.download%"
             },
             {
                 "command": "tree-enhancer.openFolderInNewWindow",
@@ -162,75 +153,84 @@
             "view/item/context": [
                 {
                     "command": "tree-enhancer.newFile",
-                    "when": "view == tree-enhancer.terminalExplorer && viewItem == folder",
-                    "group": "inline@1"
+                    "group": "inline@1",
+                    "when": "view == tree-enhancer.terminalExplorer && viewItem == folder"
                 },
                 {
                     "command": "tree-enhancer.newFolder",
-                    "when": "view == tree-enhancer.terminalExplorer && viewItem == folder",
-                    "group": "inline@2"
+                    "group": "inline@2",
+                    "when": "view == tree-enhancer.terminalExplorer && viewItem == folder"
                 },
                 {
                     "command": "tree-enhancer.newFile",
-                    "when": "view == tree-enhancer.terminalExplorer",
-                    "group": "1_modification@1"
+                    "group": "1_modification@1",
+                    "when": "view == tree-enhancer.terminalExplorer"
                 },
                 {
                     "command": "tree-enhancer.newFolder",
-                    "when": "view == tree-enhancer.terminalExplorer",
-                    "group": "1_modification@2"
+                    "group": "1_modification@2",
+                    "when": "view == tree-enhancer.terminalExplorer"
                 },
                 {
                     "command": "tree-enhancer.rename",
-                    "when": "view == tree-enhancer.terminalExplorer && viewItem == file",
-                    "group": "inline@1"
+                    "group": "inline@1",
+                    "when": "view == tree-enhancer.terminalExplorer && viewItem == file"
                 },
                 {
                     "command": "tree-enhancer.rename",
-                    "when": "view == tree-enhancer.terminalExplorer && viewItem == file",
-                    "group": "5_modification@1"
+                    "group": "5_modification@1",
+                    "when": "view == tree-enhancer.terminalExplorer && viewItem == file"
                 },
                 {
                     "command": "tree-enhancer.rename",
-                    "when": "view == tree-enhancer.terminalExplorer && viewItem == folder",
-                    "group": "5_modification@1"
+                    "group": "5_modification@1",
+                    "when": "view == tree-enhancer.terminalExplorer && viewItem == folder"
                 },
                 {
                     "command": "tree-enhancer.deleteFile",
-                    "when": "view == tree-enhancer.terminalExplorer",
-                    "group": "5_modification@2"
+                    "group": "5_modification@2",
+                    "when": "view == tree-enhancer.terminalExplorer"
                 },
                 {
                     "command": "tree-enhancer.deletePermanently",
-                    "when": "view == tree-enhancer.terminalExplorer",
-                    "group": "5_modification@3"
+                    "group": "5_modification@3",
+                    "when": "view == tree-enhancer.terminalExplorer"
                 },
                 {
                     "command": "tree-enhancer.download",
-                    "when": "view == tree-enhancer.terminalExplorer && remoteName != null",
-                    "group": "5_modification@4"
+                    "group": "5_modification@4",
+                    "when": "view == tree-enhancer.terminalExplorer && remoteName != null"
                 },
                 {
                     "command": "tree-enhancer.openFolderInNewWindow",
-                    "when": "view == tree-enhancer.terminalExplorer && viewItem == folder",
-                    "group": "2_open@1"
+                    "group": "2_open@1",
+                    "when": "view == tree-enhancer.terminalExplorer && viewItem == folder"
                 },
                 {
                     "command": "tree-enhancer.openWorkspaceInNewWindow",
-                    "when": "view == tree-enhancer.terminalExplorer && viewItem == folder",
-                    "group": "2_open@2"
+                    "group": "2_open@2",
+                    "when": "view == tree-enhancer.terminalExplorer && viewItem == folder"
                 }
             ],
             "view/title": [
                 {
                     "command": "tree-enhancer.newFile",
-                    "when": "view == tree-enhancer.terminalExplorer",
-                    "group": "navigation@1"
+                    "group": "navigation@1",
+                    "when": "view == tree-enhancer.terminalExplorer"
                 },
                 {
                     "command": "tree-enhancer.newFolder",
-                    "when": "view == tree-enhancer.terminalExplorer",
-                    "group": "navigation@2"
+                    "group": "navigation@2",
+                    "when": "view == tree-enhancer.terminalExplorer"
+                }
+            ]
+        },
+        "views": {
+            "explorer": [
+                {
+                    "id": "tree-enhancer.terminalExplorer",
+                    "name": "%description.terminalExplorer%",
+                    "when": "config.tree-enhancer.terminalExplorer.enabled"
                 }
             ]
         }
@@ -284,5 +284,5 @@
         "package": "pnpm run check-types && node esbuild.js --production",
         "vscode:prepublish": "pnpm run package"
     },
-    "version": "1.11.0"
+    "version": "2.0.0"
 }
