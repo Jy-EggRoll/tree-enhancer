@@ -47,7 +47,6 @@
     "[Calculate Folder Command] Calculation failed: {0}": "[文件夹计算命令] 计算失败：{0}",
     "[Calculate Folder Command] Result dismissed, starting new calculation": "[文件夹计算命令] 结果已关闭，开始新计算",
     "[Calculate Folder Command] Result displayed": "[文件夹计算命令] 结果已显示",
-    "[Config Changed] Dismissing status bar item": "[配置更改] 正在关闭状态栏项目",
     "[Config Changed] Exclude patterns reloaded": "[配置更改] 排除模式已重新加载",
     "[Config Changed] Refreshing all file decorations": "[配置更改] 正在刷新所有文件装饰",
     "[File Access Error] {0}": "[文件访问错误] {0}",

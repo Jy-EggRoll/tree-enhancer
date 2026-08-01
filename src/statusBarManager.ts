@@ -12,6 +12,8 @@ export class StatusBarManager implements vscode.Disposable {
     private statusBarItem: vscode.StatusBarItem;
     private dismissTimer?: NodeJS.Timeout;
     private _isShowing = false;
+    /** 当前显示的内容是否需要自动消失（文件信息/文件夹结果=true，计算中=false） */
+    private dismissEnabled = false;
 
     constructor() {
         this.statusBarItem = vscode.window.createStatusBarItem(
@@ -37,6 +39,7 @@ export class StatusBarManager implements vscode.Disposable {
         this.statusBarItem.tooltip = vscode.l10n.t("Click to dismiss");
         this.statusBarItem.show();
         this._isShowing = true;
+        this.dismissEnabled = true;
         this.scheduleDismiss();
     }
 
@@ -48,6 +51,7 @@ export class StatusBarManager implements vscode.Disposable {
         this.statusBarItem.text = "$(loading~spin) " + folderName;
         this.statusBarItem.show();
         this._isShowing = true;
+        this.dismissEnabled = false;
     }
 
     /**
@@ -59,6 +63,7 @@ export class StatusBarManager implements vscode.Disposable {
         this.statusBarItem.tooltip = vscode.l10n.t("Click to dismiss");
         this.statusBarItem.show();
         this._isShowing = true;
+        this.dismissEnabled = true;
         this.scheduleDismiss();
     }
 
@@ -69,6 +74,20 @@ export class StatusBarManager implements vscode.Disposable {
         this.clearDismissTimer();
         this.statusBarItem.hide();
         this._isShowing = false;
+        this.dismissEnabled = false;
+    }
+
+    /**
+     * 配置变化后由集中式配置监听调用：
+     * 若当前正在显示需要自动消失的内容（文件信息/文件夹结果），
+     * 按最新 dismissDelay 重新调度，使 dismissDelay 修改即时生效。
+     * 计算中/未显示时不做任何事。
+     */
+    public restartDismissTimer(): void {
+        if (this._isShowing && this.dismissEnabled) {
+            this.clearDismissTimer();
+            this.scheduleDismiss();
+        }
     }
 
     /**

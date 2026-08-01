@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import { getLogger } from "../utils/func";
+import type { FolderCalculationResult } from "../types";
 
 const log = getLogger();
 import { FolderCalculator, CalculationCancelledError } from "./folderCalculator";
@@ -13,6 +14,8 @@ export class CalculateFolderCommand {
     private statusBarManager: StatusBarManager;
     private isCalculating = false;
     private hasResult = false;
+    /** 最近一次计算结果的缓存，供配置热加载后按最新模板重新渲染 */
+    private lastResult?: FolderCalculationResult;
 
     constructor(statusBarManager: StatusBarManager) {
         this.statusBarManager = statusBarManager;
@@ -155,7 +158,8 @@ export class CalculateFolderCommand {
     /**
      * 显示计算结果
      */
-    private showResult(result: any): void {
+    private showResult(result: FolderCalculationResult): void {
+        this.lastResult = result;
         const statusText = Formatters.formatForStatusBar(result);
         this.statusBarManager.showFolderResult(statusText);
 
@@ -164,6 +168,17 @@ export class CalculateFolderCommand {
                 "[Calculate Folder Command] Result displayed",
             ),
         );
+    }
+
+    /**
+     * 配置热加载后重新渲染当前结果显示（若存在）。
+     * 由 extension.ts 集中式配置监听在 statusBarTemplate / fileSizeBase 变化时调用，
+     * 使正在显示的结果立即按最新模板刷新，无需重启或重新计算。
+     */
+    public refreshDisplay(): void {
+        if (this.hasResult && this.lastResult) {
+            this.showResult(this.lastResult);
+        }
     }
 
     /**

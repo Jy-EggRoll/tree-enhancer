@@ -47,7 +47,6 @@
     "[Calculate Folder Command] Calculation failed: {0}": "[Calculate Folder Command] Calculation failed: {0}",
     "[Calculate Folder Command] Result dismissed, starting new calculation": "[Calculate Folder Command] Result dismissed, starting new calculation",
     "[Calculate Folder Command] Result displayed": "[Calculate Folder Command] Result displayed",
-    "[Config Changed] Dismissing status bar item": "[Config Changed] Dismissing status bar item",
     "[Config Changed] Exclude patterns reloaded": "[Config Changed] Exclude patterns reloaded",
     "[Config Changed] Refreshing all file decorations": "[Config Changed] Refreshing all file decorations",
     "[File Access Error] {0}": "[File Access Error] {0}",
