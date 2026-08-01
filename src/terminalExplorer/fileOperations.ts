@@ -34,13 +34,14 @@ export class FileOperationHandlers {
         if (!parentDir) {
             return;
         }
-        const fileName = await vscode.window.showInputBox({
+        const fileName = await this.showNameInputBox({
+            title: vscode.l10n.t("New File"),
             prompt: vscode.l10n.t(
                 "Enter a name for the new file in {0}",
                 parentDir.fsPath,
             ),
-            placeHolder: "example.txt",
-            validateInput: (value) => this.validateFileName(value, parentDir),
+            placeholder: "example.txt",
+            validate: (value) => this.validateFileName(value, parentDir),
         });
         if (!fileName) {
             return;
@@ -68,13 +69,14 @@ export class FileOperationHandlers {
         if (!parentDir) {
             return;
         }
-        const folderName = await vscode.window.showInputBox({
+        const folderName = await this.showNameInputBox({
+            title: vscode.l10n.t("New Folder"),
             prompt: vscode.l10n.t(
                 "Enter a name for the new folder in {0}",
                 parentDir.fsPath,
             ),
-            placeHolder: "new-folder",
-            validateInput: (value) => this.validateFileName(value, parentDir),
+            placeholder: "new-folder",
+            validate: (value) => this.validateFileName(value, parentDir),
         });
         if (!folderName) {
             return;
@@ -100,13 +102,14 @@ export class FileOperationHandlers {
             return;
         }
         const oldName = this.getName(treeItem);
-        const newName = await vscode.window.showInputBox({
+        const newName = await this.showNameInputBox({
+            title: vscode.l10n.t("Rename"),
             prompt: vscode.l10n.t("Enter new name"),
             value: oldName,
             valueSelection: treeItem.isDirectory
                 ? undefined
                 : this.getBaseNameSelection(oldName),
-            validateInput: (value) => this.validateRename(value, oldName, treeItem.uri),
+            validate: (value) => this.validateRename(value, oldName, treeItem.uri),
         });
         if (!newName || newName === oldName) {
             return;
@@ -364,6 +367,93 @@ export class FileOperationHandlers {
             return [0, dotIndex];
         }
         return [0, fileName.length];
+    }
+
+    /**
+     * 通过 createInputBox 弹出带右上角关闭按钮的名称输入框。
+     * 相比 showInputBox（只能 ESC 关闭），提供显式关闭按钮，
+     * 使新建/重命名窗口的关闭方式与用户预期一致。
+     * 校验逻辑通过 validate 回调接入，与 showInputBox 的 validateInput 语义等价。
+     */
+    private showNameInputBox(options: {
+        title: string;
+        prompt: string;
+        placeholder?: string;
+        value?: string;
+        valueSelection?: [number, number];
+        validate?: (value: string) => string | null | Thenable<string | null>;
+    }): Thenable<string | undefined> {
+        return new Promise<string | undefined>((resolve) => {
+            const inputBox = vscode.window.createInputBox();
+            inputBox.title = options.title;
+            inputBox.prompt = options.prompt;
+            if (options.placeholder) {
+                inputBox.placeholder = options.placeholder;
+            }
+            if (options.value !== undefined) {
+                inputBox.value = options.value;
+            }
+            if (options.valueSelection) {
+                inputBox.valueSelection = options.valueSelection;
+            }
+
+            // 右上角关闭按钮：点击等价于 ESC 取消
+            const closeButton: vscode.QuickInputButton = {
+                iconPath: new vscode.ThemeIcon("close"),
+                tooltip: vscode.l10n.t("Close"),
+            };
+            inputBox.buttons = [closeButton];
+
+            let resolved = false;
+            const finish = (value: string | undefined): void => {
+                if (resolved) {
+                    return;
+                }
+                resolved = true;
+                inputBox.dispose();
+                resolve(value);
+            };
+
+            // 异步校验：与 showInputBox 的 validateInput 保持一致
+            const validate = (value: string): void => {
+                const result = options.validate?.(value);
+                if (result && typeof (result as Thenable<string | null>).then === "function") {
+                    (result as Thenable<string | null>).then(
+                        (msg) => {
+                            inputBox.validationMessage = msg ?? undefined;
+                        },
+                    );
+                } else {
+                    inputBox.validationMessage = (result as string | null) ?? undefined;
+                }
+            };
+
+            inputBox.onDidChangeValue(validate);
+
+            // 点击关闭按钮 → 取消
+            inputBox.onDidTriggerButton((button) => {
+                if (button === closeButton) {
+                    inputBox.hide();
+                }
+            });
+
+            // 回车确认
+            inputBox.onDidAccept(() => {
+                finish(inputBox.value);
+            });
+
+            // 失焦/ESC/关闭按钮 → 视为取消
+            inputBox.onDidHide(() => {
+                finish(undefined);
+            });
+
+            // 初始值也需要先跑一次校验（对应 showInputBox 对初始 value 的即时校验）
+            if (options.value !== undefined) {
+                validate(options.value);
+            }
+
+            inputBox.show();
+        });
     }
 
     /**
