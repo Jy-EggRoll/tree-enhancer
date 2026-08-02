@@ -165,7 +165,10 @@ export class FileOperationHandlers {
 
     /**
      * 下载文件/文件夹到本地。
-     * 仅在 VSCode 远程模式下可见（package.json 菜单 when: remoteName != null），
+     * 仅在 VSCode 远程模式下可见（package.json 菜单 when: remoteName != ''）。
+     * 注意：remoteName 在本地窗口的值是空字符串 ''（而非 null），官方定义见
+     * vscode 源码 contextkeys.ts 的 RemoteNameContext，故必须用 != '' 判断，
+     * 用 != null 在本地会恒为 true 导致按钮误显示。
      * 物理机本地文件系统不提供下载（本地文件复制无意义）。
      * 行为对齐官方 Explorer 的 explorer.download（FileDownload.doDownloadNative）：
      *  - 弹出保存对话框，默认目录为用户主目录
@@ -231,6 +234,21 @@ export class FileOperationHandlers {
             return;
         }
         await vscode.commands.executeCommand("vscode.openFolder", item.uri, {
+            forceNewWindow: true,
+        });
+    }
+
+    /**
+     * 在新窗口中打开当前根目录（终端 CWD）。
+     * 供顶栏按钮使用（无树项参数）；无活动终端/CWD 时静默返回。
+     * 打开方式与 openFolderInNewWindow 相同（vscode.openFolder + forceNewWindow）。
+     */
+    public async openCurrentFolder(): Promise<void> {
+        const cwd = this.treeProvider.cwd;
+        if (!cwd) {
+            return;
+        }
+        await vscode.commands.executeCommand("vscode.openFolder", cwd, {
             forceNewWindow: true,
         });
     }
