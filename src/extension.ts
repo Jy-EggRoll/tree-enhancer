@@ -195,6 +195,13 @@ export function activate(context: vscode.ExtensionContext) {
                 }
             },
         );
+        // 顶栏按钮：打开当前根目录（无参，内部取终端 CWD）
+        const openCurrentFolderCommand = vscode.commands.registerCommand(
+            "tree-enhancer.openCurrentFolder",
+            () => {
+                fileOps.openCurrentFolder();
+            },
+        );
 
         context.subscriptions.push(newFileCommand);
         context.subscriptions.push(newFolderCommand);
@@ -204,6 +211,7 @@ export function activate(context: vscode.ExtensionContext) {
         context.subscriptions.push(downloadCommand);
         context.subscriptions.push(openFolderInNewWindowCommand);
         context.subscriptions.push(openWorkspaceInNewWindowCommand);
+        context.subscriptions.push(openCurrentFolderCommand);
 
         context.subscriptions.push(terminalTracker);
         context.subscriptions.push(terminalTreeProvider);

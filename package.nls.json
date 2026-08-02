@@ -24,5 +24,6 @@
     "description.terminalExplorer.deletePermanently": "Delete Permanently",
     "description.terminalExplorer.download": "Download...",
     "description.terminalExplorer.openFolderInNewWindow": "Open Folder in New Window",
+    "description.terminalExplorer.openCurrentFolder": "Open Current Folder",
     "description.terminalExplorer.openWorkspaceInNewWindow": "Open Workspace in New Window"
 }

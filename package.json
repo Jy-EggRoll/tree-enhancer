@@ -52,6 +52,11 @@
                 "title": "%description.terminalExplorer.openFolderInNewWindow%"
             },
             {
+                "command": "tree-enhancer.openCurrentFolder",
+                "icon": "$(folder-opened)",
+                "title": "%description.terminalExplorer.openCurrentFolder%"
+            },
+            {
                 "command": "tree-enhancer.openWorkspaceInNewWindow",
                 "title": "%description.terminalExplorer.openWorkspaceInNewWindow%"
             }
@@ -192,7 +197,7 @@
                 {
                     "command": "tree-enhancer.download",
                     "group": "5_modification@4",
-                    "when": "view == tree-enhancer.terminalExplorer && remoteName != null"
+                    "when": "view == tree-enhancer.terminalExplorer && remoteName != ''"
                 },
                 {
                     "command": "tree-enhancer.openFolderInNewWindow",
@@ -219,6 +224,11 @@
                 {
                     "command": "tree-enhancer.newFolder",
                     "group": "navigation@2",
+                    "when": "view == tree-enhancer.terminalExplorer"
+                },
+                {
+                    "command": "tree-enhancer.openCurrentFolder",
+                    "group": "navigation@3",
                     "when": "view == tree-enhancer.terminalExplorer"
                 }
             ]
