@@ -302,5 +302,5 @@
         "package": "pnpm run check-types && node esbuild.js --production",
         "vscode:prepublish": "pnpm run package"
     },
-    "version": "2.1.0"
+    "version": "2.1.1"
 }

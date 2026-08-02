@@ -1,5 +1,10 @@
 # 更新日志 | Change Log
 
+## 2.1.1
+
+- ✨ feat: 终端文件树顶栏新增"打开当前文件夹"按钮，一键在新窗口中打开当前根目录（终端 CWD），无需手动在树中定位 | Added an "Open Current Folder" button to the Terminal File Explorer title bar — one click opens the current root directory (terminal CWD) in a new window, no need to locate it in the tree
+- 🐛 fix: 修复"下载"按钮在本地窗口误显示的问题。官方 `remoteName` context key 在本地窗口的值为空字符串 `''`（而非 `null`），原先的 `remoteName != null` 判断在本地恒为真，现改为官方标准写法 `remoteName != ''` | Fixed the "Download" button incorrectly showing in local windows. The official `remoteName` context key is `''` (empty string, not `null`) in local windows, so the previous `remoteName != null` check was always true; it now uses the official `remoteName != ''` pattern
+
 ## 2.1.0
 
 - ✨ feat: 终端文件浏览器回归资源管理器侧栏，不再占用独立活动栏图标。无活动终端时自动回退显示用户主目录，确保视图始终可用 | Terminal File Explorer returns to the Explorer sidebar — no longer occupies a separate Activity Bar icon. Falls back to the user's home directory when no active terminal is present, ensuring the view is always available
