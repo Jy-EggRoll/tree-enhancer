@@ -15,6 +15,7 @@
     - 远程模式下支持将文件下载到本地
     - 文件夹右键菜单支持计算文件夹大小、在新窗口中打开该文件夹，或打开该文件夹下的 `.code-workspace` 工作区
     - 顶栏"打开当前文件夹"按钮，一键以新窗口打开当前根目录（终端 CWD）
+    - 顶栏"强制刷新"按钮，一键全量刷新整棵自定义树。由于文件监控器采用非递归模式（仅监听当前目录直接子节点），深层目录的文件增删不会自动触发刷新，此按钮提供手动强制刷新入口
     - 符号链接文件与文件夹行最右侧显示官方同款 ⤷ 箭头标识，悬浮时显示"符号链接" tooltip | Symlinks show the official ⤷ arrow badge on the far right, with a localized tooltip
     - 可通过设置开启遵循 `files.exclude` 排除规则（默认关闭，显示全部文件与文件夹）
 
@@ -101,6 +102,7 @@
     - In remote mode, files can be downloaded to your local machine
     - Folder context menu supports calculating folder size, opening the folder in a new window, or opening a `.code-workspace` workspace file under the folder
     - An "Open Current Folder" title-bar button opens the current root directory (terminal CWD) in a new window with one click
+    - A "Refresh" title-bar button fully reloads the whole custom tree in one click. Because the file watcher is non-recursive (watching only the direct children of the current directory), changes in deeper directories do not trigger an automatic refresh; this button provides a manual force-refresh entry point
     - Symbolic links show the official ⤷ arrow badge on the far right, with a localized "Symbolic Link" tooltip
     - Optionally respects the `files.exclude` patterns via settings (off by default; shows all files and folders)
 
