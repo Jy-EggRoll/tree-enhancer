@@ -25,5 +25,6 @@
     "description.terminalExplorer.download": "下载...",
     "description.terminalExplorer.openFolderInNewWindow": "在新窗口中打开文件夹",
     "description.terminalExplorer.openCurrentFolder": "打开当前文件夹",
-    "description.terminalExplorer.openWorkspaceInNewWindow": "在新窗口中打开文件夹下的工作区"
+    "description.terminalExplorer.openWorkspaceInNewWindow": "在新窗口中打开文件夹下的工作区",
+    "description.terminalExplorer.refresh": "强制刷新"
 }

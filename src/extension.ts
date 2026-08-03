@@ -203,6 +203,17 @@ export function activate(context: vscode.ExtensionContext) {
             },
         );
 
+        // 顶栏按钮：强制刷新整个文件树。
+        // 由于 watcher 采用非递归模式（treeDataProvider.ts 中 RelativePattern(cwd, "*")），
+        // 深层的文件增删不会触发自动刷新，故提供手动强制刷新入口：
+        // 全量 fire 让已展开节点重新懒加载 readDirectory。
+        const refreshTerminalExplorerCommand = vscode.commands.registerCommand(
+            "tree-enhancer.refreshTerminalExplorer",
+            () => {
+                terminalTreeProvider?.refresh();
+            },
+        );
+
         context.subscriptions.push(newFileCommand);
         context.subscriptions.push(newFolderCommand);
         context.subscriptions.push(renameCommand);
@@ -212,6 +223,7 @@ export function activate(context: vscode.ExtensionContext) {
         context.subscriptions.push(openFolderInNewWindowCommand);
         context.subscriptions.push(openWorkspaceInNewWindowCommand);
         context.subscriptions.push(openCurrentFolderCommand);
+        context.subscriptions.push(refreshTerminalExplorerCommand);
 
         context.subscriptions.push(terminalTracker);
         context.subscriptions.push(terminalTreeProvider);
