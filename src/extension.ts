@@ -179,6 +179,12 @@ export function activate(context: vscode.ExtensionContext) {
                 fileOps.download(getSelection(treeItem));
             },
         );
+        const copyPathCommand = vscode.commands.registerCommand(
+            "tree-enhancer.copyPath",
+            (treeItem?: TerminalFileTreeItem) => {
+                fileOps.copyPath(getSelection(treeItem));
+            },
+        );
         const openFolderInNewWindowCommand = vscode.commands.registerCommand(
             "tree-enhancer.openFolderInNewWindow",
             (treeItem?: TerminalFileTreeItem) => {
@@ -220,6 +226,7 @@ export function activate(context: vscode.ExtensionContext) {
         context.subscriptions.push(deleteCommand);
         context.subscriptions.push(deletePermanentlyCommand);
         context.subscriptions.push(downloadCommand);
+        context.subscriptions.push(copyPathCommand);
         context.subscriptions.push(openFolderInNewWindowCommand);
         context.subscriptions.push(openWorkspaceInNewWindowCommand);
         context.subscriptions.push(openCurrentFolderCommand);

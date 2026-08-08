@@ -129,4 +129,11 @@ export class ConfigManager {
     public static getTerminalExplorerFollowExcludes(): boolean {
         return this.get<boolean>("terminalExplorer.followExcludes", false);
     }
+
+    /**
+     * 获取终端文件浏览器复制路径时是否加双引号（默认 true）
+     */
+    public static getCopyPathQuote(): boolean {
+        return this.get<boolean>("terminalExplorer.copyPathQuote", true);
+    }
 }

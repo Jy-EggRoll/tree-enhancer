@@ -18,6 +18,11 @@
                 "title": "%description.calculateFolder%"
             },
             {
+                "command": "tree-enhancer.copyPath",
+                "icon": "$(copy)",
+                "title": "%description.terminalExplorer.copyPath%"
+            },
+            {
                 "command": "tree-enhancer.newFile",
                 "icon": "$(new-file)",
                 "title": "%description.terminalExplorer.newFile%"
@@ -141,6 +146,11 @@
                     "default": false,
                     "description": "%description.terminalExplorer.followExcludes%",
                     "type": "boolean"
+                },
+                "tree-enhancer.terminalExplorer.copyPathQuote": {
+                    "default": true,
+                    "description": "%description.terminalExplorer.copyPathQuote%",
+                    "type": "boolean"
                 }
             },
             "title": "Tree Enhancer"
@@ -218,6 +228,11 @@
                     "command": "tree-enhancer.calculateFolder",
                     "group": "3_calculation@1",
                     "when": "view == tree-enhancer.terminalExplorer && viewItem == folder"
+                },
+                {
+                    "command": "tree-enhancer.copyPath",
+                    "group": "4_clipboard@1",
+                    "when": "view == tree-enhancer.terminalExplorer"
                 }
             ],
             "view/title": [

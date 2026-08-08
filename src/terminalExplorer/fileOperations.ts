@@ -1,5 +1,6 @@
 import * as vscode from "vscode";
 import type { TerminalFileTreeItem, TerminalFileTreeProvider } from "./treeDataProvider";
+import { ConfigManager } from "../config";
 import { getLogger } from "../utils/func";
 
 const log = getLogger();
@@ -322,6 +323,22 @@ export class FileOperationHandlers {
         await vscode.commands.executeCommand("vscode.openFolder", target, {
             forceNewWindow: true,
         });
+    }
+
+    /**
+     * 复制路径到剪贴板。
+     * 支持多选（; 分隔），是否加双引号由 tree-enhancer.terminalExplorer.copyPathQuote 控制。
+     */
+    public async copyPath(items: TerminalFileTreeItem[]): Promise<void> {
+        if (items.length === 0) {
+            return;
+        }
+        const quote = ConfigManager.getCopyPathQuote();
+        const paths = items.map((item) => item.uri.fsPath);
+        const text = paths.length === 1
+            ? (quote ? `"${paths[0]}"` : paths[0])
+            : paths.map((p) => quote ? `"${p}"` : p).join(";");
+        await vscode.env.clipboard.writeText(text);
     }
 
     // -----------------------------------------------------------------
