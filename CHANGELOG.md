@@ -1,5 +1,10 @@
 # 更新日志 | Change Log
 
+## 2.1.3
+
+- ✨ feat: 终端文件树右键菜单新增"复制路径"命令，支持多选批量复制（每个路径用双引号包裹，以 `;` 分隔） | Added "Copy Path" to the Terminal File Explorer context menu, with multi-select batch copy support (each path wrapped in double quotes, separated by `;`)
+- 🔧 config: 新增 `tree-enhancer.terminalExplorer.copyPathQuote` 设置项（默认 `true`），控制复制路径时是否用双引号包裹；关闭后单条直接复制原始路径，多条以 `;` 分隔不加引号 | Added `tree-enhancer.terminalExplorer.copyPathQuote` setting (default: `true`) to control whether copied paths are wrapped in double quotes; when disabled, single paths are copied plain and multiple paths are `;`-separated without quotes
+
 ## 2.1.2
 
 - ✨ feat: 终端文件树顶栏新增"强制刷新"按钮，一键全量刷新整棵自定义树。由于文件监控器采用非递归模式（仅监听当前目录直接子节点），深层目录的文件增删不会自动触发刷新，新按钮提供了手动强制刷新入口 | Added a "Refresh" button to the Terminal File Explorer title bar — one click fully reloads the whole custom tree. Because the file watcher uses a non-recursive pattern (only watching direct children of the current directory), changes in deeper directories do not trigger automatic refresh; this button provides a manual force-refresh entry point

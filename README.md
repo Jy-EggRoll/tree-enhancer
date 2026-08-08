@@ -11,6 +11,7 @@
 - 终端文件浏览器：在资源管理器侧栏中新增一个自定义文件树，始终追随当前终端的工作目录（CWD）。切换终端时树自动跟随切换，是您"终端的文件管理器"。
 
     - 支持新建文件 / 新建文件夹、重命名、删除（回收站与彻底删除），支持多选批量删除
+    - 支持复制路径（右键菜单，单选/多选批量复制，双引号包裹可选）
     - 支持拖放：树内移动文件，或从系统拖入文件进行上传
     - 远程模式下支持将文件下载到本地
     - 文件夹右键菜单支持计算文件夹大小、在新窗口中打开该文件夹，或打开该文件夹下的 `.code-workspace` 工作区
@@ -49,6 +50,7 @@
 | ------ | ------ | ---- |
 | `tree-enhancer.terminalExplorer.enabled` | `true` | 是否启用终端文件浏览器视图 |
 | `tree-enhancer.terminalExplorer.followExcludes` | `false` | 终端文件浏览器是否遵循 `files.exclude` 排除规则。关闭时显示终端工作目录下所有文件（含被排除项，如 `.git`） |
+| `tree-enhancer.terminalExplorer.copyPathQuote` | `true` | 复制路径时是否用双引号包裹。关闭时路径不带引号直接复制，多条时以 `;` 分隔 |
 | `tree-enhancer.fileInfo.enabled` | `false` | 打开或切换文件时是否在状态栏自动显示文件信息（默认关闭，需显式开启） |
 | `tree-enhancer.fileSizeBase` | `1000` | 文件大小计算基底。`1000`（十进制，KB/MB/GB）或 `1024`（二进制，KiB/MiB/GiB） |
 | `tree-enhancer.fileTemplate` | 详情模板 | 文件悬浮提示的显示模板，支持 `{name}`、`{size}`、`{rawSize}`、`{modifiedTime}` 占位符 |
