@@ -18,20 +18,6 @@ export class FileUtils {
         }
     }
 
-    public static async getDirectoryEntries(
-        dirPath: string,
-    ): Promise<Array<{ name: string; type: vscode.FileType }>> {
-        // 获取目录内容，安全地读取目录内容，包含文件类型信息
-        try {
-            const entries = await vscode.workspace.fs.readDirectory(
-                this.toUri(dirPath),
-            );
-            return entries.map(([name, type]) => ({ name, type }));
-        } catch (error) {
-            return [];
-        }
-    }
-
     // 定义公共静态方法 getFileName，参数 filePath 为字符串类型（表示文件路径），方法返回字符串类型（提取出的不含路径的文件名）
     public static getFileName(filePath: string): string {
         // 获取文件名（不含路径） // 行内注释：明确该方法的核心业务目标是提取文件路径中仅文件名的部分
@@ -94,14 +80,6 @@ export class FileUtils {
 
     public static isSymbolicLink(stat: vscode.FileStat): boolean {
         return (stat.type & vscode.FileType.SymbolicLink) !== 0;
-    }
-
-    public static isDirectoryType(fileType: vscode.FileType): boolean {
-        return (fileType & vscode.FileType.Directory) !== 0;
-    }
-
-    public static isFileType(fileType: vscode.FileType): boolean {
-        return (fileType & vscode.FileType.File) !== 0;
     }
 
     private static toUri(filePath: string): vscode.Uri {
