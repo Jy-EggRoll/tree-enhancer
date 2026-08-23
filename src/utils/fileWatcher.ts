@@ -100,7 +100,6 @@ export class FileWatcherManager {
         folder: vscode.WorkspaceFolder,
         onChange: (uri: vscode.Uri) => void,
         onCreate: (uri: vscode.Uri) => void,
-        onDelete: (uri: vscode.Uri) => void,
     ): vscode.FileSystemWatcher {
         const watcher = vscode.workspace.createFileSystemWatcher(
             new vscode.RelativePattern(folder, "**/*"),
@@ -116,10 +115,6 @@ export class FileWatcherManager {
             if (this.shouldHandle(uri)) {
                 onCreate(uri);
             }
-        });
-
-        watcher.onDidDelete((uri) => {
-            // 忽略，文件删除无需任何操作
         });
 
         log.debug(

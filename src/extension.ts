@@ -362,8 +362,6 @@ export function activate(context: vscode.ExtensionContext) {
                     // 如果创建的文件是当前选中的文件，刷新状态栏信息并重置超时
                     selectionMonitor.refreshCurrentFile();
                 },
-                (uri) => {
-                },
             );
 
             log.debug(
