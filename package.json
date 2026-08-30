@@ -124,7 +124,7 @@
                     "type": "string"
                 },
                 "tree-enhancer.largeFileThreshold": {
-                    "default": 20,
+                    "default": 10,
                     "description": "%description.largeFileThreshold%",
                     "maximum": 1000,
                     "minimum": 0,

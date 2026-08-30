@@ -58,7 +58,7 @@
 | `tree-enhancer.imageResolutionTemplate` | 分辨率模板 | 图片分辨率信息的显示模板，支持 `{width}`、`{height}` 占位符 |
 | `tree-enhancer.dateTimeFormat` | `YYYY-MM-DD HH:mm:ss` | 日期时间显示格式，支持 `YYYY`、`MM`、`DD`、`HH`、`mm`、`ss` 占位符 |
 | `tree-enhancer.startupDelay` | `0` | 扩展启动后的延迟工作时间（秒），用于错峰计算 |
-| `tree-enhancer.largeFileThreshold` | `20` | 大文件识别阈值（单位随 `fileSizeBase`）。超过该大小显示 L 标识，设为 `0` 关闭 |
+| `tree-enhancer.largeFileThreshold` | `10` | 大文件识别阈值（单位随 `fileSizeBase`）。超过该大小显示 L 标识，设为 `0` 关闭 |
 | `tree-enhancer.folderCalculator.dismissDelay` | `10` | 文件夹大小计算结果在状态栏自动消失的延迟时间（秒），设为 `0` 不自动消失 |
 | `tree-enhancer.folderCalculator.statusBarTemplate` | 默认模板 | 文件夹计算结果在状态栏的显示模板，支持 `{folderName}`、`{totalSize}`、`{fileCount}`、`{folderCount}`、`{modifiedTime}` 占位符 |
 
@@ -125,7 +125,7 @@
 
 - Instant File Info: When opening or switching files, the status bar instantly displays the file name, size, and modification time (shown for 10 seconds by default, can be closed by clicking, duration adjustable in settings). The info refreshes automatically when the file content changes and the timer resets. When all editors are closed, the info hides automatically. Can be independently enabled/disabled via `tree-enhancer.fileInfo.enabled` in settings (off by default, enable it in settings if needed).
 
-- Large File Marking: Large files are identified in a style similar to Git extensions (an "L" flag is appended, which can coexist with Git flags), making it easy for users to recognize them with excellent Git integration. If your workspace is a Git repository, this will effectively remind you to avoid accidentally committing large files. Even if you do not use a Git repository, this flag still helps you identify large files. The default threshold for displaying the "L" flag is 20 MB/MiB, which can be adjusted in settings.
+- Large File Marking: Large files are identified in a style similar to Git extensions (an "L" flag is appended, which can coexist with Git flags), making it easy for users to recognize them with excellent Git integration. If your workspace is a Git repository, this will effectively remind you to avoid accidentally committing large files. Even if you do not use a Git repository, this flag still helps you identify large files. The default threshold for displaying the "L" flag is 10 MB/MiB, which can be adjusted in settings.
 
     ![Large File Marking](https://raw.githubusercontent.com/Jy-EggRoll/tree-enhancer/refs/heads/main/readme-img/大文件标识.png)
     ![Integration with Git](https://raw.githubusercontent.com/Jy-EggRoll/tree-enhancer/refs/heads/main/readme-img/与-git-的集成.png)
@@ -145,7 +145,7 @@ You can search for `tree-enhancer` in VSCode Settings to locate the configuratio
 | `tree-enhancer.imageResolutionTemplate` | Resolution template | Display template for image resolution, supporting `{width}`, `{height}` placeholders |
 | `tree-enhancer.dateTimeFormat` | `YYYY-MM-DD HH:mm:ss` | Date and time display format, supporting `YYYY`, `MM`, `DD`, `HH`, `mm`, `ss` placeholders |
 | `tree-enhancer.startupDelay` | `0` | Delay (in seconds) before the extension starts working after VSCode startup |
-| `tree-enhancer.largeFileThreshold` | `20` | Large file recognition threshold (unit follows `fileSizeBase`). Files exceeding this size show the L flag; set to `0` to disable |
+| `tree-enhancer.largeFileThreshold` | `10` | Large file recognition threshold (unit follows `fileSizeBase`). Files exceeding this size show the L flag; set to `0` to disable |
 | `tree-enhancer.folderCalculator.dismissDelay` | `10` | Delay (in seconds) before the folder calculation result automatically disappears from the status bar; set to `0` to keep it until closed manually |
 | `tree-enhancer.folderCalculator.statusBarTemplate` | Default template | Display template for folder calculation results in the status bar, supporting `{folderName}`, `{totalSize}`, `{fileCount}`, `{folderCount}`, `{modifiedTime}` placeholders |
 

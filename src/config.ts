@@ -32,7 +32,7 @@ export class ConfigManager {
                 "YYYY-MM-DD HH:mm:ss",
             ),
             startupDelay: config.get<number>("startupDelay", 0),
-            largeFileThreshold: config.get<number>("largeFileThreshold", 20),
+            largeFileThreshold: config.get<number>("largeFileThreshold", 10),
         };
     }
 
@@ -72,7 +72,7 @@ export class ConfigManager {
      * 获取大文件识别阈值（MB 或 MiB）
      */
     public static getLargeFileThreshold(): number {
-        return this.get<number>("largeFileThreshold", 20);
+        return this.get<number>("largeFileThreshold", 10);
     }
 
     /**
