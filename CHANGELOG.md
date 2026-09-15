@@ -1,5 +1,9 @@
 # 更新日志 | Change Log
 
+## 2.2.0
+
+- ✨ feat: 终端文件浏览器从资源管理器侧栏独立为侧边栏，不再占用 Explorer 面板，用户可自由显示/隐藏，互不干扰 | Terminal File Explorer is now an independent sidebar instead of being embedded in the Explorer panel, allowing users to show/hide it independently
+
 ## 2.1.3
 
 - ✨ feat: 终端文件树右键菜单新增"复制路径"命令，支持多选批量复制（每个路径用双引号包裹，以 `;` 分隔） | Added "Copy Path" to the Terminal File Explorer context menu, with multi-select batch copy support (each path wrapped in double quotes, separated by `;`)
