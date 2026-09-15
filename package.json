@@ -259,7 +259,7 @@
             ]
         },
         "views": {
-            "explorer": [
+            "tree-enhancer": [
                 {
                     "icon": "$(file-code)",
                     "id": "tree-enhancer.terminalExplorer",

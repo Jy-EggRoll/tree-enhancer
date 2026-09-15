@@ -8,7 +8,7 @@
 
 ## 功能演示
 
-- 终端文件浏览器：在资源管理器侧栏中新增一个自定义文件树，始终追随当前终端的工作目录（CWD）。切换终端时树自动跟随切换，是您"终端的文件管理器"。
+- 终端文件浏览器：独立侧边栏中的自定义文件树，始终追随当前终端的工作目录（CWD）。切换终端时树自动跟随切换，是您"终端的文件管理器"。
 
     - 支持新建文件 / 新建文件夹、重命名、删除（回收站与彻底删除），支持多选批量删除
     - 支持复制路径（右键菜单，单选/多选批量复制，双引号包裹可选）
@@ -97,7 +97,7 @@
 
 ## Feature Demonstration
 
-- Terminal File Explorer: A custom file tree is added to the Explorer sidebar that always follows the working directory (CWD) of the current terminal. The tree switches automatically when you switch terminals — it is your "file manager for the terminal".
+- Terminal File Explorer: A custom file tree in an independent sidebar that always follows the working directory (CWD) of the current terminal. The tree switches automatically when you switch terminals — it is your "file manager for the terminal".
 
     - Create new files / new folders, rename, delete (Move to Trash and Delete Permanently), with multi-select batch delete support
     - Drag and drop support: move files within the tree, or drag files in from your system to upload
