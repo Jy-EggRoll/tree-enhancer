@@ -73,7 +73,7 @@
     "[Terminal Explorer] CWD changed to: {0}": "[终端浏览器] 工作目录已更改为：{0}",
     "[Terminal Explorer] File watcher not supported for: {0}": "[终端浏览器] 文件监控不支持：{0}",
     "[Terminal Explorer] File watcher started for: {0}": "[终端浏览器] 文件监控已启动：{0}",
-    "[Terminal Explorer] No active terminal, hiding tree": "[终端浏览器] 无活动终端，隐藏树视图",
+    "[Terminal Explorer] No active terminal, fallback to: {0}": "[终端浏览器] 无活动终端，回退到：{0}",
     "[Terminal Explorer] Terminal closed": "[终端浏览器] 终端已关闭",
     "[Terminal Explorer] Terminal opened": "[终端浏览器] 终端已打开",
     "[Terminal Explorer] Terminal tracking started": "[终端浏览器] 终端追踪已启动"

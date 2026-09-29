@@ -73,7 +73,7 @@
     "[Terminal Explorer] CWD changed to: {0}": "[Terminal Explorer] CWD changed to: {0}",
     "[Terminal Explorer] File watcher not supported for: {0}": "[Terminal Explorer] File watcher not supported for: {0}",
     "[Terminal Explorer] File watcher started for: {0}": "[Terminal Explorer] File watcher started for: {0}",
-    "[Terminal Explorer] No active terminal, hiding tree": "[Terminal Explorer] No active terminal, hiding tree",
+    "[Terminal Explorer] No active terminal, fallback to: {0}": "[Terminal Explorer] No active terminal, fallback to: {0}",
     "[Terminal Explorer] Terminal closed": "[Terminal Explorer] Terminal closed",
     "[Terminal Explorer] Terminal opened": "[Terminal Explorer] Terminal opened",
     "[Terminal Explorer] Terminal tracking started": "[Terminal Explorer] Terminal tracking started"
