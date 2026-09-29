@@ -1,5 +1,5 @@
 import * as vscode from "vscode";
-import { ExtensionConfig, FolderCalculatorConfig } from "./types";
+import { ExtensionConfig } from "./types";
 
 /**
  * 配置管理器类，提供统一的配置访问接口和默认值管理
@@ -69,30 +69,6 @@ export class ConfigManager {
     }
 
     /**
-     * 获取大文件识别阈值（MB 或 MiB）
-     */
-    public static getLargeFileThreshold(): number {
-        return this.get<number>("largeFileThreshold", 10);
-    }
-
-    /**
-     * 获取文件夹计算器配置
-     */
-    public static getFolderCalculatorConfig(): FolderCalculatorConfig {
-        return {
-            statusBarTemplate: this.get<string>(
-                "folderCalculator.statusBarTemplate",
-                "Please restart VSCode",
-            ),
-            statusBarDismissDelay: this.get<number>(
-                "folderCalculator.dismissDelay",
-                10,
-            ),
-            fileSizeBase: this.getFileSizeBase(),
-        };
-    }
-
-    /**
      * 获取状态栏模板
      */
     public static getStatusBarTemplate(): string {
@@ -121,13 +97,6 @@ export class ConfigManager {
      */
     public static getTerminalExplorerEnabled(): boolean {
         return this.get<boolean>("terminalExplorer.enabled", true);
-    }
-
-    /**
-     * 获取终端文件浏览器是否遵循 files.exclude 排除规则
-     */
-    public static getTerminalExplorerFollowExcludes(): boolean {
-        return this.get<boolean>("terminalExplorer.followExcludes", false);
     }
 
     /**

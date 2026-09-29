@@ -53,10 +53,3 @@ export interface FolderCalculationResult {
     folderCount: number;
     modifiedTime: number;
 }
-
-// 文件夹计算配置
-export interface FolderCalculatorConfig {
-    statusBarTemplate: string;
-    statusBarDismissDelay: number;
-    fileSizeBase: number;
-}

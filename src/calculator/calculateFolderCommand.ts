@@ -25,10 +25,6 @@ export class CalculateFolderCommand {
         return this.isCalculating;
     }
 
-    public get hasResultDisplayed(): boolean {
-        return this.hasResult;
-    }
-
     /**
      * 取消当前计算
      */
