@@ -1,6 +1,9 @@
 import * as vscode from "vscode";
-import { minimatch } from "minimatch";
 import { getLogger } from "../utils/func";
+import {
+    isExcludedByConfig,
+    readExcludePatterns,
+} from "../utils/excludeMatcher";
 
 const log = getLogger();
 
@@ -87,33 +90,27 @@ export class TerminalFileTreeProvider
             return;
         }
 
-        const excludeConfig = vscode.workspace
-            .getConfiguration("files")
-            .get<Record<string, boolean>>("exclude");
-        this.excludePatterns = excludeConfig
-            ? Object.keys(excludeConfig).filter((key) => excludeConfig[key])
-            : [];
+        this.excludePatterns = readExcludePatterns();
     }
 
     /**
      * 判断 uri 是否命中 files.exclude。
      * 仅在 followExcludes 开启时生效；对工作区外的路径不过滤
      * （与官方一致：工作区外的路径无相对根可依，官方同样不过滤）。
+     *
+     * 关闭后代兜底匹配：树是懒加载的，被排除目录不会展开，其后代不会进入
+     * 判断点；若开启兜底，当终端 CWD 本身位于某个排除目录之内时
+     * （例如 CWD = sub/node_modules），当前层的所有子项都会被判定为已排除，
+     * 导致整棵树显示为空。
      */
     private isExcluded(uri: vscode.Uri): boolean {
-        if (!this.followExcludes || this.excludePatterns.length === 0) {
+        if (!this.followExcludes) {
             return false;
         }
 
-        const relative = vscode.workspace.asRelativePath(uri, false);
-        // 工作区外的路径 asRelativePath 会原样返回绝对路径，此时跳过过滤
-        if (vscode.Uri.file(relative).fsPath === uri.fsPath) {
-            return false;
-        }
-
-        return this.excludePatterns.some((pattern) =>
-            minimatch(relative, pattern, { dot: true }),
-        );
+        return isExcludedByConfig(uri, this.excludePatterns, {
+            matchDescendants: false,
+        });
     }
 
     /**
@@ -126,7 +123,9 @@ export class TerminalFileTreeProvider
     /**
      * 设置当前工作目录并刷新整棵树。
      * 同时创建文件系统监控器，当目录内文件增删改时自动刷新。
-     * @param uri 新的 CWD URI，或 undefined 表示清空树
+     * @param uri 新的 CWD URI。传 undefined 时忽略本次调用，保留原 CWD
+     *            （调用方 TerminalTracker 已保证回退到工作区根目录或用户主目录，
+     *             因此此处不会出现"无 CWD 可显示"的情况）
      */
     public setCwd(uri: vscode.Uri | undefined): void {
         if (!uri) return;
@@ -137,9 +136,7 @@ export class TerminalFileTreeProvider
         this.disposeFileWatcher();
 
         // 为新目录创建文件监控器
-        if (uri) {
-            this.createFileWatcher(uri);
-        }
+        this.createFileWatcher(uri);
     }
 
     /**
