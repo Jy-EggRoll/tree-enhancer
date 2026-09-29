@@ -15,10 +15,10 @@
 		},
 		{
 			"type": "npm",
-			"script": "compile-tests",
-			"group": "build",
-			"label": "compile-tests",
-			"problemMatcher": "$tsc-watch"
+			"script": "test",
+			"group": "test",
+			"label": "test",
+			"problemMatcher": []
 		}
 	]
 }

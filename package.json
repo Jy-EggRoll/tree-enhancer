@@ -322,7 +322,7 @@
     "scripts": {
         "check-types": "pnpm tsc --noEmit",
         "compile": "pnpm run check-types && node esbuild.js",
-        "compile-tests": "pnpm tsc -p . --outDir out",
+        "test": "pnpm run check-types && node scripts/run-tests.cjs",
         "gen-l10n": "npx @vscode/l10n-dev export -o ./l10n ./src && node scripts/sort-l10n.mjs",
         "package": "pnpm run check-types && node esbuild.js --production",
         "vscode:prepublish": "pnpm run package"
