@@ -1,4 +1,7 @@
-# 默认排除列表
+# 打包排除清单：只保留运行期真正需要的文件。
+# 每条的「为什么」写在其上方；改动前请先确认不会破坏运行期依赖或 Marketplace 展示。
+
+# --- 开发期文件：源码与工具链 ---
 .vscode/
 .vscode-test/
 src/
@@ -10,20 +13,24 @@ node_modules/
 **/*.ts
 esbuild.js
 
-# 排除演示图片
-readme-img/
-
-# 排除工作区文件
-**/*.code-workspace
-
-# 排除工作流等文件
+# --- 维护者内部资产 ---
 .github/
-
-# 排除 lock 文件
-pnpm-lock.yaml
-
-# 排除维护者内部文档与工作区文件
 AGENTS.md
 RELEASE.md
 pnpm-workspace.yaml
+# l10n 校验 / 排序等开发脚本，运行期不需要
 scripts/
+# README 的插图引用的是 raw.githubusercontent 绝对地址，Marketplace 展示时从网络加载，
+# 故本地 readme-img/ 无需随包分发（若改成相对路径引用，则必须从本列表移除）
+readme-img/
+
+# --- 杂项 ---
+**/*.code-workspace
+pnpm-lock.yaml
+
+# --- 以下内容必须随包分发，切勿加入排除列表 ---
+# dist/                含 extension.js 与其 source map
+# dist/*.js.map        logger 依赖它把日志行号还原到 src/（extension.ts 的 sourceMapSupport），
+#                      排除后日志会退回到压缩后的 JS 位置，见 CHANGELOG 1.11.0 的修复记录
+# l10n/                package.json 的 l10n 字段指向此处，运行时字符串从它加载
+# package.nls*.json    contributes 里的 %key% 占位符靠它解析（多语言清单）
