@@ -4,7 +4,7 @@ This project publishes stable versions to the Visual Studio Marketplace from Git
 
 ## Marketplace token
 
-Create an Azure DevOps Personal Access Token with Marketplace `Manage` scope, then add it to the GitHub repository as an Actions secret named `VSCE_TOKEN`.
+Create an Azure DevOps Personal Access Token with Marketplace `Manage` scope, then add it to the GitHub repository as an Actions secret named `VSCE_PAT`.
 
 VS Code's official CI guidance recommends `VSCE_PAT` because `vsce` reads this environment variable automatically during `vsce publish`.
 
@@ -37,7 +37,7 @@ The `Publish Extension` workflow will:
 
 - verify that the tag equals `package.json` version
 - package a `.vsix`
-- publish to the VS Code Marketplace using `VSCE_TOKEN`
+- publish to the VS Code Marketplace using `VSCE_PAT`
 - create a GitHub Release with auto-generated release notes from CHANGELOG.md
 - attach the `.vsix` to the release
 

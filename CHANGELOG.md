@@ -1,5 +1,10 @@
 # 更新日志 | Change Log
 
+## 2.3.0
+
+- 🐛 fix: 修复终端文件树在工作区外目录的悬浮信息不刷新问题。文件装饰 tooltip 由 VSCode 缓存，此前只有工作区内的变更会触发失效，而终端 CWD 常在工作区之外，导致文件已修改但悬浮仍显示旧的大小/修改时间。现统一由 extension.ts 管理文件监控，终端 CWD 的增删改会同时刷新树与该文件的装饰 | Fixed stale hover info in the Terminal File Explorer for directories outside the workspace. Decoration tooltips are cached by VSCode and were only invalidated for changes inside the workspace, while the terminal CWD is often outside it — hover kept showing the old size/mtime. File watchers are now owned centrally by extension.ts, so CWD create/change/delete refresh both the tree and that file's decoration
+- 📝 docs: 修正过期文档：README 的大文件阈值默认值（20 → 10）与文件夹大小计算的「快捷键触发」表述（`Alt+Enter` 已于 2.1.0 移除）；RELEASE.md 的 Marketplace token 变量名（`VSCE_TOKEN` → `VSCE_PAT`），与实际工作流保持一致 | Fixed stale docs: the large-file threshold default in README (20 → 10) and the "triggered by shortcut" wording for folder size calculation (`Alt+Enter` was removed in 2.1.0); corrected the Marketplace token name in RELEASE.md (`VSCE_TOKEN` → `VSCE_PAT`) to match the actual workflow
+
 ## 2.2.0
 
 - ✨ feat: 终端文件浏览器从资源管理器侧栏独立为侧边栏，不再占用 Explorer 面板，用户可自由显示/隐藏，互不干扰 | Terminal File Explorer is now an independent sidebar instead of being embedded in the Explorer panel, allowing users to show/hide it independently
