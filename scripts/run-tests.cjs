@@ -43,6 +43,10 @@ async function main() {
         alias: {
             vscode: path.join(root, "src/test/vscodeStub.ts"),
         },
+        // 桩件需要知道扩展根目录，才能读取 package.json 声明的配置默认值
+        define: {
+            __EXTENSION_ROOT__: JSON.stringify(root),
+        },
         logLevel: "warning",
     });
 

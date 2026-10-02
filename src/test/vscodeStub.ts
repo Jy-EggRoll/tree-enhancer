@@ -2,11 +2,21 @@
  * 测试用的 vscode 模块桩件。
  *
  * 单元测试在扩展宿主之外运行，真实的 vscode 模块不可用；
- * scripts/run-tests.mjs 会把源码中的 "vscode" 导入别名到本文件。
+ * scripts/run-tests.cjs 会把源码中的 "vscode" 导入别名到本文件。
  *
  * 只实现被测试代码实际用到的 API，未实现的一律不提供，
  * 以便测试在遇到意外依赖时明确报错，而不是静默得到 undefined。
  */
+
+import { readFileSync } from "node:fs";
+import { join } from "node:path";
+
+/**
+ * 扩展根目录的绝对路径，由 scripts/run-tests.cjs 在打包时用 esbuild define 注入。
+ * 用于读取 package.json 声明的配置默认值——桩件按真实 VSCode 的行为在用户未设置时
+ * 返回这些声明值，而不是让被测代码自带的字面量兜底（那样测的就不是真实行为了）。
+ */
+declare const __EXTENSION_ROOT__: string;
 
 /** 供测试注入的配置表：{ 配置节: { 键: 值 } } */
 let configStore: Record<string, Record<string, unknown>> = {};
@@ -34,9 +44,7 @@ export function __setConfig(store: Record<string, Record<string, unknown>>) {
     configStore = store;
 }
 
-export function __setRelativePathOverride(
-    overrides: Record<string, string>,
-) {
+export function __setRelativePathOverride(overrides: Record<string, string>) {
     relativePathOverrides = overrides;
 }
 
@@ -71,6 +79,56 @@ export function __reset() {
     createdWatchers = [];
 }
 
+/** 解析 %key% 形式的清单字符串（模拟 VSCode 对 package.nls.json 的替换） */
+function resolveManifestString(
+    value: unknown,
+    nls: Record<string, string>,
+): unknown {
+    if (typeof value === "string") {
+        const match = value.match(/^%([^%]+)%$/);
+        return match ? (nls[match[1]] ?? value) : value;
+    }
+    if (value && typeof value === "object") {
+        return Object.fromEntries(
+            Object.entries(value).map(([key, nested]) => [
+                key,
+                resolveManifestString(nested, nls),
+            ]),
+        );
+    }
+    return value;
+}
+
+/**
+ * 读取 package.json 中 contributes.configuration 声明的默认值，
+ * 键为完整配置键（如 tree-enhancer.fileSizeBase）。
+ * 读不到时返回空表，此时 get() 只返回注入值或调用方传入的默认值。
+ */
+function loadDeclaredDefaults(): Record<string, unknown> {
+    try {
+        const pkg = JSON.parse(
+            readFileSync(join(__EXTENSION_ROOT__, "package.json"), "utf8"),
+        );
+        const nls = JSON.parse(
+            readFileSync(join(__EXTENSION_ROOT__, "package.nls.json"), "utf8"),
+        );
+        const properties = (pkg?.contributes?.configuration?.properties ??
+            {}) as Record<string, { default?: unknown }>;
+
+        const defaults: Record<string, unknown> = {};
+        for (const [key, schema] of Object.entries(properties)) {
+            if (schema && "default" in schema) {
+                defaults[key] = resolveManifestString(schema.default, nls);
+            }
+        }
+        return defaults;
+    } catch {
+        return {};
+    }
+}
+
+const declaredDefaults = loadDeclaredDefaults();
+
 export const workspace = {
     get workspaceFolders() {
         return workspaceFolders;
@@ -81,7 +139,10 @@ export const workspace = {
      * 测试可通过 __setRelativePathOverride 指定映射；未指定时按"路径在工作区内"
      * 处理，即去掉工作区前缀。
      */
-    asRelativePath(uri: { fsPath: string }, _includeWorkspaceFolder?: boolean): string {
+    asRelativePath(
+        uri: { fsPath: string },
+        _includeWorkspaceFolder?: boolean,
+    ): string {
         if (uri.fsPath in relativePathOverrides) {
             return relativePathOverrides[uri.fsPath];
         }
@@ -90,9 +151,17 @@ export const workspace = {
 
     getConfiguration(section: string) {
         return {
+            /**
+             * 复刻真实行为：注入值优先，其次 package.json 声明的默认值，
+             * 最后才是调用方传入的 default（仅用于 package.json 未声明的键）。
+             */
             get<T>(key: string, defaultValue?: T): T | undefined {
-                const value = configStore[section]?.[key];
-                return (value as T) ?? defaultValue;
+                const injected = configStore[section]?.[key];
+                if (injected !== undefined) {
+                    return injected as T;
+                }
+                const declared = declaredDefaults[`${section}.${key}`];
+                return declared !== undefined ? (declared as T) : defaultValue;
             },
         };
     },

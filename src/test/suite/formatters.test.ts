@@ -9,6 +9,10 @@ import { __setConfig, __reset } from "../vscodeStub";
  *
  * 覆盖三类纯逻辑：文件大小（十进制/二进制基底与单位进位）、
  * 日期模板替换、模板占位符渲染（含可选占位符缺失时的清除行为）。
+ *
+ * 注意：未注入配置时，桩件的 getConfiguration() 会返回 package.json（含
+ * package.nls.json）声明的默认值，与真实 VSCode 行为一致。因此下列「默认格式 /
+ * 默认模板」断言取的是声明默认值本身，而不是代码里另写的一份字面量。
  */
 
 describe("formatFileSize：十进制基底（1000）", () => {
@@ -35,13 +39,20 @@ describe("formatFileSize：十进制基底（1000）", () => {
         const huge = Math.pow(1000, 7);
         assert.match(Formatters.formatFileSize(huge, 1000), /PB$/);
     });
+
+    test("未注入配置时使用 package.json 声明的默认基底（1000）", () => {
+        assert.equal(Formatters.formatFileSize(1000), "1 KB");
+    });
 });
 
 describe("formatFileSize：二进制基底（1024）", () => {
     test("使用 IEC 单位名", () => {
         assert.equal(Formatters.formatFileSize(1024, 1024), "1 KiB");
         assert.equal(Formatters.formatFileSize(1024 * 1024, 1024), "1 MiB");
-        assert.equal(Formatters.formatFileSize(1024 * 1024 * 1024, 1024), "1 GiB");
+        assert.equal(
+            Formatters.formatFileSize(1024 * 1024 * 1024, 1024),
+            "1 GiB",
+        );
     });
 
     test("与十进制基底结果不同（1000 vs 1024）", () => {
@@ -61,8 +72,8 @@ describe("formatFileSize：二进制基底（1024）", () => {
 describe("formatDate：模板替换", () => {
     const d = new Date(2024, 2, 5, 9, 7, 3); // 2024-03-05 09:07:03（本地时区）
 
-    test("默认格式 YYYY-MM-DD HH:mm", () => {
-        assert.equal(Formatters.formatDate(d), "2024-03-05 09:07");
+    test("未设置时使用 package.json 声明的默认格式（含秒）", () => {
+        assert.equal(Formatters.formatDate(d), "2024-03-05 09:07:03");
     });
 
     test("全占位符", () => {
@@ -107,11 +118,17 @@ describe("renderTemplate：占位符渲染", () => {
     });
 
     test("rawSize 占位符", () => {
-        assert.equal(Formatters.renderTemplate("{rawSize} bytes", vars), "1024 bytes");
+        assert.equal(
+            Formatters.renderTemplate("{rawSize} bytes", vars),
+            "1024 bytes",
+        );
     });
 
     test("同一占位符多处出现时全部替换（全局替换）", () => {
-        assert.equal(Formatters.renderTemplate("{name}-{name}", vars), "a.txt-a.txt");
+        assert.equal(
+            Formatters.renderTemplate("{name}-{name}", vars),
+            "a.txt-a.txt",
+        );
     });
 
     test("可选变量（fileCount/folderCount）缺失时不残留占位符", () => {
@@ -134,7 +151,10 @@ describe("renderTemplate：占位符渲染", () => {
 
     test("图片相关占位符缺失时被清除为空串", () => {
         assert.equal(
-            Formatters.renderTemplate("{name}{resolution}{width}{height}", vars),
+            Formatters.renderTemplate(
+                "{name}{resolution}{width}{height}",
+                vars,
+            ),
             "a.txt",
         );
     });
@@ -153,22 +173,27 @@ describe("renderTemplate：占位符渲染", () => {
 });
 
 describe("formatImageResolution", () => {
-    test("默认模板", () => {
+    test("未设置时使用 package.nls.json 声明的默认模板", () => {
         assert.equal(
             Formatters.formatImageResolution({ width: 1920, height: 1080 }),
-            "1920 * 1080",
+            "Resolution: 1920 (W) * 1080 (H)",
         );
     });
 
     test("自定义模板", () => {
         assert.equal(
-            Formatters.formatImageResolution({ width: 8, height: 6 }, "{width}x{height}"),
+            Formatters.formatImageResolution(
+                { width: 8, height: 6 },
+                "{width}x{height}",
+            ),
             "8x6",
         );
     });
 
     test("未传模板时回退到配置值", () => {
-        __setConfig({ "tree-enhancer": { imageResolutionTemplate: "{width} × {height}" } });
+        __setConfig({
+            "tree-enhancer": { imageResolutionTemplate: "{width} × {height}" },
+        });
         assert.equal(
             Formatters.formatImageResolution({ width: 4, height: 3 }),
             "4 × 3",
@@ -181,7 +206,11 @@ describe("createFileVariables", () => {
     beforeEach(() => __reset());
 
     test("普通文件：生成基本变量，不含图片字段", () => {
-        const v = Formatters.createFileVariables("a.txt", 2048, new Date(2024, 0, 1));
+        const v = Formatters.createFileVariables(
+            "a.txt",
+            2048,
+            new Date(2024, 0, 1),
+        );
         assert.equal(v.name, "a.txt");
         assert.equal(v.size, "2.05 KB");
         assert.equal(v.rawSize, 2048);
@@ -198,6 +227,6 @@ describe("createFileVariables", () => {
         );
         assert.equal(v.width, 10);
         assert.equal(v.height, 20);
-        assert.equal(v.resolution, "10 * 20");
+        assert.equal(v.resolution, "Resolution: 10 (W) * 20 (H)");
     });
 });

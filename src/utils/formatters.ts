@@ -42,9 +42,7 @@ export class Formatters {
      * @returns
      */
     public static formatDate(date: Date, format?: string): string {
-        const dateFormat =
-            format ||
-            ConfigManager.get<string>("dateTimeFormat", "YYYY-MM-DD HH:mm");
+        const dateFormat = format || ConfigManager.getDateTimeFormat();
         const year = date.getFullYear(); // 获取日期时间各部分
         const month = String(date.getMonth() + 1).padStart(2, "0");
         const day = String(date.getDate()).padStart(2, "0");
@@ -129,11 +127,7 @@ export class Formatters {
         template?: string,
     ): string {
         const resolutionTemplate =
-            template ||
-            ConfigManager.get<string>(
-                "imageResolutionTemplate",
-                "{width} * {height}",
-            );
+            template || ConfigManager.getImageResolutionTemplate();
 
         return resolutionTemplate
             .replace(/{width}/g, dimensions.width.toString())
