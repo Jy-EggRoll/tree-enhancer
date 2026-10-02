@@ -71,8 +71,6 @@
     "[StatusBar Manager] Auto-dismissed after {0} seconds": "[状态栏管理器] 已在 {0} 秒后自动消失",
     "[Terminal Explorer] Active terminal changed": "[终端浏览器] 活动终端已切换",
     "[Terminal Explorer] CWD changed to: {0}": "[终端浏览器] 工作目录已更改为：{0}",
-    "[Terminal Explorer] File watcher not supported for: {0}": "[终端浏览器] 文件监控不支持：{0}",
-    "[Terminal Explorer] File watcher started for: {0}": "[终端浏览器] 文件监控已启动：{0}",
     "[Terminal Explorer] No active terminal, fallback to: {0}": "[终端浏览器] 无活动终端，回退到：{0}",
     "[Terminal Explorer] Terminal closed": "[终端浏览器] 终端已关闭",
     "[Terminal Explorer] Terminal opened": "[终端浏览器] 终端已打开",

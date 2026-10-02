@@ -1,11 +1,8 @@
 import * as vscode from "vscode";
-import { getLogger } from "../utils/func";
 import {
     isExcludedByConfig,
     readExcludePatterns,
 } from "../utils/excludeMatcher";
-
-const log = getLogger();
 
 /**
  * 终端文件树节点，复用 VSCode 内置 ThemeIcon 以保持与原生文件浏览器一致的视觉风格。
@@ -64,7 +61,6 @@ export class TerminalFileTreeProvider
     readonly onDidChangeTreeData = this._onDidChangeTreeData.event;
 
     private _cwd?: vscode.Uri;
-    private _fileWatcher?: vscode.FileSystemWatcher;
 
     /** 是否遵循 files.exclude（由 tree-enhancer.terminalExplorer.followExcludes 控制） */
     private followExcludes: boolean = false;
@@ -122,7 +118,8 @@ export class TerminalFileTreeProvider
 
     /**
      * 设置当前工作目录并刷新整棵树。
-     * 同时创建文件系统监控器，当目录内文件增删改时自动刷新。
+     * 目录的文件系统监控由 extension.ts 统一负责（变更时同时刷新树与文件装饰），
+     * 本类只维护 CWD 与树数据本身。
      * @param uri 新的 CWD URI。传 undefined 时忽略本次调用，保留原 CWD
      *            （调用方 TerminalTracker 已保证回退到工作区根目录或用户主目录，
      *             因此此处不会出现"无 CWD 可显示"的情况）
@@ -131,12 +128,6 @@ export class TerminalFileTreeProvider
         if (!uri) return;
         this._cwd = uri;
         this._onDidChangeTreeData.fire();
-
-        // 销毁旧的文件监控器
-        this.disposeFileWatcher();
-
-        // 为新目录创建文件监控器
-        this.createFileWatcher(uri);
     }
 
     /**
@@ -146,55 +137,6 @@ export class TerminalFileTreeProvider
     public onExcludeConfigChanged(): void {
         this.reloadExcludeConfig();
         this._onDidChangeTreeData.fire();
-    }
-
-    /**
-     * 创建文件系统监控器，监听指定目录下的文件增删改事件
-     */
-    private createFileWatcher(cwd: vscode.Uri): void {
-        try {
-            const pattern = new vscode.RelativePattern(cwd, "*");
-            this._fileWatcher =
-                vscode.workspace.createFileSystemWatcher(pattern);
-
-            // 非递归监控仅监听 CWD 直接子节点，与懒加载树视图可见范围匹配
-            this._fileWatcher.onDidChange(() => {
-                this._onDidChangeTreeData.fire();
-            });
-
-            this._fileWatcher.onDidCreate(() => {
-                this._onDidChangeTreeData.fire();
-            });
-
-            this._fileWatcher.onDidDelete(() => {
-                this._onDidChangeTreeData.fire();
-            });
-
-            log.debug(
-                vscode.l10n.t(
-                    "[Terminal Explorer] File watcher started for: {0}",
-                    cwd.fsPath,
-                ),
-            );
-        } catch {
-            // 某些文件系统可能不支持 watcher，静默忽略
-            log.debug(
-                vscode.l10n.t(
-                    "[Terminal Explorer] File watcher not supported for: {0}",
-                    cwd.fsPath,
-                ),
-            );
-        }
-    }
-
-    /**
-     * 销毁文件系统监控器
-     */
-    private disposeFileWatcher(): void {
-        if (this._fileWatcher) {
-            this._fileWatcher.dispose();
-            this._fileWatcher = undefined;
-        }
     }
 
     public getTreeItem(element: TerminalFileTreeItem): vscode.TreeItem {
@@ -268,7 +210,6 @@ export class TerminalFileTreeProvider
     }
 
     public dispose(): void {
-        this.disposeFileWatcher();
         this._onDidChangeTreeData.dispose();
     }
 }

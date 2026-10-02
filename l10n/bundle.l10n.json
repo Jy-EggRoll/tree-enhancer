@@ -71,8 +71,6 @@
     "[StatusBar Manager] Auto-dismissed after {0} seconds": "[StatusBar Manager] Auto-dismissed after {0} seconds",
     "[Terminal Explorer] Active terminal changed": "[Terminal Explorer] Active terminal changed",
     "[Terminal Explorer] CWD changed to: {0}": "[Terminal Explorer] CWD changed to: {0}",
-    "[Terminal Explorer] File watcher not supported for: {0}": "[Terminal Explorer] File watcher not supported for: {0}",
-    "[Terminal Explorer] File watcher started for: {0}": "[Terminal Explorer] File watcher started for: {0}",
     "[Terminal Explorer] No active terminal, fallback to: {0}": "[Terminal Explorer] No active terminal, fallback to: {0}",
     "[Terminal Explorer] Terminal closed": "[Terminal Explorer] Terminal closed",
     "[Terminal Explorer] Terminal opened": "[Terminal Explorer] Terminal opened",

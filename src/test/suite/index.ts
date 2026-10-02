@@ -6,4 +6,5 @@
  */
 
 import "./excludeMatcher.test";
+import "./fileWatcher.test";
 import "./formatters.test";

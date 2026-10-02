@@ -81,16 +81,47 @@ export function activate(context: vscode.ExtensionContext) {
     context.subscriptions.push(dismissCommand);
     context.subscriptions.push(calculateFolderCommandHandler);
 
+    // 文件监控管理器：统一创建所有文件系统监控器
+    //（工作区文件夹递归监控 + 终端 CWD 非递归监控）。
+    // 提前构造：仅读取 files.exclude，代价很低，让终端树在激活后即可获得监控。
+    const fileWatcherManager = new FileWatcherManager();
+
+    // 装饰提供者延迟启动（startupDelay），此处保留可变引用，
+    // 供下方集中式配置监听区与终端 CWD 监控访问。
+    let fileDecorationProvider: FileDecorationProvider | undefined;
+
     // 终端文件浏览器：追踪终端 CWD 并构建自定义文件树
     // 提升为外部引用，供下方集中式配置监听区访问（未启用时为 undefined）
     let terminalTreeProvider: TerminalFileTreeProvider | undefined;
+
+    // 终端 CWD 目录内的文件系统变更：同时刷新树与文件装饰。
+    // 装饰 tooltip（大小/修改时间/L 徽标）由 VSCode 缓存，不显式失效则悬浮长期显示旧值；
+    // 工作区监控器只覆盖 workspaceFolders，而终端 CWD 常在工作区之外，故必须单独失效。
+    const handleCwdFsChange = (uri: vscode.Uri): void => {
+        terminalTreeProvider?.refresh();
+        fileDecorationProvider?.refreshSpecific(uri);
+    };
+
     if (ConfigManager.getTerminalExplorerEnabled()) {
         terminalTreeProvider = new TerminalFileTreeProvider();
         const terminalTracker = new TerminalTracker();
 
-        // 当终端 CWD 变化时，刷新树视图
+        // CWD 目录监控（非递归，仅直接子节点；深层变更仍靠顶栏「强制刷新」）
+        let cwdWatcher: vscode.FileSystemWatcher | undefined;
+        const watchCwd = (cwd: vscode.Uri): void => {
+            cwdWatcher?.dispose();
+            cwdWatcher = fileWatcherManager.createDirectoryWatcher(
+                cwd,
+                handleCwdFsChange,
+            );
+        };
+
+        // 当终端 CWD 变化时，刷新树视图，并把目录监控切换到新的 CWD
         terminalTracker.onDidChangeCwd((cwd) => {
             terminalTreeProvider!.setCwd(cwd);
+            if (cwd) {
+                watchCwd(cwd);
+            }
         });
 
         // 创建终端文件树的拖放控制器（树内移动 + OS 拖入上传）
@@ -210,7 +241,7 @@ export function activate(context: vscode.ExtensionContext) {
         );
 
         // 顶栏按钮：强制刷新整个文件树。
-        // 由于 watcher 采用非递归模式（treeDataProvider.ts 中 RelativePattern(cwd, "*")），
+        // 由于 CWD 监控采用非递归模式（见上方 watchCwd / createDirectoryWatcher），
         // 深层的文件增删不会触发自动刷新，故提供手动强制刷新入口：
         // 全量 fire 让已展开节点重新懒加载 readDirectory。
         const refreshTerminalExplorerCommand = vscode.commands.registerCommand(
@@ -235,6 +266,9 @@ export function activate(context: vscode.ExtensionContext) {
         context.subscriptions.push(terminalTracker);
         context.subscriptions.push(terminalTreeProvider);
         context.subscriptions.push(treeView);
+        context.subscriptions.push({
+            dispose: () => cwdWatcher?.dispose(),
+        });
     }
 
     log.debug(
@@ -250,11 +284,8 @@ export function activate(context: vscode.ExtensionContext) {
     // onDidChangeConfiguration，避免再次出现"改设置需重启才生效"的漏监听问题。
     // 新增响应式设置时，在此添加对应的 affectsConfiguration 分支即可。
     //
-    // 文件装饰提供者与文件监控器为延迟启动（startupDelay），在此用可选引用访问，
+    // 文件装饰提供者延迟启动（startupDelay），在上方用可选引用访问，
     // 配置监听在延迟启动完成前就已生效。
-    let fileWatcherManager: FileWatcherManager | undefined;
-    let fileDecorationProvider: FileDecorationProvider | undefined;
-
     const configChangeDisposable = vscode.workspace.onDidChangeConfiguration(
         (event) => {
             // 1. 状态栏文件信息显示开关：实时启停，无需重启
@@ -316,7 +347,7 @@ export function activate(context: vscode.ExtensionContext) {
 
             // 5. 文件监控排除规则（files.exclude）变化 → 重载监控
             if (event.affectsConfiguration("files.exclude")) {
-                fileWatcherManager?.reload();
+                fileWatcherManager.reload();
                 log.debug(
                     vscode.l10n.t(
                         "[Config Changed] Exclude patterns reloaded",
@@ -329,53 +360,56 @@ export function activate(context: vscode.ExtensionContext) {
 
     // 延迟启动文件装饰提供者
     const startupTimer = setTimeout(() => {
-        fileWatcherManager = new FileWatcherManager();
         fileDecorationProvider = new FileDecorationProvider(fileWatcherManager);
         const providerDisposable = vscode.window.registerFileDecorationProvider(
             fileDecorationProvider,
         );
 
-        const folder = vscode.workspace.workspaceFolders?.[0];
-        let fileWatcher: vscode.FileSystemWatcher | undefined;
-        if (folder) {
-            fileWatcher = fileWatcherManager.createWatcher(
-                folder,
-                (uri) => {
-                    fileDecorationProvider!.refreshSpecific(uri);
-                    log.debug(
-                        vscode.l10n.t(
-                            "[File Changed] {0} has been changed, corresponding file decorations have been refreshed",
-                            uri.fsPath,
-                        ),
-                    );
-                    // 如果变更的文件是当前选中的文件，刷新状态栏信息并重置超时
-                    selectionMonitor.refreshCurrentFile();
-                },
-                (uri) => {
-                    fileDecorationProvider!.refreshSpecific(uri);
-                    log.debug(
-                        vscode.l10n.t(
-                            "[File Created] {0} has been created, corresponding file decorations have been refreshed",
-                            uri.fsPath,
-                        ),
-                    );
-                    // 如果创建的文件是当前选中的文件，刷新状态栏信息并重置超时
-                    selectionMonitor.refreshCurrentFile();
-                },
+        // 工作区范围内的变更：刷新对应文件的装饰；
+        // 若是当前选中文件，一并刷新状态栏信息并重置计时
+        const onWorkspaceChange = (uri: vscode.Uri): void => {
+            fileDecorationProvider!.refreshSpecific(uri);
+            log.debug(
+                vscode.l10n.t(
+                    "[File Changed] {0} has been changed, corresponding file decorations have been refreshed",
+                    uri.fsPath,
+                ),
             );
+            selectionMonitor.refreshCurrentFile();
+        };
 
+        const onWorkspaceCreate = (uri: vscode.Uri): void => {
+            fileDecorationProvider!.refreshSpecific(uri);
+            log.debug(
+                vscode.l10n.t(
+                    "[File Created] {0} has been created, corresponding file decorations have been refreshed",
+                    uri.fsPath,
+                ),
+            );
+            selectionMonitor.refreshCurrentFile();
+        };
+
+        const workspaceFolders = vscode.workspace.workspaceFolders ?? [];
+        const workspaceWatchers = fileWatcherManager.createWorkspaceWatchers(
+            onWorkspaceChange,
+            onWorkspaceCreate,
+        );
+
+        if (workspaceFolders.length > 0) {
             log.debug(
                 vscode.l10n.t(
                     "[File Watcher] Started watching all files in workspace: {0}",
-                    folder.uri.fsPath
+                    workspaceFolders
+                        .map((folder) => folder.uri.fsPath)
+                        .join(", "),
                 ),
             );
         }
 
         context.subscriptions.push(providerDisposable);
-        if (fileWatcher) {
-            context.subscriptions.push(fileWatcher);
-        }
+        workspaceWatchers.forEach((watcher) =>
+            context.subscriptions.push(watcher),
+        );
     }, startupDelay);
 
     context.subscriptions.push({

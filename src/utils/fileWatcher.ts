@@ -75,31 +75,72 @@ export class FileWatcherManager {
     }
 
     /**
-     * 创建文件监控器
+     * 为所有工作区文件夹创建递归监控器（递归 glob，覆盖全部子目录），
+     * 覆盖官方资源管理器可见范围的深层变更。无工作区时返回空数组。
+     *
+     * 需过滤 files.exclude：整棵工作区被全量订阅，被排除目录的后代也必须挡掉，
+     * 否则它们仍会进入装饰计算。
+     *
+     * 不监听删除：官方资源管理器会自行处理删除后的节点与装饰，
+     * 曾因此把删除回调作为空实现移除（见 6937847）。
      */
-    public createWatcher(
-        folder: vscode.WorkspaceFolder,
+    public createWorkspaceWatchers(
         onChange: (uri: vscode.Uri) => void,
         onCreate: (uri: vscode.Uri) => void,
+    ): vscode.FileSystemWatcher[] {
+        return (vscode.workspace.workspaceFolders ?? []).map((folder) => {
+            const watcher = vscode.workspace.createFileSystemWatcher(
+                new vscode.RelativePattern(folder, "**/*"),
+            );
+
+            watcher.onDidChange((uri) => {
+                if (this.shouldHandle(uri)) {
+                    onChange(uri);
+                }
+            });
+
+            watcher.onDidCreate((uri) => {
+                if (this.shouldHandle(uri)) {
+                    onCreate(uri);
+                }
+            });
+
+            log.debug(
+                vscode.l10n.t(
+                    "[FileWatcher] Created for: {0}",
+                    folder.uri.fsPath,
+                ),
+            );
+
+            return watcher;
+        });
+    }
+
+    /**
+     * 为任意目录创建非递归监控器（单层 glob，仅直接子节点）。
+     * 供终端文件树使用：树是懒加载的，只需覆盖当前可见层，
+     * 深层变更仍靠顶栏「强制刷新」按钮兜底。
+     *
+     * 增删改共用同一回调：三者都要求"该目录有变化 → 刷新树 + 失效对应装饰"，
+     * 无需区分事件类型。
+     *
+     * 不做 files.exclude 过滤：树在读取时自行过滤（treeDataProvider.isExcluded），
+     * 且装饰提供者对被排除项本就返回 undefined，此处再过滤没有收益。
+     */
+    public createDirectoryWatcher(
+        dir: vscode.Uri,
+        onChanged: (uri: vscode.Uri) => void,
     ): vscode.FileSystemWatcher {
         const watcher = vscode.workspace.createFileSystemWatcher(
-            new vscode.RelativePattern(folder, "**/*"),
+            new vscode.RelativePattern(dir, "*"),
         );
 
-        watcher.onDidChange((uri) => {
-            if (this.shouldHandle(uri)) {
-                onChange(uri);
-            }
-        });
-
-        watcher.onDidCreate((uri) => {
-            if (this.shouldHandle(uri)) {
-                onCreate(uri);
-            }
-        });
+        watcher.onDidChange(onChanged);
+        watcher.onDidCreate(onChanged);
+        watcher.onDidDelete(onChanged);
 
         log.debug(
-            vscode.l10n.t("[FileWatcher] Created for: {0}", folder.uri.fsPath),
+            vscode.l10n.t("[FileWatcher] Created for: {0}", dir.fsPath),
         );
 
         return watcher;
