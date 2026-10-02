@@ -324,6 +324,7 @@
         "compile": "pnpm run check-types && node esbuild.js",
         "test": "pnpm run check-types && node scripts/run-tests.cjs",
         "gen-l10n": "npx @vscode/l10n-dev export -o ./l10n ./src && node scripts/sort-l10n.mjs",
+        "l10n:parity": "node scripts/check-l10n.mjs",
         "package": "pnpm run check-types && node esbuild.js --production",
         "vscode:prepublish": "pnpm run package"
     },
