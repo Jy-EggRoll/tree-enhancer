@@ -21,7 +21,11 @@ runs:
       shell: bash
       run: pnpm test
 
-    - name: Check l10n key parity
+    - name: Verify l10n files are normalized
+      shell: bash
+      run: pnpm run l10n:check
+
+    - name: Verify l10n locales are aligned
       shell: bash
       run: pnpm run l10n:parity
 

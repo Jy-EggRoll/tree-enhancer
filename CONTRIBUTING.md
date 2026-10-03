@@ -39,12 +39,18 @@ src/
 1. Update the string in the source code using `vscode.l10n.t()`.
 2. Run `pnpm run gen-l10n` to regenerate `l10n/bundle.l10n.json`.
 3. Manually update `l10n/bundle.l10n.zh-cn.json` with the corresponding Chinese translations.
-4. Ensure no keys are orphaned or missing across all language files.
+4. Run `pnpm run l10n:check` — it regenerates the bundles and fails if the committed
+   content or key order drifts from source.
+5. Run `pnpm run l10n:parity` — it fails on a missing/orphaned key in any locale, or on a
+   `%key%` placeholder in `package.json` without a translation (and vice versa).
+
+Both commands run in CI. Key order is enforced (keys must be sorted); `gen-l10n`
+normalizes it, so a drift shows up as a diff instead of a hand-fixable format error.
 
 ## Code Style
 
 - Use TypeScript with strict type checking.
-- Comments must be in English.
+- Comments must be in Chinese, matching the rest of the codebase.
 - Use meaningful variable and function names.
 - Keep functions small and focused.
 

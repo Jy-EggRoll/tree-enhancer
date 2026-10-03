@@ -1,90 +1,119 @@
-import { readFileSync, readdirSync } from "node:fs";
+import { readFileSync } from "node:fs";
+
+import { l10nGroups } from "./l10n-files.mjs";
 
 /**
- * l10n parity guard。
+ * l10n 一致性门禁（只读，不写入任何文件）。CI 强制执行三类校验：
  *
- * 两类事实源各自校验键集合，CI 强制执行：
+ * 1. 键序：每个 l10n 文件的键必须恰好等于自身按键字典序重排的结果。
+ *    修复入口是 scripts/sort-l10n.mjs；缩进与换行由 prettier 负责，两者分工不重叠。
+ * 2. 跨语言对齐：每种语言文件的键集合必须与英文基线完全一致。抓「新键只译了部分
+ *    语言」与「别处删了、这里留下的孤儿键」。
+ * 3. manifest 引用闭合：package.nls.json 的键必须恰好等于 package.json 中的 %key%
+ *    占位符集合，抓「占位符没有译文」与「译文没人引用」。
  *
- * 1. 运行时 bundle（l10n/bundle.l10n*.json）与 manifest 字符串
- *    （package.nls*.json）：每个语言的键集合必须与英文（无语言后缀）完全一致。
- *    这能抓出"只翻译了部分语言的新键"与"别处删了、这里留下的孤儿键"。
- * 2. package.nls.json 的键必须恰好等于 package.json 中的 %key% 占位符集合。
- *    这能同时抓出"占位符没有译文"与"译文没人引用"两类漂移。
+ * 英文运行时 bundle 与源码是否一致不在这里校验——那需要重新导出（写文件），由
+ * `pnpm run l10n:check`（重新生成后与已提交内容逐字节比对）负责。
  *
- * 语言列表由目录扫描得出，不硬编码：新增语言文件即自动纳入校验。
- * 英文运行时 bundle 与源码的一致性不在此校验（那是 gen-l10n + l10n:check 的职责）。
+ * 键序口径基于 JSON.parse 的键序；l10n 的键都是消息文本，不含整数样式的键
+ * （JS 对象会把整数样式的键提前，届时该口径不再可靠）。
  */
 
-const isBundle = (name) => /^bundle\.l10n(\.[\w-]+)?\.json$/.test(name);
-const isNls = (name) => /^package\.nls(\.[\w-]+)?\.json$/.test(name);
+const readKeys = (file) => Object.keys(JSON.parse(readFileSync(file, "utf8")));
 
-const bundleFiles = readdirSync("l10n")
-  .filter(isBundle)
-  .map((name) => `l10n/${name}`);
-const nlsFiles = readdirSync(".").filter(isNls);
+function checkOrder(file) {
+  const keys = readKeys(file);
+  const sorted = [...keys].sort();
+  const at = keys.findIndex((key, i) => key !== sorted[i]);
+  if (at === -1) return true;
+  console.error(
+    `${file}: 键序不合字典序，首个错位是第 ${at + 1} 个键 "${keys[at]}"（应为 "${sorted[at]}"）`,
+  );
+  return false;
+}
 
-const keysOf = (file) =>
-  new Set(Object.keys(JSON.parse(readFileSync(file, "utf8"))));
-
-/** 英文基线：文件名恰好为 `<prefix>.json`（无语言后缀） */
-const englishOf = (files, prefix) =>
-  files.find((file) => file.split("/").pop() === `${prefix}.json`);
-
-function sameKeys(label, prefix, files) {
-  const baselineFile = englishOf(files, prefix);
-  if (!baselineFile) {
-    console.error(`${label}: 未找到英文基线文件 ${prefix}.json`);
+function checkAlignment(group) {
+  if (!group.files.includes(group.baseline)) {
+    console.error(`${group.label}: 找不到英文基线 ${group.baseline}`);
     return false;
   }
 
-  const base = keysOf(baselineFile);
+  const base = readKeys(group.baseline);
+  const baseSet = new Set(base);
   let ok = true;
-  for (const file of files) {
-    if (file === baselineFile) continue;
-    const keys = keysOf(file);
-    const missing = [...base].filter((key) => !keys.has(key));
-    const extra = [...keys].filter((key) => !base.has(key));
-    if (missing.length || extra.length) {
-      ok = false;
-      console.error(`${label}: ${file} 与 ${baselineFile} 不一致`);
-      if (missing.length) console.error(`  缺失键: ${missing.join(", ")}`);
-      if (extra.length) console.error(`  多余键: ${extra.join(", ")}`);
-    }
+
+  for (const file of group.files) {
+    if (file === group.baseline) continue;
+    const keys = readKeys(file);
+    const keySet = new Set(keys);
+    const missing = base.filter((key) => !keySet.has(key));
+    const extra = keys.filter((key) => !baseSet.has(key));
+    if (!missing.length && !extra.length) continue;
+
+    ok = false;
+    console.error(
+      `${group.label}: ${file} 与 ${group.baseline} 的键集合不一致`,
+    );
+    if (missing.length) console.error(`  缺失: ${missing.join(", ")}`);
+    if (extra.length) console.error(`  多余: ${extra.join(", ")}`);
   }
   return ok;
 }
 
-function nlsMatchesManifest() {
-  const manifest = readFileSync("package.json", "utf8");
+function checkManifestRefs(baseline) {
   const refs = new Set(
-    [...manifest.matchAll(/%([^%]+)%/g)].map((match) => match[1]),
+    [...readFileSync("package.json", "utf8").matchAll(/%([^%]+)%/g)].map(
+      (match) => match[1],
+    ),
   );
-  const nls = keysOf("package.nls.json");
+  const nls = new Set(readKeys(baseline));
 
   const missing = [...refs].filter((key) => !nls.has(key));
   const dead = [...nls].filter((key) => !refs.has(key));
 
   if (missing.length) {
     console.error(
-      `package.nls.json 缺少 package.json 引用的键: ${missing.join(", ")}`,
+      `${baseline} 缺少 package.json 引用的键: ${missing.join(", ")}`,
     );
   }
   if (dead.length) {
     console.error(
-      `package.nls.json 存在 package.json 未引用的键: ${dead.join(", ")}`,
+      `${baseline} 存在 package.json 未引用的键: ${dead.join(", ")}`,
     );
   }
-  return { ok: !missing.length && !dead.length, count: nls.size };
+  return !missing.length && !dead.length;
 }
 
-const bundleOk = sameKeys("运行时 bundle", "bundle.l10n", bundleFiles);
-const nlsOk = sameKeys("manifest nls", "package.nls", nlsFiles);
-const { ok: refOk, count } = nlsMatchesManifest();
+const groups = l10nGroups();
+if (!groups.length) {
+  console.error(
+    "未发现任何 l10n 文件（l10n/bundle.l10n*.json 或 package.nls*.json）——该门禁在此仓库无生效对象",
+  );
+  process.exit(1);
+}
 
-if (bundleOk && nlsOk && refOk) {
+let ok = true;
+let fileCount = 0;
+
+for (const group of groups) {
+  fileCount += group.files.length;
+  for (const file of group.files) {
+    if (!checkOrder(file)) ok = false;
+  }
+  if (!checkAlignment(group)) ok = false;
+}
+
+const nlsGroup = groups.find((group) => group.baseline === "package.nls.json");
+if (nlsGroup && !checkManifestRefs(nlsGroup.baseline)) ok = false;
+
+if (ok) {
   console.log(
-    `l10n parity OK (运行时 bundle: ${keysOf("l10n/bundle.l10n.json").size} 键, manifest nls: ${count} 键)`,
+    `l10n OK（${fileCount} 个文件：键序 / 跨语言对齐 / manifest 引用）`,
   );
   process.exit(0);
 }
+
+console.error(
+  "\n修复：node scripts/sort-l10n.mjs 重排键序；缺失键或占位符不一致需人工补齐",
+);
 process.exit(1);
