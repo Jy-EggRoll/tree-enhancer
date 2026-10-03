@@ -5,11 +5,11 @@ import * as vscode from "vscode";
 
 import { FileWatcherManager } from "../../utils/fileWatcher";
 import {
-    __reset,
-    __setConfig,
-    __setWorkspaceFolders,
-    __fireWatcher,
-    __getCreatedWatchers,
+  __reset,
+  __setConfig,
+  __setWorkspaceFolders,
+  __fireWatcher,
+  __getCreatedWatchers,
 } from "../vscodeStub";
 
 /**
@@ -33,95 +33,101 @@ const file = (fsPath: string) => vscode.Uri.file(fsPath);
 beforeEach(() => __reset());
 
 describe("createDirectoryWatcher：终端 CWD 非递归监控", () => {
-    test("监听范围为单层 glob（非递归）", () => {
-        const manager = new FileWatcherManager();
-        manager.createDirectoryWatcher(file("/proj"), () => {});
+  test("监听范围为单层 glob（非递归）", () => {
+    const manager = new FileWatcherManager();
+    manager.createDirectoryWatcher(file("/proj"), () => {});
 
-        const watchers = __getCreatedWatchers();
-        assert.equal(watchers.length, 1);
-        assert.equal(watchers[0].pattern, "*");
-    });
+    const watchers = __getCreatedWatchers();
+    assert.equal(watchers.length, 1);
+    assert.equal(watchers[0].pattern, "*");
+  });
 
-    test("change/create/delete 共用一个回调，三者都会触发", () => {
-        const manager = new FileWatcherManager();
-        const seen: string[] = [];
-        manager.createDirectoryWatcher(file("/proj"), (uri) =>
-            seen.push(uri.fsPath),
-        );
+  test("change/create/delete 共用一个回调，三者都会触发", () => {
+    const manager = new FileWatcherManager();
+    const seen: string[] = [];
+    manager.createDirectoryWatcher(file("/proj"), (uri) =>
+      seen.push(uri.fsPath),
+    );
 
-        __fireWatcher("change", file("/proj/a.ts"));
-        __fireWatcher("create", file("/proj/b.ts"));
-        __fireWatcher("delete", file("/proj/c.ts"));
+    __fireWatcher("change", file("/proj/a.ts"));
+    __fireWatcher("create", file("/proj/b.ts"));
+    __fireWatcher("delete", file("/proj/c.ts"));
 
-        assert.deepEqual(seen, ["/proj/a.ts", "/proj/b.ts", "/proj/c.ts"]);
-    });
+    assert.deepEqual(seen, ["/proj/a.ts", "/proj/b.ts", "/proj/c.ts"]);
+  });
 
-    test("不过滤 files.exclude（树在读取时自行过滤，装饰侧本就返回 undefined）", () => {
-        __setConfig({ files: { exclude: { "**/node_modules": true } } });
-        const manager = new FileWatcherManager();
-        const seen: string[] = [];
-        manager.createDirectoryWatcher(file("/outside"), (uri) =>
-            seen.push(uri.fsPath),
-        );
+  test("不过滤 files.exclude（树在读取时自行过滤，装饰侧本就返回 undefined）", () => {
+    __setConfig({ files: { exclude: { "**/node_modules": true } } });
+    const manager = new FileWatcherManager();
+    const seen: string[] = [];
+    manager.createDirectoryWatcher(file("/outside"), (uri) =>
+      seen.push(uri.fsPath),
+    );
 
-        __fireWatcher("change", file("/outside/node_modules/x.js"));
+    __fireWatcher("change", file("/outside/node_modules/x.js"));
 
-        assert.deepEqual(seen, ["/outside/node_modules/x.js"]);
-    });
+    assert.deepEqual(seen, ["/outside/node_modules/x.js"]);
+  });
 });
 
 describe("createWorkspaceWatchers：工作区递归监控", () => {
-    test("每个工作区根各建一个递归监控器", () => {
-        __setWorkspaceFolders([{ uri: file("/a") }, { uri: file("/b") }]);
-        const manager = new FileWatcherManager();
+  test("每个工作区根各建一个递归监控器", () => {
+    __setWorkspaceFolders([{ uri: file("/a") }, { uri: file("/b") }]);
+    const manager = new FileWatcherManager();
 
-        const watchers = manager.createWorkspaceWatchers(
-            () => {},
-            () => {},
-        );
+    const watchers = manager.createWorkspaceWatchers(
+      () => {},
+      () => {},
+    );
 
-        assert.equal(watchers.length, 2);
-        assert.deepEqual(
-            __getCreatedWatchers().map((watcher) => watcher.pattern),
-            ["**/*", "**/*"],
-        );
-    });
+    assert.equal(watchers.length, 2);
+    assert.deepEqual(
+      __getCreatedWatchers().map((watcher) => watcher.pattern),
+      ["**/*", "**/*"],
+    );
+  });
 
-    test("无工作区时返回空数组", () => {
-        __setWorkspaceFolders([]);
-        const manager = new FileWatcherManager();
-        assert.equal(manager.createWorkspaceWatchers(() => {}, () => {}).length, 0);
-    });
+  test("无工作区时返回空数组", () => {
+    __setWorkspaceFolders([]);
+    const manager = new FileWatcherManager();
+    assert.equal(
+      manager.createWorkspaceWatchers(
+        () => {},
+        () => {},
+      ).length,
+      0,
+    );
+  });
 
-    test("只派发 change/create，不派发 delete（有意为之，见 6937847）", () => {
-        __setWorkspaceFolders([{ uri: file("/a") }]);
-        const manager = new FileWatcherManager();
-        const seen: string[] = [];
-        manager.createWorkspaceWatchers(
-            (uri) => seen.push(`change:${uri.fsPath}`),
-            (uri) => seen.push(`create:${uri.fsPath}`),
-        );
+  test("只派发 change/create，不派发 delete（有意为之，见 6937847）", () => {
+    __setWorkspaceFolders([{ uri: file("/a") }]);
+    const manager = new FileWatcherManager();
+    const seen: string[] = [];
+    manager.createWorkspaceWatchers(
+      (uri) => seen.push(`change:${uri.fsPath}`),
+      (uri) => seen.push(`create:${uri.fsPath}`),
+    );
 
-        __fireWatcher("change", file("/a/x.ts"));
-        __fireWatcher("create", file("/a/y.ts"));
-        __fireWatcher("delete", file("/a/gone.ts"));
+    __fireWatcher("change", file("/a/x.ts"));
+    __fireWatcher("create", file("/a/y.ts"));
+    __fireWatcher("delete", file("/a/gone.ts"));
 
-        assert.deepEqual(seen, ["change:/a/x.ts", "create:/a/y.ts"]);
-    });
+    assert.deepEqual(seen, ["change:/a/x.ts", "create:/a/y.ts"]);
+  });
 
-    test("被 files.exclude 命中的路径不派发", () => {
-        __setConfig({ files: { exclude: { "**/ignored": true } } });
-        __setWorkspaceFolders([{ uri: file("/a") }]);
-        const manager = new FileWatcherManager();
-        const seen: string[] = [];
-        manager.createWorkspaceWatchers(
-            (uri) => seen.push(uri.fsPath),
-            () => {},
-        );
+  test("被 files.exclude 命中的路径不派发", () => {
+    __setConfig({ files: { exclude: { "**/ignored": true } } });
+    __setWorkspaceFolders([{ uri: file("/a") }]);
+    const manager = new FileWatcherManager();
+    const seen: string[] = [];
+    manager.createWorkspaceWatchers(
+      (uri) => seen.push(uri.fsPath),
+      () => {},
+    );
 
-        __fireWatcher("change", file("/a/ignored/x.ts"));
-        __fireWatcher("change", file("/a/kept/x.ts"));
+    __fireWatcher("change", file("/a/ignored/x.ts"));
+    __fireWatcher("change", file("/a/kept/x.ts"));
 
-        assert.deepEqual(seen, ["/a/kept/x.ts"]);
-    });
+    assert.deepEqual(seen, ["/a/kept/x.ts"]);
+  });
 });

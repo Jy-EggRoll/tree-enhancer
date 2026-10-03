@@ -1,332 +1,335 @@
 {
-    "activationEvents": [
-        "onStartupFinished"
+  "activationEvents": [
+    "onStartupFinished"
+  ],
+  "author": {
+    "name": "EggRoll"
+  },
+  "bugs": {
+    "url": "https://github.com/Jy-EggRoll/tree-enhancer/issues"
+  },
+  "categories": [
+    "Other"
+  ],
+  "contributes": {
+    "commands": [
+      {
+        "command": "tree-enhancer.calculateFolder",
+        "title": "%description.calculateFolder%"
+      },
+      {
+        "command": "tree-enhancer.copyPath",
+        "icon": "$(copy)",
+        "title": "%description.terminalExplorer.copyPath%"
+      },
+      {
+        "command": "tree-enhancer.newFile",
+        "icon": "$(new-file)",
+        "title": "%description.terminalExplorer.newFile%"
+      },
+      {
+        "command": "tree-enhancer.newFolder",
+        "icon": "$(new-folder)",
+        "title": "%description.terminalExplorer.newFolder%"
+      },
+      {
+        "command": "tree-enhancer.rename",
+        "icon": "$(edit)",
+        "title": "%description.terminalExplorer.rename%"
+      },
+      {
+        "command": "tree-enhancer.deleteFile",
+        "icon": "$(trash)",
+        "title": "%description.terminalExplorer.delete%"
+      },
+      {
+        "command": "tree-enhancer.deletePermanently",
+        "icon": "$(trash)",
+        "title": "%description.terminalExplorer.deletePermanently%"
+      },
+      {
+        "command": "tree-enhancer.download",
+        "icon": "$(cloud-download)",
+        "title": "%description.terminalExplorer.download%"
+      },
+      {
+        "command": "tree-enhancer.openFolderInNewWindow",
+        "title": "%description.terminalExplorer.openFolderInNewWindow%"
+      },
+      {
+        "command": "tree-enhancer.openCurrentFolder",
+        "icon": "$(folder-opened)",
+        "title": "%description.terminalExplorer.openCurrentFolder%"
+      },
+      {
+        "command": "tree-enhancer.openWorkspaceInNewWindow",
+        "title": "%description.terminalExplorer.openWorkspaceInNewWindow%"
+      },
+      {
+        "command": "tree-enhancer.refreshTerminalExplorer",
+        "icon": "$(refresh)",
+        "title": "%description.terminalExplorer.refresh%"
+      }
     ],
-    "author": {
-        "name": "EggRoll"
-    },
-    "bugs": {
-        "url": "https://github.com/Jy-EggRoll/tree-enhancer/issues"
-    },
-    "categories": [
-        "Other"
-    ],
-    "contributes": {
-        "commands": [
-            {
-                "command": "tree-enhancer.calculateFolder",
-                "title": "%description.calculateFolder%"
-            },
-            {
-                "command": "tree-enhancer.copyPath",
-                "icon": "$(copy)",
-                "title": "%description.terminalExplorer.copyPath%"
-            },
-            {
-                "command": "tree-enhancer.newFile",
-                "icon": "$(new-file)",
-                "title": "%description.terminalExplorer.newFile%"
-            },
-            {
-                "command": "tree-enhancer.newFolder",
-                "icon": "$(new-folder)",
-                "title": "%description.terminalExplorer.newFolder%"
-            },
-            {
-                "command": "tree-enhancer.rename",
-                "icon": "$(edit)",
-                "title": "%description.terminalExplorer.rename%"
-            },
-            {
-                "command": "tree-enhancer.deleteFile",
-                "icon": "$(trash)",
-                "title": "%description.terminalExplorer.delete%"
-            },
-            {
-                "command": "tree-enhancer.deletePermanently",
-                "icon": "$(trash)",
-                "title": "%description.terminalExplorer.deletePermanently%"
-            },
-            {
-                "command": "tree-enhancer.download",
-                "icon": "$(cloud-download)",
-                "title": "%description.terminalExplorer.download%"
-            },
-            {
-                "command": "tree-enhancer.openFolderInNewWindow",
-                "title": "%description.terminalExplorer.openFolderInNewWindow%"
-            },
-            {
-                "command": "tree-enhancer.openCurrentFolder",
-                "icon": "$(folder-opened)",
-                "title": "%description.terminalExplorer.openCurrentFolder%"
-            },
-            {
-                "command": "tree-enhancer.openWorkspaceInNewWindow",
-                "title": "%description.terminalExplorer.openWorkspaceInNewWindow%"
-            },
-            {
-                "command": "tree-enhancer.refreshTerminalExplorer",
-                "icon": "$(refresh)",
-                "title": "%description.terminalExplorer.refresh%"
-            }
-        ],
-        "configuration": {
-            "properties": {
-                "tree-enhancer.dateTimeFormat": {
-                    "default": "YYYY-MM-DD HH:mm:ss",
-                    "description": "%description.dateTimeFormat%",
-                    "type": "string"
-                },
-                "tree-enhancer.fileInfo.enabled": {
-                    "default": false,
-                    "description": "%description.fileInfo.enabled%",
-                    "type": "boolean"
-                },
-                "tree-enhancer.fileSizeBase": {
-                    "default": 1000,
-                    "description": "%description.fileSizeBase%",
-                    "enum": [
-                        1000,
-                        1024
-                    ],
-                    "type": "number"
-                },
-                "tree-enhancer.fileTemplate": {
-                    "default": {
-                        "fileString": "%default.fileTemplate%"
-                    },
-                    "description": "%description.fileTemplate%",
-                    "type": "object"
-                },
-                "tree-enhancer.folderCalculator.dismissDelay": {
-                    "default": 10,
-                    "description": "%description.folderCalculator.dismissDelay%",
-                    "maximum": 3600,
-                    "minimum": 0,
-                    "type": "number"
-                },
-                "tree-enhancer.folderCalculator.statusBarTemplate": {
-                    "default": "%default.folderCalculator.statusBarTemplate%",
-                    "description": "%description.folderCalculator.statusBarTemplate%",
-                    "type": "string"
-                },
-                "tree-enhancer.imageFileTemplate": {
-                    "default": {
-                        "imageFileString": "%default.imageFileTemplate%"
-                    },
-                    "description": "%description.imageFileTemplate%",
-                    "type": "object"
-                },
-                "tree-enhancer.imageResolutionTemplate": {
-                    "default": "%default.imageResolutionTemplate%",
-                    "description": "%description.imageResolutionTemplate%",
-                    "type": "string"
-                },
-                "tree-enhancer.largeFileThreshold": {
-                    "default": 10,
-                    "description": "%description.largeFileThreshold%",
-                    "maximum": 1000,
-                    "minimum": 0,
-                    "type": "number"
-                },
-                "tree-enhancer.startupDelay": {
-                    "default": 0,
-                    "description": "%description.startupDelay%",
-                    "maximum": 10,
-                    "minimum": 0,
-                    "type": "number"
-                },
-                "tree-enhancer.terminalExplorer.enabled": {
-                    "default": true,
-                    "description": "%description.terminalExplorer.enabled%",
-                    "type": "boolean"
-                },
-                "tree-enhancer.terminalExplorer.followExcludes": {
-                    "default": false,
-                    "description": "%description.terminalExplorer.followExcludes%",
-                    "type": "boolean"
-                },
-                "tree-enhancer.terminalExplorer.copyPathQuote": {
-                    "default": true,
-                    "description": "%description.terminalExplorer.copyPathQuote%",
-                    "type": "boolean"
-                }
-            },
-            "title": "Tree Enhancer"
+    "configuration": {
+      "properties": {
+        "tree-enhancer.dateTimeFormat": {
+          "default": "YYYY-MM-DD HH:mm:ss",
+          "description": "%description.dateTimeFormat%",
+          "type": "string"
         },
-        "menus": {
-            "explorer/context": [
-                {
-                    "command": "tree-enhancer.calculateFolder",
-                    "group": "navigation@99",
-                    "when": "explorerResourceIsFolder"
-                }
-            ],
-            "view/item/context": [
-                {
-                    "command": "tree-enhancer.newFile",
-                    "group": "inline@1",
-                    "when": "view == tree-enhancer.terminalExplorer && viewItem == folder"
-                },
-                {
-                    "command": "tree-enhancer.newFolder",
-                    "group": "inline@2",
-                    "when": "view == tree-enhancer.terminalExplorer && viewItem == folder"
-                },
-                {
-                    "command": "tree-enhancer.newFile",
-                    "group": "1_modification@1",
-                    "when": "view == tree-enhancer.terminalExplorer"
-                },
-                {
-                    "command": "tree-enhancer.newFolder",
-                    "group": "1_modification@2",
-                    "when": "view == tree-enhancer.terminalExplorer"
-                },
-                {
-                    "command": "tree-enhancer.rename",
-                    "group": "inline@1",
-                    "when": "view == tree-enhancer.terminalExplorer && viewItem == file"
-                },
-                {
-                    "command": "tree-enhancer.rename",
-                    "group": "5_modification@1",
-                    "when": "view == tree-enhancer.terminalExplorer && viewItem == file"
-                },
-                {
-                    "command": "tree-enhancer.rename",
-                    "group": "5_modification@1",
-                    "when": "view == tree-enhancer.terminalExplorer && viewItem == folder"
-                },
-                {
-                    "command": "tree-enhancer.deleteFile",
-                    "group": "5_modification@2",
-                    "when": "view == tree-enhancer.terminalExplorer"
-                },
-                {
-                    "command": "tree-enhancer.deletePermanently",
-                    "group": "5_modification@3",
-                    "when": "view == tree-enhancer.terminalExplorer"
-                },
-                {
-                    "command": "tree-enhancer.download",
-                    "group": "5_modification@4",
-                    "when": "view == tree-enhancer.terminalExplorer && remoteName != ''"
-                },
-                {
-                    "command": "tree-enhancer.openFolderInNewWindow",
-                    "group": "2_open@1",
-                    "when": "view == tree-enhancer.terminalExplorer && viewItem == folder"
-                },
-                {
-                    "command": "tree-enhancer.openWorkspaceInNewWindow",
-                    "group": "2_open@2",
-                    "when": "view == tree-enhancer.terminalExplorer && viewItem == folder"
-                },
-                {
-                    "command": "tree-enhancer.calculateFolder",
-                    "group": "3_calculation@1",
-                    "when": "view == tree-enhancer.terminalExplorer && viewItem == folder"
-                },
-                {
-                    "command": "tree-enhancer.copyPath",
-                    "group": "4_clipboard@1",
-                    "when": "view == tree-enhancer.terminalExplorer"
-                }
-            ],
-            "view/title": [
-                {
-                    "command": "tree-enhancer.newFile",
-                    "group": "navigation@1",
-                    "when": "view == tree-enhancer.terminalExplorer"
-                },
-                {
-                    "command": "tree-enhancer.newFolder",
-                    "group": "navigation@2",
-                    "when": "view == tree-enhancer.terminalExplorer"
-                },
-                {
-                    "command": "tree-enhancer.openCurrentFolder",
-                    "group": "navigation@3",
-                    "when": "view == tree-enhancer.terminalExplorer"
-                },
-                {
-                    "command": "tree-enhancer.refreshTerminalExplorer",
-                    "group": "navigation@4",
-                    "when": "view == tree-enhancer.terminalExplorer"
-                }
-            ]
+        "tree-enhancer.fileInfo.enabled": {
+          "default": false,
+          "description": "%description.fileInfo.enabled%",
+          "type": "boolean"
         },
-        "views": {
-            "tree-enhancer": [
-                {
-                    "icon": "$(file-code)",
-                    "id": "tree-enhancer.terminalExplorer",
-                    "name": "%description.terminalExplorer%",
-                    "when": "config.tree-enhancer.terminalExplorer.enabled"
-                }
-            ]
+        "tree-enhancer.fileSizeBase": {
+          "default": 1000,
+          "description": "%description.fileSizeBase%",
+          "enum": [
+            1000,
+            1024
+          ],
+          "type": "number"
         },
-        "viewsContainers": {
-            "activitybar": [
-                {
-                    "icon": "$(file-code)",
-                    "id": "tree-enhancer",
-                    "title": "%description.terminalExplorer%"
-                }
-            ]
+        "tree-enhancer.fileTemplate": {
+          "default": {
+            "fileString": "%default.fileTemplate%"
+          },
+          "description": "%description.fileTemplate%",
+          "type": "object"
+        },
+        "tree-enhancer.folderCalculator.dismissDelay": {
+          "default": 10,
+          "description": "%description.folderCalculator.dismissDelay%",
+          "maximum": 3600,
+          "minimum": 0,
+          "type": "number"
+        },
+        "tree-enhancer.folderCalculator.statusBarTemplate": {
+          "default": "%default.folderCalculator.statusBarTemplate%",
+          "description": "%description.folderCalculator.statusBarTemplate%",
+          "type": "string"
+        },
+        "tree-enhancer.imageFileTemplate": {
+          "default": {
+            "imageFileString": "%default.imageFileTemplate%"
+          },
+          "description": "%description.imageFileTemplate%",
+          "type": "object"
+        },
+        "tree-enhancer.imageResolutionTemplate": {
+          "default": "%default.imageResolutionTemplate%",
+          "description": "%description.imageResolutionTemplate%",
+          "type": "string"
+        },
+        "tree-enhancer.largeFileThreshold": {
+          "default": 10,
+          "description": "%description.largeFileThreshold%",
+          "maximum": 1000,
+          "minimum": 0,
+          "type": "number"
+        },
+        "tree-enhancer.startupDelay": {
+          "default": 0,
+          "description": "%description.startupDelay%",
+          "maximum": 10,
+          "minimum": 0,
+          "type": "number"
+        },
+        "tree-enhancer.terminalExplorer.enabled": {
+          "default": true,
+          "description": "%description.terminalExplorer.enabled%",
+          "type": "boolean"
+        },
+        "tree-enhancer.terminalExplorer.followExcludes": {
+          "default": false,
+          "description": "%description.terminalExplorer.followExcludes%",
+          "type": "boolean"
+        },
+        "tree-enhancer.terminalExplorer.copyPathQuote": {
+          "default": true,
+          "description": "%description.terminalExplorer.copyPathQuote%",
+          "type": "boolean"
         }
+      },
+      "title": "Tree Enhancer"
     },
-    "dependencies": {
-        "image-size": "^2.0.2",
-        "minimatch": "^9.0.0",
-        "source-map-support": "^0.5.21"
+    "menus": {
+      "explorer/context": [
+        {
+          "command": "tree-enhancer.calculateFolder",
+          "group": "navigation@99",
+          "when": "explorerResourceIsFolder"
+        }
+      ],
+      "view/item/context": [
+        {
+          "command": "tree-enhancer.newFile",
+          "group": "inline@1",
+          "when": "view == tree-enhancer.terminalExplorer && viewItem == folder"
+        },
+        {
+          "command": "tree-enhancer.newFolder",
+          "group": "inline@2",
+          "when": "view == tree-enhancer.terminalExplorer && viewItem == folder"
+        },
+        {
+          "command": "tree-enhancer.newFile",
+          "group": "1_modification@1",
+          "when": "view == tree-enhancer.terminalExplorer"
+        },
+        {
+          "command": "tree-enhancer.newFolder",
+          "group": "1_modification@2",
+          "when": "view == tree-enhancer.terminalExplorer"
+        },
+        {
+          "command": "tree-enhancer.rename",
+          "group": "inline@1",
+          "when": "view == tree-enhancer.terminalExplorer && viewItem == file"
+        },
+        {
+          "command": "tree-enhancer.rename",
+          "group": "5_modification@1",
+          "when": "view == tree-enhancer.terminalExplorer && viewItem == file"
+        },
+        {
+          "command": "tree-enhancer.rename",
+          "group": "5_modification@1",
+          "when": "view == tree-enhancer.terminalExplorer && viewItem == folder"
+        },
+        {
+          "command": "tree-enhancer.deleteFile",
+          "group": "5_modification@2",
+          "when": "view == tree-enhancer.terminalExplorer"
+        },
+        {
+          "command": "tree-enhancer.deletePermanently",
+          "group": "5_modification@3",
+          "when": "view == tree-enhancer.terminalExplorer"
+        },
+        {
+          "command": "tree-enhancer.download",
+          "group": "5_modification@4",
+          "when": "view == tree-enhancer.terminalExplorer && remoteName != ''"
+        },
+        {
+          "command": "tree-enhancer.openFolderInNewWindow",
+          "group": "2_open@1",
+          "when": "view == tree-enhancer.terminalExplorer && viewItem == folder"
+        },
+        {
+          "command": "tree-enhancer.openWorkspaceInNewWindow",
+          "group": "2_open@2",
+          "when": "view == tree-enhancer.terminalExplorer && viewItem == folder"
+        },
+        {
+          "command": "tree-enhancer.calculateFolder",
+          "group": "3_calculation@1",
+          "when": "view == tree-enhancer.terminalExplorer && viewItem == folder"
+        },
+        {
+          "command": "tree-enhancer.copyPath",
+          "group": "4_clipboard@1",
+          "when": "view == tree-enhancer.terminalExplorer"
+        }
+      ],
+      "view/title": [
+        {
+          "command": "tree-enhancer.newFile",
+          "group": "navigation@1",
+          "when": "view == tree-enhancer.terminalExplorer"
+        },
+        {
+          "command": "tree-enhancer.newFolder",
+          "group": "navigation@2",
+          "when": "view == tree-enhancer.terminalExplorer"
+        },
+        {
+          "command": "tree-enhancer.openCurrentFolder",
+          "group": "navigation@3",
+          "when": "view == tree-enhancer.terminalExplorer"
+        },
+        {
+          "command": "tree-enhancer.refreshTerminalExplorer",
+          "group": "navigation@4",
+          "when": "view == tree-enhancer.terminalExplorer"
+        }
+      ]
     },
-    "description": "Show more information in the VSCode file explorer when hovering over files | 鼠标悬浮时在 VSCode 资源管理器中显示文件的详细信息",
-    "devDependencies": {
-        "@types/node": "20.x",
-        "@types/source-map-support": "^0.5.10",
-        "@types/vscode": "^1.93.0",
-        "@vscode/l10n-dev": "^0.0.35",
-        "@vscode/test-cli": "^0.0.11",
-        "@vscode/vsce": "^3.3.2",
-        "esbuild": "^0.25.9",
-        "typescript": "^5.8.3"
+    "views": {
+      "tree-enhancer": [
+        {
+          "icon": "$(file-code)",
+          "id": "tree-enhancer.terminalExplorer",
+          "name": "%description.terminalExplorer%",
+          "when": "config.tree-enhancer.terminalExplorer.enabled"
+        }
+      ]
     },
-    "displayName": "Tree Enhancer",
-    "engines": {
-        "vscode": "^1.93.0"
-    },
-    "homepage": "https://github.com/Jy-EggRoll/tree-enhancer#readme",
-    "icon": "icon.png",
-    "keywords": [
-        "file",
-        "explorer",
-        "size",
-        "tooltip",
-        "show size",
-        "文件管理器",
-        "文件",
-        "信息"
-    ],
-    "l10n": "./l10n",
-    "license": "SEE LICENSE IN LICENSE",
-    "main": "./dist/extension.js",
-    "name": "eggroll-tree-enhancer",
-    "publisher": "Jy-EggRoll",
-    "repository": {
-        "type": "git",
-        "url": "https://github.com/Jy-EggRoll/tree-enhancer.git"
-    },
-    "scripts": {
-        "check-types": "pnpm tsc --noEmit",
-        "compile": "pnpm run check-types && node esbuild.js",
-        "test": "pnpm run check-types && node scripts/run-tests.cjs",
-        "gen-l10n": "npx @vscode/l10n-dev export -o ./l10n ./src && node scripts/sort-l10n.mjs",
-        "l10n:parity": "node scripts/check-l10n.mjs",
-        "package": "pnpm run check-types && node esbuild.js --production",
-        "vscode:prepublish": "pnpm run package"
-    },
-    "version": "2.3.0"
+    "viewsContainers": {
+      "activitybar": [
+        {
+          "icon": "$(file-code)",
+          "id": "tree-enhancer",
+          "title": "%description.terminalExplorer%"
+        }
+      ]
+    }
+  },
+  "dependencies": {
+    "image-size": "^2.0.2",
+    "minimatch": "^9.0.0",
+    "source-map-support": "^0.5.21"
+  },
+  "description": "Show more information in the VSCode file explorer when hovering over files | 鼠标悬浮时在 VSCode 资源管理器中显示文件的详细信息",
+  "devDependencies": {
+    "@types/node": "20.x",
+    "@types/source-map-support": "^0.5.10",
+    "@types/vscode": "^1.93.0",
+    "@vscode/l10n-dev": "^0.0.35",
+    "@vscode/test-cli": "^0.0.11",
+    "@vscode/vsce": "^3.3.2",
+    "esbuild": "^0.25.9",
+    "prettier": "3.9.5",
+    "typescript": "^5.8.3"
+  },
+  "displayName": "Tree Enhancer",
+  "engines": {
+    "vscode": "^1.93.0"
+  },
+  "homepage": "https://github.com/Jy-EggRoll/tree-enhancer#readme",
+  "icon": "icon.png",
+  "keywords": [
+    "file",
+    "explorer",
+    "size",
+    "tooltip",
+    "show size",
+    "文件管理器",
+    "文件",
+    "信息"
+  ],
+  "l10n": "./l10n",
+  "license": "SEE LICENSE IN LICENSE",
+  "main": "./dist/extension.js",
+  "name": "eggroll-tree-enhancer",
+  "publisher": "Jy-EggRoll",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/Jy-EggRoll/tree-enhancer.git"
+  },
+  "scripts": {
+    "check-types": "pnpm tsc --noEmit",
+    "compile": "pnpm run check-types && node esbuild.js",
+    "format": "prettier --write .",
+    "format:check": "prettier --check .",
+    "test": "pnpm run check-types && node scripts/run-tests.cjs",
+    "gen-l10n": "npx @vscode/l10n-dev export -o ./l10n ./src && node scripts/sort-l10n.mjs",
+    "l10n:parity": "node scripts/check-l10n.mjs",
+    "package": "pnpm run check-types && node esbuild.js --production",
+    "vscode:prepublish": "pnpm run package"
+  },
+  "version": "2.3.0"
 }

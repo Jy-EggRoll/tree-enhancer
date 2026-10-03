@@ -1,80 +1,80 @@
 name: Package Extension
 
 on:
-    push:
-        branches:
-            - '**'
-        tags:
-            - '[0-9]*.[0-9]*.[0-9]*.dev.*'
-    workflow_dispatch:
+  push:
+    branches:
+      - "**"
+    tags:
+      - "[0-9]*.[0-9]*.[0-9]*.dev.*"
+  workflow_dispatch:
 
 permissions:
-    contents: write
+  contents: write
 
 env:
-    FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: 'true'
+  FORCE_JAVASCRIPT_ACTIONS_TO_NODE24: "true"
 
 jobs:
-    package:
-        runs-on: ubuntu-latest
+  package:
+    runs-on: ubuntu-latest
 
-        steps:
-            - uses: actions/checkout@v4
-              with:
-                  fetch-depth: 0
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
 
-            - uses: ./.github/actions/setup
+      - uses: ./.github/actions/setup
 
-            - name: Get version info
-              id: get_version
-              run: |
-                  if [ "${{ github.ref_type }}" = "tag" ]; then
-                    VERSION=${GITHUB_REF#refs/tags/}
-                  else
-                    PKG_VERSION=$(node -p "require('./package.json').version")
-                    SAFE_BRANCH="${GITHUB_REF_NAME//\//-}"
-                    VERSION="${PKG_VERSION}.dev.${SAFE_BRANCH}$(date +%Y%m%d)"
-                  fi
-                  echo "version=$VERSION" >> $GITHUB_OUTPUT
+      - name: Get version info
+        id: get_version
+        run: |
+          if [ "${{ github.ref_type }}" = "tag" ]; then
+            VERSION=${GITHUB_REF#refs/tags/}
+          else
+            PKG_VERSION=$(node -p "require('./package.json').version")
+            SAFE_BRANCH="${GITHUB_REF_NAME//\//-}"
+            VERSION="${PKG_VERSION}.dev.${SAFE_BRANCH}$(date +%Y%m%d)"
+          fi
+          echo "version=$VERSION" >> $GITHUB_OUTPUT
 
-            - name: Package extension
-              run: |
-                  pnpm vsce package --no-dependencies --out tree-enhancer-${{ steps.get_version.outputs.version }}.vsix
+      - name: Package extension
+        run: |
+          pnpm vsce package --no-dependencies --out tree-enhancer-${{ steps.get_version.outputs.version }}.vsix
 
-            - name: Find previous stable tag
-              id: previous_stable_tag
-              run: |
-                  PREV=$(git tag -l --sort=-version:refname | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | head -n1)
-                  echo "previous_stable_tag=$PREV" >> $GITHUB_OUTPUT
+      - name: Find previous stable tag
+        id: previous_stable_tag
+        run: |
+          PREV=$(git tag -l --sort=-version:refname | grep -E '^[0-9]+\.[0-9]+\.[0-9]+$' | head -n1)
+          echo "previous_stable_tag=$PREV" >> $GITHUB_OUTPUT
 
-            - name: Create development release
-              if: github.ref_type == 'tag'
-              uses: softprops/action-gh-release@v2
-              with:
-                  tag_name: ${{ steps.get_version.outputs.version }}
-                  name: 'Tree Enhancer ${{ steps.get_version.outputs.version }} (Dev Build)'
-                  body: |
-                      # Development Build -- For Testing Only
+      - name: Create development release
+        if: github.ref_type == 'tag'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: ${{ steps.get_version.outputs.version }}
+          name: "Tree Enhancer ${{ steps.get_version.outputs.version }} (Dev Build)"
+          body: |
+            # Development Build -- For Testing Only
 
-                      This is a development build for internal testing. Do not use in production.
+            This is a development build for internal testing. Do not use in production.
 
-                      - **Version**: ${{ steps.get_version.outputs.version }}
-                      - **Build**: ${{ github.run_id }}
-                      - **Commit**: ${{ github.sha }}
+            - **Version**: ${{ steps.get_version.outputs.version }}
+            - **Build**: ${{ github.run_id }}
+            - **Commit**: ${{ github.sha }}
 
-                      This build will NOT be published to the VS Code Marketplace. Download via GitHub Release only.
+            This build will NOT be published to the VS Code Marketplace. Download via GitHub Release only.
 
-                      **What's Changed:** [Compare with ${{ steps.previous_stable_tag.outputs.previous_stable_tag }}](https://github.com/${{ github.repository }}/compare/${{ steps.previous_stable_tag.outputs.previous_stable_tag }}...${{ steps.get_version.outputs.version }})
+            **What's Changed:** [Compare with ${{ steps.previous_stable_tag.outputs.previous_stable_tag }}](https://github.com/${{ github.repository }}/compare/${{ steps.previous_stable_tag.outputs.previous_stable_tag }}...${{ steps.get_version.outputs.version }})
 
-                      **Installation:** Download the .vsix file and install manually in VS Code.
-                  files: tree-enhancer-*.vsix
-                  draft: false
-                  prerelease: true
-              env:
-                  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+            **Installation:** Download the .vsix file and install manually in VS Code.
+          files: tree-enhancer-*.vsix
+          draft: false
+          prerelease: true
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
-            - uses: actions/upload-artifact@v4
-              with:
-                  name: vsix-${{ steps.get_version.outputs.version }}
-                  path: 'tree-enhancer-*.vsix'
-                  retention-days: 90
+      - uses: actions/upload-artifact@v4
+        with:
+          name: vsix-${{ steps.get_version.outputs.version }}
+          path: "tree-enhancer-*.vsix"
+          retention-days: 90

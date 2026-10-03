@@ -15,20 +15,20 @@ import { minimatch } from "minimatch";
  *   在 CWD 落入深层排除目录时误判，把整层子项全部隐藏）。
  */
 export interface ExcludeMatchOptions {
-    /**
-     * 是否启用"目录前缀兜底"，即把被排除目录下的所有后代一并视为排除。
-     *
-     * minimatch 中 globstar 只能跨目录、不能匹配目录内部的文件名，
-     * 因此「globstar + 目录名」这类模式无法匹配其下文件（例如
-     * 以 globstar 加 node_modules 为模式时，匹配不到 node_modules 里的 index.js）。
-     *
-     * - true：文件监控器需要。它按全量 glob 订阅整棵工作区，必须靠兜底
-     *         把被排除目录的后代一并挡掉，否则这些文件仍会进入监控与装饰计算。
-     * - false：终端文件树需要。树是懒加载的，被排除的目录不会展开，
-     *          其后代根本不会进入匹配点；启用兜底反而会在"CWD 位于排除目录内"
-     *          时把当前层的全部子项误判为已排除，导致树显示为空。
-     */
-    matchDescendants: boolean;
+  /**
+   * 是否启用"目录前缀兜底"，即把被排除目录下的所有后代一并视为排除。
+   *
+   * minimatch 中 globstar 只能跨目录、不能匹配目录内部的文件名，
+   * 因此「globstar + 目录名」这类模式无法匹配其下文件（例如
+   * 以 globstar 加 node_modules 为模式时，匹配不到 node_modules 里的 index.js）。
+   *
+   * - true：文件监控器需要。它按全量 glob 订阅整棵工作区，必须靠兜底
+   *         把被排除目录的后代一并挡掉，否则这些文件仍会进入监控与装饰计算。
+   * - false：终端文件树需要。树是懒加载的，被排除的目录不会展开，
+   *          其后代根本不会进入匹配点；启用兜底反而会在"CWD 位于排除目录内"
+   *          时把当前层的全部子项误判为已排除，导致树显示为空。
+   */
+  matchDescendants: boolean;
 }
 
 /**
@@ -37,13 +37,13 @@ export interface ExcludeMatchOptions {
  * 返回的数组顺序即配置中的键顺序，对匹配语义无影响。
  */
 export function readExcludePatterns(): string[] {
-    const excludeConfig = vscode.workspace
-        .getConfiguration("files")
-        .get<Record<string, boolean>>("exclude");
+  const excludeConfig = vscode.workspace
+    .getConfiguration("files")
+    .get<Record<string, boolean>>("exclude");
 
-    return excludeConfig
-        ? Object.keys(excludeConfig).filter((key) => excludeConfig[key])
-        : [];
+  return excludeConfig
+    ? Object.keys(excludeConfig).filter((key) => excludeConfig[key])
+    : [];
 }
 
 /**
@@ -54,30 +54,30 @@ export function readExcludePatterns(): string[] {
  * 2. 可选的目录前缀兜底，仅在 options.matchDescendants 为 true 时启用。
  */
 export function pathMatchesExclude(
-    relativePath: string,
-    pattern: string,
-    options: ExcludeMatchOptions,
+  relativePath: string,
+  pattern: string,
+  options: ExcludeMatchOptions,
 ): boolean {
-    if (minimatch(relativePath, pattern, { dot: true })) {
-        return true;
-    }
+  if (minimatch(relativePath, pattern, { dot: true })) {
+    return true;
+  }
 
-    if (!options.matchDescendants) {
-        return false;
-    }
-
-    // 处理 **/.git 类型的模式，命中 .git 目录下的所有后代
-    if (pattern.startsWith("**/")) {
-        const matchPart = pattern.slice(3);
-        if (
-            relativePath.includes("/" + matchPart + "/") ||
-            relativePath.endsWith("/" + matchPart)
-        ) {
-            return true;
-        }
-    }
-
+  if (!options.matchDescendants) {
     return false;
+  }
+
+  // 处理 **/.git 类型的模式，命中 .git 目录下的所有后代
+  if (pattern.startsWith("**/")) {
+    const matchPart = pattern.slice(3);
+    if (
+      relativePath.includes("/" + matchPart + "/") ||
+      relativePath.endsWith("/" + matchPart)
+    ) {
+      return true;
+    }
+  }
+
+  return false;
 }
 
 /**
@@ -87,20 +87,20 @@ export function pathMatchesExclude(
  * 此时没有可依据的相对根，官方资源管理器同样不做排除。
  */
 export function isExcludedByConfig(
-    uri: vscode.Uri,
-    patterns: string[],
-    options: ExcludeMatchOptions,
+  uri: vscode.Uri,
+  patterns: string[],
+  options: ExcludeMatchOptions,
 ): boolean {
-    if (patterns.length === 0) {
-        return false;
-    }
+  if (patterns.length === 0) {
+    return false;
+  }
 
-    const relative = vscode.workspace.asRelativePath(uri, false);
-    if (vscode.Uri.file(relative).fsPath === uri.fsPath) {
-        return false;
-    }
+  const relative = vscode.workspace.asRelativePath(uri, false);
+  if (vscode.Uri.file(relative).fsPath === uri.fsPath) {
+    return false;
+  }
 
-    return patterns.some((pattern) =>
-        pathMatchesExclude(relative, pattern, options),
-    );
+  return patterns.some((pattern) =>
+    pathMatchesExclude(relative, pattern, options),
+  );
 }

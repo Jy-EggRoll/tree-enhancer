@@ -111,8 +111,8 @@
 ## 1.4.0
 
 1. 大幅优化扩展的性能 | Significant performance optimizations
-    - 引入智能刷新机制，定期刷新文件装饰，避免频繁全量刷新 | Introduced intelligent refresh mechanism to periodically refresh file decorations, avoiding frequent full refreshes
-    - 优化缓存机制，减少重复计算 | Optimized caching mechanism to reduce redundant calculations
+   - 引入智能刷新机制，定期刷新文件装饰，避免频繁全量刷新 | Introduced intelligent refresh mechanism to periodically refresh file decorations, avoiding frequent full refreshes
+   - 优化缓存机制，减少重复计算 | Optimized caching mechanism to reduce redundant calculations
 2. 新增大文件标识功能，用类似 Git 扩展的样式标识大文件 | Added large file identification feature, marking large files with a style similar to Git extension
 3. 修复大量问题 | Fixed numerous issues
 4. 优化代码结构，提高可维护性 | Improved code structure for better maintainability

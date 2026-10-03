@@ -25,7 +25,10 @@ function callerLocation(skip = 2): string {
   const line = content.slice(sep2 + 1, sep);
   const segments = filePart.split(/[/\\]/);
   const srcIdx = segments.lastIndexOf("src");
-  const short = srcIdx >= 0 ? segments.slice(srcIdx).join("/") : segments.slice(-2).join("/");
+  const short =
+    srcIdx >= 0
+      ? segments.slice(srcIdx).join("/")
+      : segments.slice(-2).join("/");
 
   return `${short}:${line}`;
 }
@@ -55,7 +58,9 @@ export function getLogger(): ILogger {
 }
 
 export function initLogger(name: string): void {
-  _channel = window.createOutputChannel(name, { log: true }) as unknown as ILogger;
+  _channel = window.createOutputChannel(name, {
+    log: true,
+  }) as unknown as ILogger;
 
   _logger.trace = (msg: string) => {
     const loc = callerLocation();

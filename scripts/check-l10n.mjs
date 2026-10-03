@@ -19,62 +19,62 @@ const isBundle = (name) => /^bundle\.l10n(\.[\w-]+)?\.json$/.test(name);
 const isNls = (name) => /^package\.nls(\.[\w-]+)?\.json$/.test(name);
 
 const bundleFiles = readdirSync("l10n")
-    .filter(isBundle)
-    .map((name) => `l10n/${name}`);
+  .filter(isBundle)
+  .map((name) => `l10n/${name}`);
 const nlsFiles = readdirSync(".").filter(isNls);
 
 const keysOf = (file) =>
-    new Set(Object.keys(JSON.parse(readFileSync(file, "utf8"))));
+  new Set(Object.keys(JSON.parse(readFileSync(file, "utf8"))));
 
 /** 英文基线：文件名恰好为 `<prefix>.json`（无语言后缀） */
 const englishOf = (files, prefix) =>
-    files.find((file) => file.split("/").pop() === `${prefix}.json`);
+  files.find((file) => file.split("/").pop() === `${prefix}.json`);
 
 function sameKeys(label, prefix, files) {
-    const baselineFile = englishOf(files, prefix);
-    if (!baselineFile) {
-        console.error(`${label}: 未找到英文基线文件 ${prefix}.json`);
-        return false;
-    }
+  const baselineFile = englishOf(files, prefix);
+  if (!baselineFile) {
+    console.error(`${label}: 未找到英文基线文件 ${prefix}.json`);
+    return false;
+  }
 
-    const base = keysOf(baselineFile);
-    let ok = true;
-    for (const file of files) {
-        if (file === baselineFile) continue;
-        const keys = keysOf(file);
-        const missing = [...base].filter((key) => !keys.has(key));
-        const extra = [...keys].filter((key) => !base.has(key));
-        if (missing.length || extra.length) {
-            ok = false;
-            console.error(`${label}: ${file} 与 ${baselineFile} 不一致`);
-            if (missing.length) console.error(`  缺失键: ${missing.join(", ")}`);
-            if (extra.length) console.error(`  多余键: ${extra.join(", ")}`);
-        }
+  const base = keysOf(baselineFile);
+  let ok = true;
+  for (const file of files) {
+    if (file === baselineFile) continue;
+    const keys = keysOf(file);
+    const missing = [...base].filter((key) => !keys.has(key));
+    const extra = [...keys].filter((key) => !base.has(key));
+    if (missing.length || extra.length) {
+      ok = false;
+      console.error(`${label}: ${file} 与 ${baselineFile} 不一致`);
+      if (missing.length) console.error(`  缺失键: ${missing.join(", ")}`);
+      if (extra.length) console.error(`  多余键: ${extra.join(", ")}`);
     }
-    return ok;
+  }
+  return ok;
 }
 
 function nlsMatchesManifest() {
-    const manifest = readFileSync("package.json", "utf8");
-    const refs = new Set(
-        [...manifest.matchAll(/%([^%]+)%/g)].map((match) => match[1]),
+  const manifest = readFileSync("package.json", "utf8");
+  const refs = new Set(
+    [...manifest.matchAll(/%([^%]+)%/g)].map((match) => match[1]),
+  );
+  const nls = keysOf("package.nls.json");
+
+  const missing = [...refs].filter((key) => !nls.has(key));
+  const dead = [...nls].filter((key) => !refs.has(key));
+
+  if (missing.length) {
+    console.error(
+      `package.nls.json 缺少 package.json 引用的键: ${missing.join(", ")}`,
     );
-    const nls = keysOf("package.nls.json");
-
-    const missing = [...refs].filter((key) => !nls.has(key));
-    const dead = [...nls].filter((key) => !refs.has(key));
-
-    if (missing.length) {
-        console.error(
-            `package.nls.json 缺少 package.json 引用的键: ${missing.join(", ")}`,
-        );
-    }
-    if (dead.length) {
-        console.error(
-            `package.nls.json 存在 package.json 未引用的键: ${dead.join(", ")}`,
-        );
-    }
-    return { ok: !missing.length && !dead.length, count: nls.size };
+  }
+  if (dead.length) {
+    console.error(
+      `package.nls.json 存在 package.json 未引用的键: ${dead.join(", ")}`,
+    );
+  }
+  return { ok: !missing.length && !dead.length, count: nls.size };
 }
 
 const bundleOk = sameKeys("运行时 bundle", "bundle.l10n", bundleFiles);
@@ -82,9 +82,9 @@ const nlsOk = sameKeys("manifest nls", "package.nls", nlsFiles);
 const { ok: refOk, count } = nlsMatchesManifest();
 
 if (bundleOk && nlsOk && refOk) {
-    console.log(
-        `l10n parity OK (运行时 bundle: ${keysOf("l10n/bundle.l10n.json").size} 键, manifest nls: ${count} 键)`,
-    );
-    process.exit(0);
+  console.log(
+    `l10n parity OK (运行时 bundle: ${keysOf("l10n/bundle.l10n.json").size} 键, manifest nls: ${count} 键)`,
+  );
+  process.exit(0);
 }
 process.exit(1);

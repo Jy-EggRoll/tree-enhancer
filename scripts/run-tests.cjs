@@ -22,44 +22,44 @@ const outDir = fs.mkdtempSync(path.join(os.tmpdir(), "tree-enhancer-test-"));
 const outFile = path.join(outDir, "tests.cjs");
 
 function cleanup() {
-    fs.rmSync(outDir, { recursive: true, force: true });
+  fs.rmSync(outDir, { recursive: true, force: true });
 }
 
 async function main() {
-    if (!fs.existsSync(entry)) {
-        console.error(`未找到测试入口: ${entry}`);
-        process.exit(1);
-    }
+  if (!fs.existsSync(entry)) {
+    console.error(`未找到测试入口: ${entry}`);
+    process.exit(1);
+  }
 
-    await esbuild.build({
-        entryPoints: [entry],
-        bundle: true,
-        format: "cjs",
-        platform: "node",
-        target: "node20",
-        outfile: outFile,
-        sourcemap: "inline",
-        // vscode 模块在扩展宿主外不存在，打包时替换为测试桩件
-        alias: {
-            vscode: path.join(root, "src/test/vscodeStub.ts"),
-        },
-        // 桩件需要知道扩展根目录，才能读取 package.json 声明的配置默认值
-        define: {
-            __EXTENSION_ROOT__: JSON.stringify(root),
-        },
-        logLevel: "warning",
-    });
+  await esbuild.build({
+    entryPoints: [entry],
+    bundle: true,
+    format: "cjs",
+    platform: "node",
+    target: "node20",
+    outfile: outFile,
+    sourcemap: "inline",
+    // vscode 模块在扩展宿主外不存在，打包时替换为测试桩件
+    alias: {
+      vscode: path.join(root, "src/test/vscodeStub.ts"),
+    },
+    // 桩件需要知道扩展根目录，才能读取 package.json 声明的配置默认值
+    define: {
+      __EXTENSION_ROOT__: JSON.stringify(root),
+    },
+    logLevel: "warning",
+  });
 
-    const result = spawnSync(process.execPath, ["--test", outFile], {
-        stdio: "inherit",
-    });
+  const result = spawnSync(process.execPath, ["--test", outFile], {
+    stdio: "inherit",
+  });
 
-    cleanup();
-    process.exit(result.status ?? 1);
+  cleanup();
+  process.exit(result.status ?? 1);
 }
 
 main().catch((e) => {
-    cleanup();
-    console.error(e);
-    process.exit(1);
+  cleanup();
+  console.error(e);
+  process.exit(1);
 });

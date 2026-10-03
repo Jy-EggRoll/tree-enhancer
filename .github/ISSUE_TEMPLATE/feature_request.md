@@ -1,10 +1,9 @@
 ---
 name: Feature request
 about: Suggest an idea for this project
-title: '[✨ Feat]'
-labels: ''
+title: "[✨ Feat]"
+labels: ""
 assignees: Jy-EggRoll
-
 ---
 
 Please write in **Chinese** or **English**.

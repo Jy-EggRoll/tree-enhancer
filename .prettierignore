@@ -1,0 +1,2 @@
+# pnpm 自行维护 lockfile 的写法，交给 prettier 只会持续产生无意义 diff
+pnpm-lock.yaml
