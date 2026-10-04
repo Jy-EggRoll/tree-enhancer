@@ -4,26 +4,12 @@
 
 1. Clone the repository.
 2. Run `pnpm install` to install dependencies.
-3. Open the project in VSCode and press `F5` to start debugging.
+3. Run `pnpm test` to type-check the sources and run the unit tests.
+4. Open the project in VSCode and press `F5` to start debugging.
 
 ## Project Structure
 
-```
-src/
-  extension.ts          # Extension entry point
-  config.ts             # Configuration manager
-  types.ts              # Type definitions
-  provider/
-    provider.ts         # File decoration provider
-  calculator/
-    folderCalculator.ts # Folder size calculation logic
-    calculateFolderCommand.ts # Folder calculation command handler
-  utils/
-    logger.ts           # Logger with caller location tracking
-    file.ts             # File system utilities
-    fileWatcher.ts      # Smart file watcher
-    formatters.ts       # Data formatting utilities
-```
+See [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md) for the module map, the design notes behind each subsystem, and the list of checks that CI runs.
 
 ## Adding Features
 
@@ -50,6 +36,7 @@ normalizes it, so a drift shows up as a diff instead of a hand-fixable format er
 ## Code Style
 
 - Use TypeScript with strict type checking.
+- Format with Prettier before committing (`pnpm run format`); CI enforces `pnpm run format:check`.
 - Comments must be in Chinese, matching the rest of the codebase.
 - Use meaningful variable and function names.
 - Keep functions small and focused.
@@ -62,7 +49,7 @@ normalizes it, so a drift shows up as a diff instead of a hand-fixable format er
 
 ## Pull Request Process
 
-1. Ensure all checks pass (type check, build).
+1. Run the checks listed in [docs/DEVELOPMENT.md](docs/DEVELOPMENT.md). They mirror what CI runs.
 2. Update CHANGELOG.md with the changes.
 3. Update documentation if needed.
 4. Create a pull request with a clear description of the changes.

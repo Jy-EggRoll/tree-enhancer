@@ -17,6 +17,9 @@ esbuild.js
 .github/
 AGENTS.md
 RELEASE.md
+# 面向贡献者的开发文档：Marketplace 展示只用 README.md，无需随包分发
+CONTRIBUTING.md
+docs/
 pnpm-workspace.yaml
 # l10n 校验 / 排序等开发脚本，运行期不需要
 scripts/
