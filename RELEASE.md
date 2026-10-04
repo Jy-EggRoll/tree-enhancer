@@ -17,13 +17,18 @@ References:
 
 1. Update `version` in `package.json`.
 2. Update `CHANGELOG.md` with the changes.
-3. Run local checks:
+3. Run the same checks that CI runs:
 
 ```sh
 pnpm install
-pnpm run check-types
+pnpm run test
+pnpm run l10n:check
+pnpm run l10n:parity
+pnpm run format:check
 pnpm run package
 ```
+
+`l10n:check` regenerates the l10n bundles and fails when they differ from what is committed, so run it on a clean working tree. The `setup` composite action used by both workflows runs exactly this list, so a local run mirrors CI.
 
 4. Commit the changes.
 5. Create and push a SemVer tag that matches `package.json` exactly:
@@ -35,10 +40,11 @@ git push origin 1.10.2
 
 The `Publish Extension` workflow will:
 
+- run the same check suite as CI (unit tests, l10n checks, formatting, build)
 - verify that the tag equals `package.json` version
 - package a `.vsix`
 - publish to the VS Code Marketplace using `VSCE_PAT`
-- create a GitHub Release with auto-generated release notes from CHANGELOG.md
+- create a GitHub Release whose notes are the `CHANGELOG.md` section for that version, with installation instructions appended
 - attach the `.vsix` to the release
 
 ## Development package

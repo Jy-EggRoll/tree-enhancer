@@ -8,16 +8,16 @@
 
 ## 功能演示
 
-- 终端文件浏览器：独立侧边栏中的自定义文件树，始终追随当前终端的工作目录（CWD）。切换终端时树自动跟随切换，是您"终端的文件管理器"。
+- 终端文件浏览器：独立侧边栏中的自定义文件树，始终追随当前终端的工作目录（CWD）。切换终端时树自动跟随切换，是您“终端的文件管理器”。
 
   - 支持新建文件 / 新建文件夹、重命名、删除（回收站与彻底删除），支持多选批量删除
   - 支持复制路径（右键菜单，单选/多选批量复制，双引号包裹可选）
   - 支持拖放：树内移动文件，或从系统拖入文件进行上传
   - 远程模式下支持将文件下载到本地
   - 文件夹右键菜单支持计算文件夹大小、在新窗口中打开该文件夹，或打开该文件夹下的 `.code-workspace` 工作区
-  - 顶栏"打开当前文件夹"按钮，一键以新窗口打开当前根目录（终端 CWD）
-  - 顶栏"强制刷新"按钮，一键全量刷新整棵自定义树。由于文件监控器采用非递归模式（仅监听当前目录直接子节点），深层目录的文件增删不会自动触发刷新，此按钮提供手动强制刷新入口
-  - 符号链接文件与文件夹行最右侧显示官方同款 ⤷ 箭头标识，悬浮时显示"符号链接" tooltip | Symlinks show the official ⤷ arrow badge on the far right, with a localized tooltip
+  - 顶栏“打开当前文件夹”按钮，一键以新窗口打开当前根目录（终端 CWD）
+  - 顶栏“强制刷新”按钮，一键全量刷新整棵自定义树。由于文件监控器采用非递归模式（仅监听当前目录直接子节点），深层目录的文件增删不会自动触发刷新，此按钮提供手动强制刷新入口
+  - 符号链接文件与文件夹行最右侧显示官方同款 ⤷ 箭头标识，悬浮时显示“符号链接” tooltip
   - 可通过设置开启遵循 `files.exclude` 排除规则（默认关闭，显示全部文件与文件夹）
 
     <!-- TODO: 待补充截图 -->
@@ -76,7 +76,7 @@
 
 本扩展使用 GitHub Actions 进行持续集成与交付：
 
-- **CI 构建**：推送到 `main` 分支（非 tag）时自动构建并上传 vsix 到 Actions Artifacts，方便测试
+- **CI 构建**：推送到任意分支时自动构建并上传 vsix 到 Actions Artifacts，方便测试，也可在 Actions 页面手动触发；推送开发标签（如 `2.3.0.dev.1`）会额外创建预发布 Release
 - **正式发布**：推送 tag（如 `2.0.0`）时自动构建、发布到 VSCode Marketplace、创建 GitHub Release 并上传 vsix 到 Release Assets
 
 ### 发布的 Token 配置
@@ -100,6 +100,7 @@
 - Terminal File Explorer: A custom file tree in an independent sidebar that always follows the working directory (CWD) of the current terminal. The tree switches automatically when you switch terminals — it is your "file manager for the terminal".
 
   - Create new files / new folders, rename, delete (Move to Trash and Delete Permanently), with multi-select batch delete support
+  - Copy path from the context menu, with single or multi-select batch copy (double-quote wrapping optional)
   - Drag and drop support: move files within the tree, or drag files in from your system to upload
   - In remote mode, files can be downloaded to your local machine
   - Folder context menu supports calculating folder size, opening the folder in a new window, or opening a `.code-workspace` workspace file under the folder
@@ -138,6 +139,7 @@ You can search for `tree-enhancer` in VSCode Settings to locate the configuratio
 | -------------------------------------------------- | --------------------- | ---------------------------------------------------------------------------------------------------------------------------------------------------------------------------------------- |
 | `tree-enhancer.terminalExplorer.enabled`           | `true`                | Whether the Terminal File Explorer view is enabled                                                                                                                                       |
 | `tree-enhancer.terminalExplorer.followExcludes`    | `false`               | Whether the Terminal File Explorer respects `files.exclude` patterns. When disabled, all files under the terminal's working directory are shown (including excluded ones such as `.git`) |
+| `tree-enhancer.terminalExplorer.copyPathQuote`     | `true`                | Whether copied paths are wrapped in double quotes. When disabled, paths are copied without quotes and multiple paths are separated by `;`                                                |
 | `tree-enhancer.fileInfo.enabled`                   | `false`               | Whether to automatically show file info in the status bar when opening or switching files (off by default; enable explicitly in settings)                                                |
 | `tree-enhancer.fileSizeBase`                       | `1000`                | File size calculation base. `1000` (decimal, KB/MB/GB) or `1024` (binary, KiB/MiB/GiB)                                                                                                   |
 | `tree-enhancer.fileTemplate`                       | Detail template       | Display template for file hover tooltips, supporting `{name}`, `{size}`, `{rawSize}`, `{modifiedTime}` placeholders                                                                      |
@@ -163,7 +165,7 @@ To add a new language:
 
 This extension uses GitHub Actions for continuous integration and delivery:
 
-- **CI Build**: Pushes to the `main` branch (non-tag) automatically build and upload the vsix to Actions Artifacts for testing
+- **CI Build**: Pushes to any branch automatically build and upload the vsix to Actions Artifacts for testing. The workflow can also be run manually, and pushing a development tag (e.g. `2.3.0.dev.1`) additionally creates a prerelease
 - **Release**: Pushing a tag (e.g. `2.0.0`) automatically builds, publishes to the VSCode Marketplace, creates a GitHub Release, and uploads the vsix to Release Assets
 
 ### Token Configuration for Publishing
