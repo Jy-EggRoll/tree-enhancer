@@ -62,6 +62,8 @@
   "[Folder Calculator] Failed to access file: {0}, error: {1}": "[文件夹计算器] 访问文件失败：{0}，错误：{1}",
   "[Folder Calculator] Max concurrency: {0}": "[文件夹计算器] 最大并发数：{0}",
   "[Full Refresh] All file decorations have been re-rendered": "[完全刷新] 所有文件装饰已重新渲染",
+  "[Git Repository Follow] Not triggered: {0}": "[Git 仓库跟随] 未触发：{0}",
+  "[Git Repository Follow] Repository registered: {0}": "[Git 仓库跟随] 已注册仓库：{0}",
   "[Image File] {0} resolution: {1} * {2}": "[图片文件] {0} 分辨率：{1} * {2}",
   "[Large File] {0} has been marked with L": "[大文件] {0} 已标记为 L",
   "[Selection Monitor] Failed to stat file: {0}, error: {1}": "[选中监控] 获取文件状态失败：{0}，错误：{1}",

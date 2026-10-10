@@ -121,4 +121,11 @@ export class ConfigManager {
   public static getCopyPathQuote(): boolean {
     return this.getConfigValue<boolean>("terminalExplorer.copyPathQuote");
   }
+
+  /**
+   * 获取终端 CWD 进入 Git 仓库时是否让内置 Git 注册该仓库
+   */
+  public static getFollowGitRepository(): boolean {
+    return this.getConfigValue<boolean>("terminalExplorer.followGitRepository");
+  }
 }

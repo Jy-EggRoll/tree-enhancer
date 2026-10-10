@@ -22,6 +22,7 @@
   "description.terminalExplorer.download": "Download...",
   "description.terminalExplorer.enabled": "Enable/disable the Terminal File Explorer view. When enabled, an independent sidebar will appear showing a custom file tree that follows the current terminal's working directory.",
   "description.terminalExplorer.followExcludes": "Whether the Terminal File Explorer should respect the workspace's files.exclude patterns. When disabled (default), all files and folders in the terminal's working directory are shown, including ones excluded by the Explorer (e.g. .git). When enabled, the tree hides entries matching files.exclude, matching the Explorer's display rules.",
+  "description.terminalExplorer.followGitRepository": "Whether to let the built-in Git extension register the repository that the terminal's working directory belongs to. When enabled (default), switching the terminal into a Git repository outside the workspace makes the Source Control view recognize it immediately, without having to open a file inside that repository first.",
   "description.terminalExplorer.newFile": "New File",
   "description.terminalExplorer.newFolder": "New Folder",
   "description.terminalExplorer.openCurrentFolder": "Open Current Folder",

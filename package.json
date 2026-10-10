@@ -147,6 +147,11 @@
           "description": "%description.terminalExplorer.followExcludes%",
           "type": "boolean"
         },
+        "tree-enhancer.terminalExplorer.followGitRepository": {
+          "default": true,
+          "description": "%description.terminalExplorer.followGitRepository%",
+          "type": "boolean"
+        },
         "tree-enhancer.terminalExplorer.copyPathQuote": {
           "default": true,
           "description": "%description.terminalExplorer.copyPathQuote%",

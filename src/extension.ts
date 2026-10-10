@@ -13,6 +13,7 @@ import {
 } from "./terminalExplorer/treeDataProvider";
 import { TerminalFileDragAndDrop } from "./terminalExplorer/treeDragAndDrop";
 import { FileOperationHandlers } from "./terminalExplorer/fileOperations";
+import { followGitRepository } from "./terminalExplorer/gitRepositoryFollow";
 import sourceMapSupport from "source-map-support";
 
 const log = getLogger();
@@ -121,6 +122,9 @@ export function activate(context: vscode.ExtensionContext) {
       terminalTreeProvider!.setCwd(cwd);
       if (cwd) {
         watchCwd(cwd);
+        // 终端进入 Git 仓库时让内置 Git 注册该仓库；工作区之外的仓库不在内置 Git
+        // 的自动发现范围内，缺此一步则必须先打开仓库内的文件才会被识别。
+        void followGitRepository(cwd);
       }
     });
 
