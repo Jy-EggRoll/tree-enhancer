@@ -1,5 +1,10 @@
 # 更新日志 | Change Log
 
+## 2.4.0
+
+- ✨ feat: 终端进入 Git 仓库时自动让内置 Git 注册该仓库。内置 Git 的仓库自动发现只覆盖工作区文件夹与已打开的编辑器，终端工作目录不在其检测范围内，因此此前终端 cd 进一个工作区之外的仓库后，必须先在该仓库内打开一个文件，源代码管理视图才会认识它。现在终端 CWD 变化时自动触发注册；工作区之外的仓库如何对待由内置 Git 自身的策略决定，本扩展不干预 | Automatically registers the Git repository that the terminal enters. The built-in Git extension's repository auto-detection only covers workspace folders and open editors, leaving the terminal's working directory out of scope — previously you had to open a file inside an out-of-workspace repository before the Source Control view would recognize it. The extension now triggers registration whenever the terminal CWD changes; how out-of-workspace repositories are treated is left to the built-in Git extension's own policy
+- 🔧 config: 新增 `tree-enhancer.terminalExplorer.followGitRepository` 设置项（默认 `true`），控制上述自动注册是否启用 | Added the `tree-enhancer.terminalExplorer.followGitRepository` setting (default `true`) to control whether the automatic registration above is enabled
+
 ## 2.3.0
 
 - 🐛 fix: 修复终端文件树在工作区外目录的悬浮信息不刷新问题。文件装饰 tooltip 由 VSCode 缓存，此前只有工作区内的变更会触发失效，而终端 CWD 常在工作区之外，导致文件已修改但悬浮仍显示旧的大小/修改时间。现统一由 extension.ts 管理文件监控，终端 CWD 的增删改会同时刷新树与该文件的装饰 | Fixed stale hover info in the Terminal File Explorer for directories outside the workspace. Decoration tooltips are cached by VSCode and were only invalidated for changes inside the workspace, while the terminal CWD is often outside it — hover kept showing the old size/mtime. File watchers are now owned centrally by extension.ts, so CWD create/change/delete refresh both the tree and that file's decoration
