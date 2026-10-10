@@ -8,3 +8,4 @@
 import "./excludeMatcher.test";
 import "./fileWatcher.test";
 import "./formatters.test";
+import "./gitRepositoryFollow.test";

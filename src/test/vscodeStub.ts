@@ -72,11 +72,29 @@ export function __getCreatedWatchers() {
   return createdWatchers.map(({ base, pattern }) => ({ base, pattern }));
 }
 
+/** 已执行命令的记录（命令名 + 参数），供测试断言 */
+let executedCommands: Array<{ command: string; args: unknown[] }> = [];
+
+/** 命令失败注入表：命令名 → 调用时抛出的错误 */
+let commandErrors: Record<string, Error> = {};
+
+/** 取已执行命令的调用记录 */
+export function __getExecutedCommands() {
+  return executedCommands;
+}
+
+/** 让指定命令在被调用时抛错，用于验证调用方的容错分支 */
+export function __setCommandError(command: string, error: Error) {
+  commandErrors[command] = error;
+}
+
 export function __reset() {
   configStore = {};
   relativePathOverrides = {};
   workspaceFolders = [];
   createdWatchers = [];
+  executedCommands = [];
+  commandErrors = {};
 }
 
 /** 解析 %key% 形式的清单字符串（模拟 VSCode 对 package.nls.json 的替换） */
@@ -232,5 +250,20 @@ export const window = {
     throw new Error(
       "createOutputChannel 未在测试桩中实现：单元测试不应调用 initLogger()",
     );
+  },
+};
+
+/**
+ * commands 桩：记录调用并按注入的错误表决定是否抛错。
+ * 供"让内置 Git 注册仓库"这类依赖命令调用的代码做断言。
+ */
+export const commands = {
+  async executeCommand(command: string, ...args: unknown[]): Promise<unknown> {
+    executedCommands.push({ command, args });
+    const error = commandErrors[command];
+    if (error) {
+      throw error;
+    }
+    return undefined;
   },
 };
