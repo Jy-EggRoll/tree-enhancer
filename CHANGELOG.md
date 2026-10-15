@@ -1,5 +1,10 @@
 # 更新日志 | Change Log
 
+## 2.4.1
+
+- 🐛 fix: 修复计算超大文件夹时耗尽扩展主机内存、导致扩展主机意外重启的问题，计算速度同时提升 | Fixed the extension host running out of memory and restarting unexpectedly when calculating very large folders, with faster calculation as well
+- 🐛 fix: 修复取消文件夹计算不生效的问题，现在点击状态栏即可立即停止计算，重复触发也不会叠加负载 | Fixed cancellation of folder size calculation not taking effect; clicking the status bar now stops it immediately, and repeated triggers no longer stack
+
 ## 2.4.0
 
 - ✨ feat: 终端进入 Git 仓库时自动让内置 Git 注册该仓库。内置 Git 的仓库自动发现只覆盖工作区文件夹与已打开的编辑器，终端工作目录不在其检测范围内，因此此前终端 cd 进一个工作区之外的仓库后，必须先在该仓库内打开一个文件，源代码管理视图才会认识它。现在终端 CWD 变化时自动触发注册；工作区之外的仓库如何对待由内置 Git 自身的策略决定，本扩展不干预 | Automatically registers the Git repository that the terminal enters. The built-in Git extension's repository auto-detection only covers workspace folders and open editors, leaving the terminal's working directory out of scope — previously you had to open a file inside an out-of-workspace repository before the Source Control view would recognize it. The extension now triggers registration whenever the terminal CWD changes; how out-of-workspace repositories are treated is left to the built-in Git extension's own policy
