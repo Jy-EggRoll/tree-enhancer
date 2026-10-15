@@ -95,6 +95,7 @@ export function __reset() {
   createdWatchers = [];
   executedCommands = [];
   commandErrors = {};
+  __resetFs();
 }
 
 /** 解析 %key% 形式的清单字符串（模拟 VSCode 对 package.nls.json 的替换） */
@@ -147,6 +148,114 @@ function loadDeclaredDefaults(): Record<string, unknown> {
 
 const declaredDefaults = loadDeclaredDefaults();
 
+/**
+ * 与 vscode.FileType 的取值一致。
+ * 注意符号链接是位掩码组合：File|SymbolicLink = 65，Directory|SymbolicLink = 66。
+ */
+export const FileType = {
+  Unknown: 0,
+  File: 1,
+  Directory: 2,
+  SymbolicLink: 64,
+} as const;
+
+/** 虚拟文件系统节点类型。symlink* 用于复刻 readDirectory 返回的位掩码组合。 */
+export type VirtualKind =
+  "file" | "dir" | "symlinkFile" | "symlinkDir" | "unknown";
+
+export interface VirtualEntry {
+  name: string;
+  kind: VirtualKind;
+  /** 文件大小（字节），仅 file 有意义 */
+  size?: number;
+  /** 子项，仅 dir 有意义 */
+  children?: VirtualEntry[];
+  /** 该条目在 stat / readDirectory 时抛错，用于覆盖容错分支 */
+  fail?: boolean;
+}
+
+/** 虚拟文件系统按绝对路径索引 */
+let virtualNodes = new Map<string, VirtualEntry>();
+
+/** 每次文件系统调用的模拟延迟（事件循环节拍数），0 表示不延迟 */
+let fsLatencyHops = 0;
+
+/** 虚拟文件系统调用的在途与总量统计，供"并发是否有上限"的断言使用 */
+export const fsStats = {
+  inFlight: 0,
+  peakInFlight: 0,
+  statCalls: 0,
+  readDirCalls: 0,
+};
+
+/** 虚拟文件系统返回的固定修改时间，便于断言 */
+export const VIRTUAL_FS_MTIME = 1700000000000;
+
+export function __resetFs(): void {
+  virtualNodes = new Map();
+  fsLatencyHops = 0;
+  fsStats.inFlight = 0;
+  fsStats.peakInFlight = 0;
+  fsStats.statCalls = 0;
+  fsStats.readDirCalls = 0;
+}
+
+/** 注入虚拟文件树：root 为根目录绝对路径，children 为其直接子项 */
+export function __setVirtualFs(root: string, children: VirtualEntry[]): void {
+  virtualNodes = new Map();
+  const index = (path: string, entry: VirtualEntry): void => {
+    virtualNodes.set(path, entry);
+    for (const child of entry.children ?? []) {
+      index(`${path}/${child.name}`, child);
+    }
+  };
+  index(root, { name: root, kind: "dir", children });
+}
+
+/** 注入文件系统调用延迟（事件循环节拍数） */
+export function __setFsLatency(hops: number): void {
+  fsLatencyHops = hops;
+}
+
+function typeOf(kind: VirtualKind): number {
+  switch (kind) {
+    case "file":
+      return FileType.File;
+    case "dir":
+      return FileType.Directory;
+    // 符号链接返回"目标类型 | SymbolicLink"的位掩码，与真实 readDirectory 一致
+    case "symlinkFile":
+      return FileType.File | FileType.SymbolicLink;
+    case "symlinkDir":
+      return FileType.Directory | FileType.SymbolicLink;
+    default:
+      return FileType.Unknown;
+  }
+}
+
+async function fsDelay(): Promise<void> {
+  for (let i = 0; i < fsLatencyHops; i++) {
+    await new Promise<void>((resolve) => setImmediate(resolve));
+  }
+}
+
+/**
+ * 包裹一次虚拟文件系统调用：统计在途数、施加延迟。
+ * 与被测代码的并发上限无关，只让"同时有多少个调用在途"可被观测。
+ */
+async function trackFsCall<T>(call: () => T): Promise<T> {
+  fsStats.inFlight++;
+  if (fsStats.inFlight > fsStats.peakInFlight) {
+    fsStats.peakInFlight = fsStats.inFlight;
+  }
+  try {
+    await fsDelay();
+    return call();
+  } finally {
+    fsStats.inFlight--;
+  }
+}
+
 export const workspace = {
   get workspaceFolders() {
     return workspaceFolders;
@@ -182,6 +291,40 @@ export const workspace = {
         return declared !== undefined ? (declared as T) : defaultValue;
       },
     };
+  },
+
+  /**
+   * 虚拟文件系统：只实现被测代码用到的 stat 与 readDirectory。
+   * 读不到或标记了 fail 的条目一律抛错，以复刻真实的权限/存在性失败。
+   * 路径用 uri.path 索引，因为 FolderCalculator 按 path 遍历。
+   */
+  fs: {
+    async stat(uri: { path: string }) {
+      fsStats.statCalls++;
+      return trackFsCall(() => {
+        const node = virtualNodes.get(uri.path);
+        if (!node || node.fail) {
+          throw new Error(`ENOENT: ${uri.path}`);
+        }
+        return { size: node.size ?? 0, mtime: VIRTUAL_FS_MTIME };
+      });
+    },
+
+    async readDirectory(uri: { path: string }) {
+      fsStats.readDirCalls++;
+      return trackFsCall((): Array<[string, number]> => {
+        const node = virtualNodes.get(uri.path);
+        if (!node || node.fail) {
+          throw new Error(`ENOENT: ${uri.path}`);
+        }
+        if (node.kind !== "dir") {
+          throw new Error(`ENOTDIR: ${uri.path}`);
+        }
+        return (node.children ?? []).map(
+          (child) => [child.name, typeOf(child.kind)] as [string, number],
+        );
+      });
+    },
   },
 
   /**
@@ -228,9 +371,38 @@ export class RelativePattern {
 
 export const Uri = {
   file(fsPath: string) {
-    return { fsPath };
+    return { scheme: "file", path: fsPath, fsPath };
+  },
+
+  /** 与真实 Uri 一致：base 末尾斜杠不重复，子项以 / 连接 */
+  joinPath(base: { scheme: string; path: string }, ...parts: string[]) {
+    const path = base.path.replace(/\/+$/, "") + "/" + parts.join("/");
+    return { scheme: base.scheme, path, fsPath: path };
   },
 };
+
+/**
+ * vscode.CancellationTokenSource 的最小复刻：cancel() 后 token.isCancellationRequested 为 true。
+ * onCancellationRequested 刻意不提供实现——被测代码不应订阅取消事件，
+ * 一旦订阅就应在此明确报错，而不是静默拿到一个空实现。
+ */
+export class CancellationTokenSource {
+  public readonly token = {
+    isCancellationRequested: false,
+    onCancellationRequested(): never {
+      throw new Error(
+        "CancellationToken.onCancellationRequested 未在测试桩中实现",
+      );
+    },
+  };
+
+  public cancel(): void {
+    this.token.isCancellationRequested = true;
+  }
+
+  /** 桩件不持有需要释放的资源 */
+  public dispose(): void {}
+}
 
 export const l10n = {
   t(message: string, ...args: unknown[]): string {

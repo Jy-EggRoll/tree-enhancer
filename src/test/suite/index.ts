@@ -7,5 +7,6 @@
 
 import "./excludeMatcher.test";
 import "./fileWatcher.test";
+import "./folderCalculator.test";
 import "./formatters.test";
 import "./gitRepositoryFollow.test";
