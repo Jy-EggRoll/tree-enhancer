@@ -188,6 +188,21 @@ export class TerminalFileDragAndDrop implements vscode.TreeDragAndDropController
   // OS 拖入上传
   // -----------------------------------------------------------------
 
+  /**
+   * 把从系统拖入的文件上传到目标目录。
+   *
+   * 为什么没有 Ctrl+V 粘贴上传：VSCode 扩展 API 读不到剪贴板里的文件。
+   * `vscode.env.clipboard` 只有 readText 与 writeText；TreeView 没有粘贴事件，
+   * 也没有对应的提案接口（主分支已有的提案里没有一项涉及剪贴板文件或树内粘贴）。
+   * 官方资源管理器的粘贴由工作台内部完成：一条来源是 DOM 粘贴事件携带的 FileList，
+   * 另一条是内部 clipboardService.readResources()，两者都不经过扩展宿主。
+   *
+   * 绕行方案同样不可取：用 readText 解析路径只覆盖“剪贴板里恰好是文本路径”的情况，
+   * 从系统文件管理器直接复制文件时，各平台给出的通常是原生文件列表格式，读不到文本；
+   * 改为调用 xclip、wl-paste、osascript 或 PowerShell 读取原生剪贴板，会引入外部
+   * 程序依赖，而且远程开发（SSH、容器、WSL）下客户端剪贴板里的文件本来也到不了
+   * 扩展宿主。故此处只保留拖放这一条导入路径。
+   */
   private async handleUpload(
     target: TerminalFileTreeItem | undefined,
     dataTransfer: vscode.DataTransfer,
